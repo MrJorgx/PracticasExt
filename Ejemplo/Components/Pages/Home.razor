@@ -1,0 +1,23 @@
+﻿@page "/"
+@using ejemplo.Utilidades /* También podemos añadir esta línea en el archivo Imports.razor */
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<p>Hola, me llamo @nombre</p>
+<p>Mi nombre en mayusculas: @UtilidadesString.mayus(nombre)</p>
+
+<p>Si sumamos 5 + 4 = @(5 + 4)</p>
+
+<button @onclick=@ManejarClick>Clica</button>
+
+
+
+@code {
+    string nombre = "Jorge";
+
+    void ManejarClick() {
+        Console.WriteLine("Me han clicado desde una función");
+    }
+}
