@@ -1,0 +1,251 @@
+@page "/ejercicio3"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 3 - Operaciones con fechas</PageTitle>
+
+<h1>Programa para devolver datos de las fechas</h1>
+
+<p>Introduce las fechas para aplicar las acciones sobre ellas.</p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="fecha1" class="form-label">Primera fecha (yyyy/MM/dd):</label>
+            <input type="text" class="form-control" id="fecha1" @bind="fecha1Text"
+                    placeholder="2024/10/16" maxlength="10"/>
+            <small class="form-text text-muted">Formato obligatorio: yyyy/MM/dd</small>
+        </div>
+        <div class="col-md-6">
+            <label for="fecha2" class="form-label">Segunda fecha (yyyy/MM/dd):</label>
+            <input type="text" class="form-control" id="fecha2" @bind="fecha2Text"
+                    placeholder="2024/12/25" maxlength="10"/>
+            <small class="form-text text-muted">Formato obligatorio: yyyy/MM/dd</small>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary me-2" @onclick="ProcesarFechas" disabled="@isProcessing">
+                @if (isProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidder="true"></span>
+                    <text> Procesando...</text>
+                }
+                else
+                {
+                    <text>Calcular Operaciones</text>
+                }
+            </button>
+            <button class="btn btn-secondary" @onclick="LimpiarResultados" disabled="@isProcessing">
+                Limpiar
+            </button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <div class="alert alert-danger" role="alert">
+            @mensajeError
+        </div>
+    }
+
+    @if (mostrarResultados && resultado != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados de las operaciones</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Fechas introducidas -->
+                        <div class="mb-4">
+                            <h5>Fechas introducidas:</h5>
+                            <div class=row>
+                                <div class="col-md-6">
+                                    <div class="border p-2 bg-light">
+                                        <strong>Primera fecha:</strong> @resultado.Fecha1.ToString("yyyy/MM/dd")
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-2 bg-light">
+                                        <strong>Segunda fecha:</strong> @resultado.Fecha2.ToString("yyyy/MM/dd")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diferencia de dias -->
+                        <div class="mb-4">
+                            <h5>Diferencia de días entre las fechas:</h5>
+                            <div class="border p-3 bg-light">
+                                <p><strong>Diferencia absoluta:</strong> @Math.Abs(resultado.DiferenciaDias) días</p>
+                                <p><strong>Diferencia con signo:</strong> @resultado.DiferenciaDias días</p>
+                                <small class="text-muted">
+                                    @if (resultado.DiferenciaDias > 0)
+                                    {
+                                        <span>La primera fecha es @resultado.DiferenciaDias días posterior a la segunda.</span>
+                                    }
+                                    else if (resultado.DiferenciaDias < 0)
+                                    {
+                                        <span>La primera fecha es @Math.Abs(resultado.DiferenciaDias) días anterior a la segunda.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Ambas fechas son iguales.</span>
+                                    }
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Inicio y fin de año -->
+                        <div class="mb-4">
+                            <h5>Inicio y fin de año de cada fecha:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Primera fecha (@resultado.Fecha1.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Inicio de año:</strong> @resultado.InicioAno1.ToString("yyyy/MM/dd")</p>
+                                        <p><strong>Fin de año:</strong> @resultado.FinAno1.ToString("yyyy/MM/dd")</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Segunda fecha (@resultado.Fecha2.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Inicio de año:</strong> @resultado.InicioAno2.ToString("yyyy/MM/dd")</p>
+                                        <p><strong>Fin de año:</strong> @resultado.FinAno2.ToString("yyyy/MM/dd")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Número de días del año -->
+                        <div class="mb-4">
+                            <h5>Número de días del año de cada fecha:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Año @resultado.Fecha1.Year:</h6>
+                                        <p><strong>Días totales:</strong> @resultado.DiasDelAno1 días</p>
+                                        <p><strong>Tipo de año:</strong> @(resultado.EsBisiesto1 ? "Bisiesto" : "Normal")</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Año @resultado.Fecha2.Year:</h6>
+                                        <p><strong>Días totales:</strong> @resultado.DiasDelAno2 días</p>
+                                        <p><strong>Tipo de año:</strong> @(resultado.EsBisiesto2 ? "Bisiesto" : "Normal")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Número de semana -->
+                        <div class="mb-4">
+                            <h5>Número de semana del año:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Primera fecha (@resultado.Fecha1.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Semana número:</strong> @resultado.NumeroSemana1</p>
+                                        <p><strong>Día de la semana:</strong> @resultado.DiaSemana1</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Segunda fecha (@resultado.Fecha2.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Semana número:</strong> @resultado.NumeroSemana2</p>
+                                        <p><strong>Día de la semana:</strong> @resultado.DiaSemana2</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de entrada
+    private string fecha1Text = "";
+    private string fecha2Text = "";
+
+    // Variables para mostrar resultados
+    private bool mostrarResultados = false;
+    private bool isProcessing = false;
+    private string mensajeError = "";
+    private FechaResult? resultado;
+
+    private async Task ProcesarFechas()
+    {
+        try
+        {
+            isProcessing = true;
+            mensajeError = "";
+            mostrarResultados = false;
+
+            var request = new FechaRequest
+            {
+                Fecha1Text = fecha1Text,
+                Fecha2Text = fecha2Text
+            };
+
+            var response = await Http.PostAsJsonAsync("api/fecha/procesar", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = await response.Content.ReadFromJsonAsync<FechaResult>();
+                mostrarResultados = true;
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                mensajeError = $"Error: {errorContent}";
+            }
+        }
+        catch (Exception ex)
+        {  
+            mensajeError = $"Error de conexion: {ex.Message}";
+        }
+        finally{
+            isProcessing = false;
+        }
+    }
+
+    private void LimpiarResultados()
+    {
+        fecha1Text = "";
+        fecha2Text = "";
+        mostrarResultados = false;
+        mensajeError = "";
+        resultado = null;
+    }
+
+    public class FechaRequest
+    {
+        public string Fecha1Text { get; set; } = "";
+        public string Fecha2Text { get; set; } = "";
+    }
+
+    public class FechaResult
+    {
+        public DateTime Fecha1 { get; set; }
+        public DateTime Fecha2 { get; set; }
+        public int DiferenciaDias { get; set; }
+        public DateTime InicioAno1 { get; set; }
+        public DateTime FinAno1 { get; set; }
+        public DateTime InicioAno2 { get; set; }
+        public DateTime FinAno2 { get; set; }
+        public int DiasDelAno1 { get; set; }
+        public int DiasDelAno2 { get; set; }
+        public int NumeroSemana1 { get; set; }
+        public int NumeroSemana2 { get; set; }
+        public string DiaSemana1 { get; set; } = "";
+        public string DiaSemana2 { get; set; } = "";
+        public bool EsBisiesto1 { get; set; }
+        public bool EsBisiesto2 { get; set; }
+    }
+}

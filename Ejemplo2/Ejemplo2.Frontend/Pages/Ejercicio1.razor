@@ -1,0 +1,143 @@
+﻿@page "/ejercicio1"
+
+<PageTitle>Ejercicio 1 - Operaciones con números</PageTitle>
+
+<h1>Calculadora de Operaciones Matemáticas</h1>
+
+<p>Introduce dos cantidades y el número de decimales para el redondeo de las operaciones.</p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="cantidad1" class="form-label">Primera cantidad:</label>
+            <input type="number" step="any" class="form-control" id="cantidad1" @bind="cantidad1" />
+        </div>
+        <div class="col-md-4">
+            <label for="cantidad2" class="form-label">Segunda cantidad:</label>
+            <input type="number" step="any" class="form-control" id="cantidad2" @bind="cantidad2" />
+        </div>
+        <div class="col-md-4">
+            <label for="decimales" class="form-label">Número de decimales:</label>
+            <input type="number" min="0" max="10" class="form-control" id="decimales" @bind="numDecimales" />
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary" @onclick="CalcularOperaciones">Calcular Operaciones</button>
+        </div>
+    </div>
+
+    @if (mostrarResultados)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Suma:</strong></td>
+                                    <td>@cantidad1 + @cantidad2 = @suma</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Resta:</strong></td>
+                                    <td>@cantidad1 - @cantidad2 = @resta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Multiplicación:</strong></td>
+                                    <td>@cantidad1 × @cantidad2 = @multiplicacion</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>División:</strong></td>
+                                    <td>@cantidad1 ÷ @cantidad2 = @division</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Módulo:</strong></td>
+                                    <td>@cantidad1 % @cantidad2 = @modulo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Comparación:</strong></td>
+                                    <td>@cantidad1 @comparacion @cantidad2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables para las cantidades de entrada
+    private double cantidad1 = 0;
+    private double cantidad2 = 0;
+    private int numDecimales = 2;
+
+    // Variables para mostrar los resultados
+    private bool mostrarResultados = false;
+    private string suma = "";
+    private string resta = "";
+    private string multiplicacion = "";
+    private string division = "";
+    private string modulo = "";
+    private string comparacion = "";
+
+    private void CalcularOperaciones()
+    {
+        try
+        {
+            // Realizar las operaciones
+            double resultadoSuma = cantidad1 + cantidad2;
+            double resultadoResta = cantidad1 - cantidad2;
+            double resultadoMultiplicacion = cantidad1 * cantidad2;
+            double resultadoDivision = cantidad2 != 0 ? cantidad1 / cantidad2 : 0;
+            double resultadoModulo = cantidad2 != 0 ? cantidad1 % cantidad2 : 0;
+
+            // Aplicar redondeo según el número de decimales
+            suma = Math.Round(resultadoSuma, numDecimales).ToString($"F{numDecimales}");
+            resta = Math.Round(resultadoResta, numDecimales).ToString($"F{numDecimales}");
+            multiplicacion = Math.Round(resultadoMultiplicacion, numDecimales).ToString($"F{numDecimales}");
+            
+            // Manejar división por cero
+            if (cantidad2!=0)
+            {
+                division = Math.Round(resultadoDivision, numDecimales).ToString($"F{numDecimales}");
+                modulo = Math.Round(resultadoModulo, numDecimales).ToString($"F{numDecimales}");
+            }
+            else
+            {
+                division = "Error: División por cero";
+                modulo = "Error: División por cero";
+            }
+
+            // Comparar los números
+            if (cantidad1 < cantidad2)
+            {
+                comparacion = "es menor que";
+            }
+            else if (cantidad1 > cantidad2)
+            {
+                comparacion = "es mayor que";
+            }
+            else
+            {
+                comparacion = "es igual a";
+            }
+
+            // Mostrar los resultados
+            mostrarResultados = true;
+        }
+        catch (Exception ex)
+        {
+            // Manejar errores inesperados
+            suma = resta = multiplicacion = division = modulo = $"Error: {ex.Message}";
+            comparacion = "Error en comparación";
+            mostrarResultados = true;
+        }
+    }
+}

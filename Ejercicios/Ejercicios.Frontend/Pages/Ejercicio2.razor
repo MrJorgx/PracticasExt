@@ -1,0 +1,192 @@
+@page "/ejercicio2"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 2 - Operaciones con texto</PageTitle>
+
+<h1>Programa para transformar tus textos</h1>
+
+<p>Introduce el texto para aplicar las acciones sobre él.</p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="textoEntrada" class="form-label">Texto de entrada:</label>
+            <textarea class="form-control" id="textoEntrada" rows="4" @bind="textoEntrada" placeholder="Introduce aquí el texto para procesar..."></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn.primary me-2" @onclick="ProcesarTexto" disabled="@isProcessing">
+                @if (isProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <text> Procesando...</text>
+                }
+                else
+                {
+                    <text>Procesar texto</text>
+                }
+            </button>
+            <button class="btn btn-secondary" @onclick="LimpiarResultados" disabled="@isProcessing">
+                Limpiar
+            </button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (mostrarResultados && resultado != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados del procesamiento</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Número de caracteres -->
+                        <div class="mb-3">
+                            <h5>Número de caracteres:</h5>
+                            <p class="border p-2 bg-light">@resultado.NumeroCaracteres</p>
+                        </div>
+
+                        <!-- Texto en mayusculas -->
+                        <div class="mb-3">
+                            <h5>Texto en mayúsculas:</h5>
+                            <p class="border p-2 bg-light">@resultado.TextoMayusculas</p>
+                        </div>
+
+                        <!-- Texto en minusculas -->
+                        <div class="mb-3">
+                            <h5>Texto en minúsculas:</h5>
+                            <p class="border p-2 bg-light">@resultado.TextoMinusculas</p>
+                        </div>
+
+                        <!-- Palabras repetidas -->
+                        <div class="mb-3">
+                            <h5>Palabras repetidas:</h5>
+                            @if (resultado.PalabrasRepetidas.Count > 0)
+                            {
+                                <p class="border p-2 bg-light">
+                                    <strong>Número de palabras repetidas:</strong> @resultado.PalabrasRepetidas.Count<br>
+                                    <strong>Palabras:</strong> @string.Join(", ", resultado.PalabrasRepetidas.Keys)
+                                </p>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        @foreach (var palabra in resultado.PalabrasRepetidas)
+                                        {
+                                            <span class="badge bg-info me-1">@palabra.Key (@palabra.Value veces)</span>
+                                        }
+                                    </small>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="border p-2 bg-light">NO hay palabras repetidas en el texto.</p>
+                            }
+                        </div>
+
+                        <!-- Texto con reemplazo -->
+                        <div class="mb-3">
+                            <h5>Texto reemplazando "Proconsi" por "Isnocorp":</h5>
+                            <p class="border p-2 bg-light">@resultado.TextoReemplazado</p>
+                        </div>
+
+                        <!-- Concatenacion 1000 veces -->
+                        <div class="mb-3">
+                            <h5>Texto concatenado 1000 veces:</h5>
+                            <div class="border p-2 bg-light">
+                                <p><strong>Tiempo transcurrido:</strong> @resultado.TiempoConcatenacion ms</p>
+                                <p><strong>Longitud del texto concatenado:</strong> @resultado.LongitudTextoConcatenado caracteres</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de entrada
+    private string textoEntrada = "";
+
+    // Variables para mostrar los resultados
+    private bool mostrarResultados = false;
+    private bool isProcessing = false;
+    private string errorMessage = "";
+    private TextoResult? resultado;
+
+    private async Task ProcesarTexto()
+    {
+        if (string.IsNullOrWhiteSpace(textoEntrada))
+        {
+            errorMessage = "Por favor, introduce el texto para procesar.";
+            return;
+        }
+
+        try
+        {
+            isProcessing = true;
+            errorMessage = "";
+            mostrarResultados = false;
+
+            var request = new TextoRequest
+            {
+                Texto = textoEntrada
+            };
+
+            var response = await Http.PostAsJsonAsync("api/texto/procesar", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = await response.Content.ReadFromJsonAsync<TextoResult>();
+                mostrarResultados = true;
+            }
+            else
+            {
+                errorMessage = $"Error al procesar la solicitud: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void LimpiarResultados()
+    {
+        textoEntrada = "";
+        mostrarResultados = false;
+        errorMessage = "";
+        resultado = null;
+    }
+
+    public class TextoRequest
+    {
+        public string Texto { get; set; } = "";
+    }
+
+    public class TextoResult
+    {
+        public int NumeroCaracteres { get; set; }
+        public string TextoMayusculas { get; set; } = "";
+        public string TextoMinusculas { get; set; } = "";
+        public Dictionary<string, int> PalabrasRepetidas { get; set; } = new Dictionary<string, int>();
+        public string TextoReemplazado { get; set; } = "";
+        public double TiempoConcatenacion { get; set; }
+        public int LongitudTextoConcatenado { get; set; }
+    }
+}

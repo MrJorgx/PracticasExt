@@ -1,0 +1,85 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Ejercicios.Backend.csproj": {}
+  },
+  "projects": {
+    "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Ejercicios.Backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Ejercicios.Backend.csproj",
+        "projectName": "Ejercicios.Backend",
+        "projectPath": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Ejercicios.Backend.csproj",
+        "packagesPath": "/home/jorge/.nuget/packages/",
+        "outputPath": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/jorge/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/lib/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Cors": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

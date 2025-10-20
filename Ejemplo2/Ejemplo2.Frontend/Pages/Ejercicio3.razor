@@ -1,0 +1,274 @@
+@page "/ejercicio3"
+@using System.Globalization
+
+
+<PageTitle>Ejercicio 3 - Operaciones con fechas</PageTitle>
+
+<h1>Operaciones con fechas</h1>
+
+<p><strong>Introduce 2 fechas.</strong></p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="fecha1" class="form-label">Primera fecha (yyyy/MM/dd):</label>
+            <input type="text" class="form-control" id="fecha1" @bind="fecha1Text" 
+                    placeholder="2024/10/16" maxlength="10" />
+            <small class="form-text text-muted">Formato obligatorio: yyyy/MM/dd</small>
+        </div>
+        <div class="col-md-6">
+            <label for="fecha2" class="form-label">Segunda fecha (yyyy/MM/dd):</label>
+            <input type="text" class="form-control" id="fecha2" @bind="fecha2Text" 
+                    placeholder="2024/12/25" maxlength="10" />
+            <small class="form-text text-muted">Formato obligatorio: yyyy/MM/dd</small>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary" @onclick="ProcesarFechas">Calcular Operaciones</button>
+            <button class="btn btn-secondary ms-2" @onclick="LimpiarResultados">Limpiar</button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <div class="alert alert-danger" role="alert">
+            @mensajeError
+        </div>
+    }
+
+    @if (mostrarResultados)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados de las operaciones</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Fechas introducidas -->
+                        <div class="mb-4">
+                            <h5>Fechas introducidas:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-2 bg-light">
+                                        <strong>Primera fecha:</strong> @fecha1.ToString("yyyy/MM/dd")
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-2 bg-light">
+                                        <strong>Segunda fecha:</strong> @fecha2.ToString("yyyy/MM/dd")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diferencia de días -->
+                        <div class="mb-4">
+                            <h5>Diferencia de días entre las fechas:</h5>
+                            <div class="border p-3 bg-light">
+                                <p><strong>Diferencia absoluta:</strong> @Math.Abs(diferenciaDias) días</p>
+                                <p><strong>Diferencia con signo:</strong> @diferenciaDias días</p>
+                                <small class="text-muted">
+                                    @if (diferenciaDias > 0)
+                                    {
+                                        <span>La primera fecha es @diferenciaDias días posterior a la segunda.</span>
+                                    }
+                                    else if (diferenciaDias < 0)
+                                    {
+                                        <span>La primera fecha es @Math.Abs(diferenciaDias) días anterior a la segunda.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Ambas fechas son iguales.</span>
+                                    }
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Diferencia de días -->
+                        <div class="mb-4">
+                            <h5>Inicio y fin de año para cada fecha:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Primera fecha (@fecha1.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Inicio de año:</strong> @inicioAno1.ToString("yyyy/MM/dd")</p>
+                                        <p><strong>Fin de año:</strong> @finAno1.ToString("yyyy/MM/dd")</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Segunda fecha (@fecha2.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Inicio de año:</strong> @inicioAno2.ToString("yyyy/MM/dd")</p>
+                                        <p><strong>Fin de año:</strong> @finAno2.ToString("yyyy/MM/dd")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Número de días del año -->
+                        <div class="mb-4">
+                            <h5>Número de días del año para cada fecha:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Año @fecha1.Year:</h6>
+                                        <p><strong>Días totales:</strong> @diasDelAno1 días</p>
+                                        <p><strong>Tipo de año:</strong> @(DateTime.IsLeapYear(fecha1.Year) ? "Bisiesto" : "Normal")</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Año @fecha2.Year:</h6>
+                                        <p><strong>Días totales:</strong> @diasDelAno2 días</p>
+                                        <p><strong>Tipo de año:</strong> @(DateTime.IsLeapYear(fecha2.Year) ? "Bisiesto" : "Normal")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Número de semana -->
+                        <div class="mb-4">
+                            <h5>Número de semana del año:</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Primera fecha (@fecha1.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Semana número:</strong> @numeroSemana1</p>
+                                        <p><strong>Día de la semana:</strong> @fecha1.ToString("dddd", new CultureInfo("es-ES"))</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 bg-light">
+                                        <h6>Segunda fecha (@fecha2.ToString("yyyy/MM/dd")):</h6>
+                                        <p><strong>Semana número:</strong> @numeroSemana2</p>
+                                        <p><strong>Día de la semana:</strong> @fecha2.ToString("dddd", new CultureInfo("es-ES"))</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de entrada
+    private string fecha1Text = "";
+    private string fecha2Text = "";
+
+    // Variables para mostrar los resultados
+    private bool mostrarResultados = false;
+    private string mensajeError = "";
+
+    // Variables de fechas procesadas
+    private DateTime fecha1;
+    private DateTime fecha2;
+
+    // Variables de resultados
+    private int diferenciaDias = 0;
+    private DateTime inicioAno1;
+    private DateTime finAno1;
+    private DateTime inicioAno2;
+    private DateTime finAno2;
+    private int diasDelAno1 = 0;
+    private int diasDelAno2 = 0;
+    private int numeroSemana1 = 0;
+    private int numeroSemana2 = 0;
+
+
+    private void ProcesarFechas()
+    {
+        try
+        {
+            mensajeError = "";
+
+            // Validar las fechas
+            if (!ValidarYConvertirFechas())
+            {
+                return;
+            }
+
+            // 1. Calcular diferencia de días
+            TimeSpan diferencia = fecha1 - fecha2;
+            diferenciaDias = (int)diferencia.TotalDays;
+
+            // 2. Calcular inicio y fin del año para cada fecha
+            inicioAno1 = new DateTime(fecha1.Year, 1, 1);
+            finAno1 = new DateTime(fecha1.Year, 12, 31);
+            inicioAno2 = new DateTime(fecha2.Year, 1, 1);
+            finAno2 = new DateTime(fecha2.Year, 12, 31);
+
+            // 3. Calcular número de días del año
+            diasDelAno1 = DateTime.IsLeapYear(fecha1.Year) ? 366 : 365;
+            diasDelAno2 = DateTime.IsLeapYear(fecha2.Year) ? 366 : 365;
+
+            // 4. Calcular número de días del año
+            numeroSemana1 = ObtenerNumeroSemana(fecha1);
+            numeroSemana2 = ObtenerNumeroSemana(fecha2);
+
+            // Mostrar los resultados
+            mostrarResultados = true;
+
+        }catch (Exception ex)
+        {
+            mensajeError = $"Error al procesar las fechas: {ex.Message}";
+            mostrarResultados = false;
+        }
+    }
+
+    private bool ValidarYConvertirFechas()
+    {
+        if (string.IsNullOrWhiteSpace(fecha1Text) || string.IsNullOrWhiteSpace(fecha2Text))
+        {
+            mensajeError = "Por favor, introduce ambas fechas.";
+            mostrarResultados = false;
+            return false;
+        }
+
+        if (!DateTime.TryParseExact(fecha1Text, "yyyy/MM/dd", null, DateTimeStyles.None, out fecha1))
+        {
+            mensajeError = $"La primera fecha '{fecha1Text}' no tiene el formato correcto. Usa yyyy/MM/dd";
+            mostrarResultados = false;
+            return false;
+        }
+
+        if (!DateTime.TryParseExact(fecha2Text, "yyyy/MM/dd", null, DateTimeStyles.None, out fecha2))
+        {
+            mensajeError = $"La segunda fecha '{fecha2Text}' no tiene el formato correcto. Usa yyyy/MM/dd";
+            mostrarResultados = false;
+            return false;
+        }
+
+        return true;
+    }
+
+    private int ObtenerNumeroSemana(DateTime fecha)
+    {
+        // Usar el calendario ISO 8601
+        Calendar calendario = CultureInfo.InvariantCulture.Calendar;
+        CalendarWeekRule reglas = CalendarWeekRule.FirstFourDayWeek;
+        DayOfWeek primerDiaSemana = DayOfWeek.Monday;
+
+
+        return calendario.GetWeekOfYear(fecha, reglas, primerDiaSemana);
+    }
+
+    private void LimpiarResultados()
+    {
+        fecha1Text = "";
+        fecha2Text = "";
+        mostrarResultados = false;
+        mensajeError = "";
+        diferenciaDias = 0;
+        diasDelAno1 = 0;
+        diasDelAno2 = 0;
+        numeroSemana1 = 0;
+        numeroSemana2 = 0;
+    }
+}

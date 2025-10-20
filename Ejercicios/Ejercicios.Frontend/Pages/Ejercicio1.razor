@@ -1,0 +1,174 @@
+﻿@page "/ejercicio1"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 1 - Operaciones con números</PageTitle>
+
+<h1>Calculadora de Operaciones Matemáticas</h1>
+
+<p>Introduce dos cantidades y le número de decimales para el redondeo.</p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="cantidad1" class="for-label">Primera cantidad:</label>
+            <input type="number" step="any" class="form-control" id="cantidad1" @bind="cantidad1" />
+        </div>
+        <div class="col-md-4">
+            <label for="cantidad2" class="for-label">Segunda cantidad:</label>
+            <input type="number" step="any" class="form-control" id="cantidad2" @bind="cantidad2" />
+        </div>
+        <div class="col-md-4">
+            <label for="decimales" class="for-label">Número de decimales:</label>
+            <input type="number" min="0" max="10" step="any" class="form-control" id="decimales" @bind="numDecimales" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary me-2" @onclick="CalcularOperaciones" disabled="@isCalculating">
+                @if (isCalculating)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <text> Calculando...</text>
+                }
+                else
+                {
+                    <text>Calcular Operaciones</text>
+                }
+            </button>
+            <button class="btn btn-secondary" @onclick="LimpiarDatos" disabled="@isCalculating">
+                Limpiar
+            </button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (mostrarResultados && resultado != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Suma:</strong></td>
+                                    <td>@cantidad1 + @cantidad2 = @resultado.Suma</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Resta:</strong></td>
+                                    <td>@cantidad1 - @cantidad2 = @resultado.Resta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Multiplicación:</strong></td>
+                                    <td>@cantidad1 * @cantidad2 = @resultado.Multiplicacion</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>División:</strong></td>
+                                    <td>@cantidad1 / @cantidad2 = @resultado.Division</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Módulo:</strong></td>
+                                    <td>@cantidad1 % @cantidad2 = @resultado.Modulo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Comparación:</strong></td>
+                                    <td>@cantidad1 @resultado.Comparacion @cantidad2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables para las cantidades y decimales
+    private double cantidad1 = 0;
+    private double cantidad2 = 0;
+    private int numDecimales = 2;
+
+    // Variables para mostrar los resultados
+    private bool mostrarResultados = false;
+    private bool isCalculating = false;
+    private string errorMessage = "";
+    private OperacionResult? resultado;
+
+    private async Task CalcularOperaciones()
+    {
+        try
+        {
+            isCalculating = true;
+            errorMessage = "";
+            mostrarResultados = false;
+
+            var request = new OperacionRequest
+            {
+                Cantidad1 = cantidad1,
+                Cantidad2 = cantidad2,
+                NumDecimales = numDecimales
+            };
+
+            var response = await Http.PostAsJsonAsync("api/calculadora/calcular", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = await response.Content.ReadFromJsonAsync<OperacionResult>();
+                mostrarResultados = true;
+            }
+            else
+            {
+                errorMessage = $"Error al procesar la solicitud: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isCalculating = false;
+        }
+    }
+
+    private void LimpiarDatos()
+    {
+        // Limpiar los campos de entradas
+        cantidad1 = 0;
+        cantidad2 = 0;
+        numDecimales = 2;
+
+        // Limpiar los resultados y mensajes
+        mostrarResultados = false;
+        errorMessage = "";
+        resultado = null;
+    }
+
+    public class OperacionRequest
+    {
+        public double Cantidad1 { get; set; }
+        public double Cantidad2 { get; set; }
+        public int NumDecimales { get; set; }
+    }
+
+    public class OperacionResult
+    {
+        public string Suma { get; set; } = "";
+        public string Resta { get; set; } = "";
+        public string Multiplicacion { get; set; } = "";
+        public string Division { get; set; } = "";
+        public string Modulo { get; set; } = "";
+        public string Comparacion { get; set; } = "";
+    }
+}

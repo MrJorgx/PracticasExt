@@ -1,0 +1,222 @@
+@page "/ejercicio2"
+@using System.Diagnostics
+
+<PageTitle>Ejercicio 2 - Operaciones con textos</PageTitle>
+
+<h1>Operaciones con Textos</h1>
+
+<p>Introduce el texto para realizar las operaciones solicitadas.</p>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="textoEntrada" class="form-label">Texto de entrada:</label>
+            <textarea class="form-control" id="textoEntrada" rows="4" @bind="textoEntrada" 
+                      placeholder="Introduce aquí el texto para procesar..."></textarea>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="btn btn-primary" @onclick="ProcesarTexto">Procesar Texto</button>
+            <button class="btn btn-secondary ms-2" @onclick="LimpiarResultados">Limpiar</button>
+        </div>
+    </div>
+
+    @if (mostrarResultados)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Resultados del Procesamiento</h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Número de caracteres -->
+                        <div class="mb-3">
+                            <h5>📊 Número de caracteres:</h5>
+                            <p class="border p-2 bg-light">@numeroCaracteres caracteres</p>
+                        </div>
+
+                        <!-- Texto en mayúsculas -->
+                        <div class="mb-3">
+                            <h5>🔤 Texto en mayúsculas:</h5>
+                            <p class="border p-2 bg-light">@textoMayusculas</p>
+                        </div>
+
+                        <!-- Texto en minúsculas -->
+                        <div class="mb-3">
+                            <h5>🔡 Texto en minúsculas:</h5>
+                            <p class="border p-2 bg-light">@textoMinusculas</p>
+                        </div>
+
+                        <!-- Palabras repetidas -->
+                        <div class="mb-3">
+                            <h5>🔄 Palabras repetidas:</h5>
+                            @if (palabrasRepetidas.Count > 0)
+                            {
+                                <p class="border p-2 bg-light">
+                                    <strong>Número de palabras repetidas:</strong> @palabrasRepetidas.Count<br>
+                                    <strong>Palabras:</strong> @string.Join(", ", palabrasRepetidas.Keys)
+                                </p>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        @foreach (var palabra in palabrasRepetidas)
+                                        {
+                                            <span class="badge bg-info me-1">@palabra.Key (@palabra.Value veces)</span>
+                                        }
+                                    </small>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="border p-2 bg-light">No hay palabras repetidas en el texto.</p>
+                            }
+                        </div>
+
+                        <!-- Texto con reemplazo -->
+                        <div class="mb-3">
+                            <h5>🔄 Texto con "Proconsi" reemplazado por "Isnocorp":</h5>
+                            <p class="border p-2 bg-light">@textoReemplazado</p>
+                        </div>
+
+                        <!-- Concatenación 1000 veces -->
+                        <div class="mb-3">
+                            <h5>⚡ Concatenación 1000 veces:</h5>
+                            <div class="border p-2 bg-light">
+                                <p><strong>Tiempo transcurrido:</strong> @tiempoConcatenacion ms</p>
+                                <p><strong>Longitud final del texto:</strong> @longitudTextoConcatenado caracteres</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de entrada
+    private string textoEntrada = "";
+
+    // Variables para mostrar resultados
+    private bool mostrarResultados = false;
+    private int numeroCaracteres = 0;
+    private string textoMayusculas = "";
+    private string textoMinusculas = "";
+    private Dictionary<string, int> palabrasRepetidas = new Dictionary<string, int>();
+    private string textoReemplazado = "";
+    private double tiempoConcatenacion = 0;
+    private int longitudTextoConcatenado = 0;
+
+    private void ProcesarTexto()
+    {
+        if (string.IsNullOrWhiteSpace(textoEntrada))
+        {
+            return;
+        }
+
+        try
+        {
+            // 1. Número de caracteres
+            numeroCaracteres = textoEntrada.Length;
+
+            // 2. Texto en mayúsculas
+            textoMayusculas = textoEntrada.ToUpper();
+
+            // 3. Texto en minúsculas
+            textoMinusculas = textoEntrada.ToLower();
+
+            // 4. Encontrar palabras repetidas
+            EncontrarPalabrasRepetidas();
+
+            // 5. Reemplazar "Proconsi" por "Isnocorp"
+            textoReemplazado = textoEntrada.Replace("Proconsi", "Isnocorp");
+
+            // 6. Concatenar 1000 veces y medir tiempo
+            ConcatenarTexto1000Veces();
+
+            // Mostrar resultados
+            mostrarResultados = true;
+        }
+        catch (Exception ex)
+        {
+            // Manejar errores
+            textoMayusculas = $"Error: {ex.Message}";
+            textoMinusculas = $"Error: {ex.Message}";
+            textoReemplazado = $"Error: {ex.Message}";
+            mostrarResultados = true;
+        }
+    }
+
+    private void EncontrarPalabrasRepetidas()
+    {
+        palabrasRepetidas.Clear();
+        
+        // Separar el texto en palabras, eliminar signos de puntuación y convertir a minúsculas
+        char[] separadores = { ' ', '.', ',', ';', ':', '!', '?', '\n', '\r', '\t', '(', ')', '[', ']', '{', '}', '"', '\'' };
+        string[] palabras = textoEntrada.ToLower().Split(separadores, StringSplitOptions.RemoveEmptyEntries);
+
+        // Contar ocurrencias de cada palabra
+        Dictionary<string, int> contadorPalabras = new Dictionary<string, int>();
+        
+        foreach (string palabra in palabras)
+        {
+            if (!string.IsNullOrWhiteSpace(palabra))
+            {
+                if (contadorPalabras.ContainsKey(palabra))
+                {
+                    contadorPalabras[palabra]++;
+                }
+                else
+                {
+                    contadorPalabras[palabra] = 1;
+                }
+            }
+        }
+
+        // Filtrar solo las palabras que se repiten
+        foreach (var kvp in contadorPalabras)
+        {
+            if (kvp.Value > 1)
+            {
+                palabrasRepetidas[kvp.Key] = kvp.Value;
+            }
+        }
+    }
+
+    private void ConcatenarTexto1000Veces()
+    {
+        // Medir el tiempo de concatenación
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        
+        // Usar StringBuilder para una concatenación eficiente
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        
+        for (int i = 0; i < 1000; i++)
+        {
+            sb.Append(textoEntrada);
+        }
+        
+        stopwatch.Stop();
+        
+        // Guardar resultados
+        tiempoConcatenacion = stopwatch.Elapsed.TotalMilliseconds;
+        longitudTextoConcatenado = sb.Length;
+    }
+
+    private void LimpiarResultados()
+    {
+        textoEntrada = "";
+        mostrarResultados = false;
+        numeroCaracteres = 0;
+        textoMayusculas = "";
+        textoMinusculas = "";
+        palabrasRepetidas.Clear();
+        textoReemplazado = "";
+        tiempoConcatenacion = 0;
+        longitudTextoConcatenado = 0;
+    }
+}

@@ -1,0 +1,32 @@
+@Ejercicios.Backend_HostAddress = http://localhost:5231
+
+GET {{Ejercicios.Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+POST {{Ejercicios.Backend_HostAddress}}/api/calculadora/calcular
+Content-Type: application/json
+
+{
+  "cantidad1": 10,
+  "cantidad2": 5,
+  "numDecimales": 2
+}
+
+###
+
+POST {{Ejercicios.Backend_HostAddress}}/api/texto/procesar
+Content-Type: application/json
+
+{
+  "texto": "Hola mundo. Este es un texto de prueba para procesar. Proconsi es una empresa. Hola de nuevo."
+}
+
+###
+
+POST {{Ejercicios.Backend_HostAddress}}/api/fecha/procesar
+Content-Type: application/json
+
+{
+  "fecha1Text": "2024/10/16",
+  "fecha2Text": "2024/12/25"
+}
