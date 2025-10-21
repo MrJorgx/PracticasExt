@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
+using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-
     public class TextoController : ControllerBase
     {
         [HttpPost("procesar")]
-
         public ActionResult<TextoResult> ProcesarTexto([FromBody] TextoRequest request)
         {
             try
@@ -114,21 +113,5 @@ namespace Ejercicios.Backend.Controllers
 
             return (stopwatch.Elapsed.TotalMilliseconds, sb.Length);
         }
-    }
-
-    public class TextoRequest
-    {
-        public string Texto { get; set; } = "";
-    }
-
-    public class TextoResult
-    {
-        public int NumeroCaracteres { get; set; }
-        public string TextoMayusculas { get; set; } = "";
-        public string TextoMinusculas { get; set; } = "";
-        public Dictionary<string, int> PalabrasRepetidas { get; set; } = new Dictionary<string, int>();
-        public string TextoReemplazado { get; set; } = "";
-        public double TiempoConcatenacion { get; set; }
-        public int LongitudTextoConcatenado { get; set; }
     }
 }

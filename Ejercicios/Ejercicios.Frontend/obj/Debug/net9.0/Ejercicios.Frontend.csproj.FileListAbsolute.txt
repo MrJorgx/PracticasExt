@@ -2158,10 +2158,10 @@
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/staticwebassets.pack.json
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/Ejercici.5A8192FA.Up2Date
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/ref/Ejercicios.Frontend.dll
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.5kvgi2ts6w.pdb
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.00p0qa7eth.wasm
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.00p0qa7eth.wasm.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.5kvgi2ts6w.pdb.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-00p0qa7eth.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-5kvgi2ts6w.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-oe4qyqg4wl.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.llvpf6edxz.pdb
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.tyxooopmlf.wasm
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.tyxooopmlf.wasm.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.llvpf6edxz.pdb.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-tyxooopmlf.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-llvpf6edxz.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-j43wp88ka1.gz

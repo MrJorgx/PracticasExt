@@ -30,3 +30,18 @@ Content-Type: application/json
   "fecha1Text": "2024/10/16",
   "fecha2Text": "2024/12/25"
 }
+
+###
+
+
+# CRUD Clientes
+POST {{Ejercicios.Backend_HostAddress}}/api/cliente
+Content-Type: application/json
+
+{
+  "dni": "12345678A",
+  "nombre": "Juán",
+  "apellidos": "Pérez García",
+  "tipoCliente": "REGISTRADO",
+  "cuotaMaxima": 1000.50
+}

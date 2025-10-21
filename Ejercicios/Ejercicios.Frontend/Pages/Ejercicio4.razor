@@ -1,6 +1,881 @@
 @page "/ejercicio4"
 @inject HttpClient Http
 
-<PageTitle>Ejercicio 4 - Operaciones con BBDD</PageTitle>
+<PageTitle>Ejercicio 4 - Gestión de Agenda</PageTitle>
 
-<h1>Programa para gestión de recibos de clientes.</h1>
+<h1>Sistema de Gestión de Agenda</h1>
+<p>Gestión completa de clientes y sus recibos con base de datos PostgreSQL.</p>
+
+<div class="container">
+    <!-- Navegación por pestañas -->
+    <ul class="nav nav-tabs mb-4" id="agendaTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "clientes" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("clientes"))" type="button">
+                <i class="bi bi-people"></i> Gestión de Clientes
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "recibos" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("recibos"))" type="button">
+                <i class="bi bi-receipt"></i> Gestión de Recibos
+            </button>
+        </li>
+    </ul>
+
+    <!-- Contenido de las pestañas -->
+    <div class="tab-content">
+        <!-- Pestaña de Clientes -->
+        @if (activeTab == "clientes")
+        {
+            <div class="tab-pane fade show active">
+                <!-- Formulario para añadir/editar cliente -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-person-plus"></i> @(editandoCliente ? "Editar Cliente" : "Añadir Nuevo Cliente")</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">DNI:</label>
+                                <input type="text" class="form-control" @bind="clienteForm.Dni" 
+                                       disabled="@editandoCliente" maxlength="9" placeholder="DNI" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" @bind="clienteForm.Nombre" 
+                                       maxlength="100" placeholder="Nombre" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Apellidos:</label>
+                                <input type="text" class="form-control" @bind="clienteForm.Apellidos" 
+                                       maxlength="100" placeholder="Apellidos" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo de Cliente:</label>
+                                <select class="form-select" @bind="clienteForm.TipoCliente">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="REGISTRADO">REGISTRADO</option>
+                                    <option value="SOCIO">SOCIO</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        @if (clienteForm.TipoCliente == "REGISTRADO")
+                        {
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Cuota Máxima (€):</label>
+                                    <input type="number" step="0.01" class="form-control" 
+                                           @bind="clienteForm.CuotaMaxima" placeholder="1000.00" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-primary me-2" @onclick="GuardarCliente" disabled="@isProcessing">
+                                    @if (isProcessing)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    }
+                                    <i class="bi bi-save"></i> @(editandoCliente ? "Actualizar" : "Guardar") Cliente
+                                </button>
+                                @if (editandoCliente)
+                                {
+                                    <button class="btn btn-secondary" @onclick="CancelarEdicion">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Búsqueda y listado de clientes -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-search"></i> Buscar y Listar Clientes</h5>
+                        <button class="btn btn-outline-primary btn-sm" @onclick="CargarClientes">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar Lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Búsqueda por DNI -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Buscar por DNI:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" @bind="dniBuscar" 
+                                           placeholder="DNI" @onkeypress="OnKeyPressBuscar" />
+                                    <button class="btn btn-outline-secondary" @onclick="BuscarClientePorDni">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ordenar por:</label>
+                                <select class="form-select" @bind="ordenarPor" @bind:after="CargarClientes">
+                                    <option value="dni">DNI</option>
+                                    <option value="fechaalta">Fecha de Alta</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Orden:</label>
+                                <select class="form-select" @bind="ordenDescendente" @bind:after="CargarClientes">
+                                    <option value="false">Ascendente</option>
+                                    <option value="true">Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Lista de clientes -->
+                        @if (clientes != null && clientes.Count > 0)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>DNI</th>
+                                            <th>Nombre Completo</th>
+                                            <th>Tipo</th>
+                                            <th>Cuota Máx.</th>
+                                            <th>Fecha Alta</th>
+                                            <th>Recibos</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var cliente in clientes)
+                                        {
+                                            <tr>
+                                                <td><strong>@cliente.Dni</strong></td>
+                                                <td>@cliente.Nombre @cliente.Apellidos</td>
+                                                <td>
+                                                    <span class="badge @(cliente.TipoCliente == "SOCIO" ? "bg-success" : "bg-primary")">
+                                                        @cliente.TipoCliente
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    @if (cliente.CuotaMaxima.HasValue)
+                                                    {
+                                                        <text>@cliente.CuotaMaxima.Value.ToString("C2")</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>-</text>
+                                                    }
+                                                </td>
+                                                <td>@cliente.FechaAlta.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>
+                                                    <span class="badge bg-info">@cliente.TotalRecibos</span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button class="btn btn-outline-warning" @onclick="() => EditarCliente(cliente)">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                        <button class="btn btn-outline-danger" @onclick="() => EliminarCliente(cliente.Dni)">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else if (cargandoClientes)
+                        {
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2">Cargando clientes...</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-inbox display-1 text-muted"></i>
+                                <p class="text-muted">No hay clientes registrados</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Pestaña de Recibos -->
+        @if (activeTab == "recibos")
+        {
+            <div class="tab-pane fade show active">
+                <!-- Formulario para añadir/editar recibo -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-receipt-cutoff"></i> @(editandoRecibo ? "Editar Recibo" : "Añadir Nuevo Recibo")</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Número de Recibo:</label>
+                                <input type="text" class="form-control" @bind="reciboForm.NumeroRecibo" 
+                                       disabled="@editandoRecibo" maxlength="50" placeholder="REC-Año-001" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">DNI del Cliente:</label>
+                                <input type="text" class="form-control" @bind="reciboForm.DniCliente" 
+                                       disabled="@editandoRecibo" maxlength="9" placeholder="DNI" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Importe (€):</label>
+                                <input type="number" step="0.01" class="form-control" @bind="reciboForm.Importe" 
+                                       placeholder="250.75" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Fecha de Emisión:</label>
+                                <input type="text" class="form-control" @bind="fechaEmisionInput" />
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-primary me-2" @onclick="GuardarRecibo" disabled="@isProcessing">
+                                    @if (isProcessing)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    }
+                                    <i class="bi bi-save"></i> @(editandoRecibo ? "Actualizar" : "Guardar") Recibo
+                                </button>
+                                @if (editandoRecibo)
+                                {
+                                    <button class="btn btn-secondary" @onclick="CancelarEdicionRecibo">
+                                        <i class="bi bi-x-circle"></i> Cancelar
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Búsqueda y listado de recibos -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-list-check"></i> Buscar y Listar Recibos</h5>
+                        <button class="btn btn-outline-primary btn-sm" @onclick="CargarRecibos">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar Lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filtros -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Recibos de cliente (DNI):</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" @bind="dniClienteRecibos" 
+                                           placeholder="DNI Cliente" />
+                                    <button class="btn btn-outline-secondary" @onclick="CargarRecibosPorCliente">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ordenar por:</label>
+                                <select class="form-select" @bind="ordenarRecibosPor" @bind:after="CargarRecibos">
+                                    <option value="fecha">Fecha de Emisión</option>
+                                    <option value="cliente">Cliente</option>
+                                    <option value="numero">Número de Recibo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Orden:</label>
+                                <select class="form-select" @bind="ordenRecibosDescendente" @bind:after="CargarRecibos">
+                                    <option value="false">Ascendente</option>
+                                    <option value="true">Descendente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Lista de recibos -->
+                        @if (recibos != null && recibos.Count > 0)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Número</th>
+                                            <th>Cliente</th>
+                                            <th>DNI</th>
+                                            <th>Importe</th>
+                                            <th>Fecha Emisión</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var recibo in recibos)
+                                        {
+                                            <tr>
+                                                <td><strong>@recibo.NumeroRecibo</strong></td>
+                                                <td>@recibo.NombreCliente</td>
+                                                <td>@recibo.DniCliente</td>
+                                                <td class="text-end">@recibo.Importe.ToString("C2")</td>
+                                                <td>@recibo.FechaEmision.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button class="btn btn-outline-warning" @onclick="() => EditarRecibo(recibo)">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                        <button class="btn btn-outline-danger" @onclick="() => EliminarRecibo(recibo.NumeroRecibo)">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else if (cargandoRecibos)
+                        {
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2">Cargando recibos...</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-receipt display-1 text-muted"></i>
+                                <p class="text-muted">No hay recibos registrados</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Mensajes de error/éxito -->
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show mt-3">
+            <i class="bi @(esError ? "bi-exclamation-triangle" : "bi-check-circle")"></i>
+            @mensaje
+            <button type="button" class="btn-close" @onclick="LimpiarMensaje"></button>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de estado
+    private string activeTab = "clientes";
+    private bool isProcessing = false;
+    private bool cargandoClientes = false;
+    private bool cargandoRecibos = false;
+    private string mensaje = "";
+    private bool esError = false;
+
+    // Formularios
+    private ClienteRequest clienteForm = new();
+    private ReciboRequest reciboForm = new();
+    private string fechaEmisionInput = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+
+    // Estados de edición
+    private bool editandoCliente = false;
+    private bool editandoRecibo = false;
+    private string dniClienteOriginal = "";
+    private string numeroReciboOriginal = "";
+
+    // Datos
+    private List<ClienteResponse> clientes = new();
+    private List<ReciboResponse> recibos = new();
+
+    // Filtros y búsqueda
+    private string dniBuscar = "";
+    private string dniClienteRecibos = "";
+    private string ordenarPor = "dni";
+    private bool ordenDescendente = false;
+    private string ordenarRecibosPor = "fecha";
+    private bool ordenRecibosDescendente = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarClientes();
+        await CargarRecibos();
+    }
+
+    private void ChangeTab(string tab)
+    {
+        activeTab = tab;
+        LimpiarMensaje();
+    }
+
+    // === MÉTODOS DE CLIENTES ===
+
+    private async Task CargarClientes()
+    {
+        try
+        {
+            cargandoClientes = true;
+            var response = await Http.GetAsync($"api/cliente?ordenarPor={ordenarPor}&descendente={ordenDescendente}");
+            if (response.IsSuccessStatusCode)
+            {
+                clientes = await response.Content.ReadFromJsonAsync<List<ClienteResponse>>() ?? new();
+            }
+            else
+            {
+                MostrarError("Error al cargar los clientes");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error de conexión: {ex.Message}");
+        }
+        finally
+        {
+            cargandoClientes = false;
+        }
+    }
+
+    private async Task BuscarClientePorDni()
+    {
+        if (string.IsNullOrWhiteSpace(dniBuscar))
+        {
+            await CargarClientes();
+            return;
+        }
+
+        try
+        {
+            cargandoClientes = true;
+            var response = await Http.GetAsync($"api/cliente/{dniBuscar.Trim()}");
+            if (response.IsSuccessStatusCode)
+            {
+                var cliente = await response.Content.ReadFromJsonAsync<ClienteResponse>();
+                clientes = cliente != null ? new List<ClienteResponse> { cliente } : new();
+            }
+            else
+            {
+                clientes = new();
+                MostrarError($"No se encontró cliente con DNI {dniBuscar}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error de búsqueda: {ex.Message}");
+        }
+        finally
+        {
+            cargandoClientes = false;
+        }
+    }
+
+    private async Task GuardarCliente()
+    {
+        try
+        {
+            isProcessing = true;
+            LimpiarMensaje();
+
+            if (!ValidarFormularioCliente()) return;
+
+            HttpResponseMessage response;
+            if (editandoCliente)
+            {
+                var updateRequest = new ClienteUpdateRequest
+                {
+                    Nombre = clienteForm.Nombre,
+                    Apellidos = clienteForm.Apellidos,
+                    TipoCliente = clienteForm.TipoCliente,
+                    CuotaMaxima = clienteForm.TipoCliente == "SOCIO" ? null : clienteForm.CuotaMaxima
+                };
+                response = await Http.PutAsJsonAsync($"api/cliente/{dniClienteOriginal}", updateRequest);
+            }
+            else
+            {
+                clienteForm.CuotaMaxima = clienteForm.TipoCliente == "SOCIO" ? null : clienteForm.CuotaMaxima;
+                response = await Http.PostAsJsonAsync("api/cliente", clienteForm);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                MostrarExito(editandoCliente ? "Cliente actualizado correctamente" : "Cliente creado correctamente");
+                LimpiarFormularioCliente();
+                await CargarClientes();
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                MostrarError($"Error: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void EditarCliente(ClienteResponse cliente)
+    {
+        editandoCliente = true;
+        dniClienteOriginal = cliente.Dni;
+        clienteForm.Dni = cliente.Dni;
+        clienteForm.Nombre = cliente.Nombre;
+        clienteForm.Apellidos = cliente.Apellidos;
+        clienteForm.TipoCliente = cliente.TipoCliente;
+        clienteForm.CuotaMaxima = cliente.CuotaMaxima;
+        LimpiarMensaje();
+    }
+
+    private async Task EliminarCliente(string dni)
+    {
+        if (!await ConfirmarAccion($"¿Estás seguro de eliminar el cliente {dni}?")) return;
+
+        try
+        {
+            isProcessing = true;
+            var response = await Http.DeleteAsync($"api/cliente/{dni}");
+            if (response.IsSuccessStatusCode)
+            {
+                MostrarExito("Cliente eliminado correctamente");
+                await CargarClientes();
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                MostrarError($"Error: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    // === MÉTODOS DE RECIBOS ===
+
+    private async Task CargarRecibos()
+    {
+        try
+        {
+            cargandoRecibos = true;
+            var response = await Http.GetAsync($"api/recibo?ordenarPor={ordenarRecibosPor}&descendente={ordenRecibosDescendente}");
+            if (response.IsSuccessStatusCode)
+            {
+                recibos = await response.Content.ReadFromJsonAsync<List<ReciboResponse>>() ?? new();
+            }
+            else
+            {
+                MostrarError("Error al cargar los recibos");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error de conexión: {ex.Message}");
+        }
+        finally
+        {
+            cargandoRecibos = false;
+        }
+    }
+
+    private async Task CargarRecibosPorCliente()
+    {
+        if (string.IsNullOrWhiteSpace(dniClienteRecibos))
+        {
+            await CargarRecibos();
+            return;
+        }
+
+        try
+        {
+            cargandoRecibos = true;
+            var response = await Http.GetAsync($"api/recibo/cliente/{dniClienteRecibos.Trim()}?ordenarPorFecha=true&descendente={ordenRecibosDescendente}");
+            if (response.IsSuccessStatusCode)
+            {
+                recibos = await response.Content.ReadFromJsonAsync<List<ReciboResponse>>() ?? new();
+            }
+            else
+            {
+                recibos = new();
+                MostrarError($"No se encontraron recibos para el cliente {dniClienteRecibos}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error de búsqueda: {ex.Message}");
+        }
+        finally
+        {
+            cargandoRecibos = false;
+        }
+    }
+
+    private async Task GuardarRecibo()
+    {
+        try
+        {
+            isProcessing = true;
+            LimpiarMensaje();
+
+            if (!ValidarFormularioRecibo()) return;
+
+            // Asignar fecha de emisión
+            if (DateTime.TryParse(fechaEmisionInput, out var fechaEmision))
+            {
+                reciboForm.FechaEmision = fechaEmision;
+            }
+            else
+            {
+                reciboForm.FechaEmision = DateTime.Now;
+            }
+
+            HttpResponseMessage response;
+            if (editandoRecibo)
+            {
+                var updateRequest = new ReciboUpdateRequest
+                {
+                    Importe = reciboForm.Importe,
+                    FechaEmision = reciboForm.FechaEmision
+                };
+                response = await Http.PutAsJsonAsync($"api/recibo/{numeroReciboOriginal}", updateRequest);
+            }
+            else
+            {
+                response = await Http.PostAsJsonAsync("api/recibo", reciboForm);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                MostrarExito(editandoRecibo ? "Recibo actualizado correctamente" : "Recibo creado correctamente");
+                LimpiarFormularioRecibo();
+                await CargarRecibos();
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                MostrarError($"Error: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void EditarRecibo(ReciboResponse recibo)
+    {
+        editandoRecibo = true;
+        numeroReciboOriginal = recibo.NumeroRecibo;
+        reciboForm.NumeroRecibo = recibo.NumeroRecibo;
+        reciboForm.DniCliente = recibo.DniCliente;
+        reciboForm.Importe = recibo.Importe;
+        fechaEmisionInput = recibo.FechaEmision.ToString("yyyy-MM-ddTHH:mm");
+        activeTab = "recibos";
+        LimpiarMensaje();
+    }
+
+    private async Task EliminarRecibo(string numeroRecibo)
+    {
+        if (!await ConfirmarAccion($"¿Estás seguro de eliminar el recibo {numeroRecibo}?")) return;
+
+        try
+        {
+            isProcessing = true;
+            var response = await Http.DeleteAsync($"api/recibo/{numeroRecibo}");
+            if (response.IsSuccessStatusCode)
+            {
+                MostrarExito("Recibo eliminado correctamente");
+                await CargarRecibos();
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                MostrarError($"Error: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    // === MÉTODOS AUXILIARES ===
+
+    private bool ValidarFormularioCliente()
+    {
+        if (string.IsNullOrWhiteSpace(clienteForm.Dni))
+        {
+            MostrarError("El DNI es obligatorio");
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(clienteForm.Nombre))
+        {
+            MostrarError("El nombre es obligatorio");
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(clienteForm.Apellidos))
+        {
+            MostrarError("Los apellidos son obligatorios");
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(clienteForm.TipoCliente))
+        {
+            MostrarError("El tipo de cliente es obligatorio");
+            return false;
+        }
+        if (clienteForm.TipoCliente == "REGISTRADO" && (!clienteForm.CuotaMaxima.HasValue || clienteForm.CuotaMaxima <= 0))
+        {
+            MostrarError("Los clientes REGISTRADO deben tener una cuota máxima válida");
+            return false;
+        }
+        return true;
+    }
+
+    private bool ValidarFormularioRecibo()
+    {
+        if (string.IsNullOrWhiteSpace(reciboForm.NumeroRecibo))
+        {
+            MostrarError("El número de recibo es obligatorio");
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(reciboForm.DniCliente))
+        {
+            MostrarError("El DNI del cliente es obligatorio");
+            return false;
+        }
+        if (reciboForm.Importe <= 0)
+        {
+            MostrarError("El importe debe ser mayor que cero");
+            return false;
+        }
+        return true;
+    }
+
+    private void LimpiarFormularioCliente()
+    {
+        clienteForm = new ClienteRequest();
+        editandoCliente = false;
+        dniClienteOriginal = "";
+    }
+
+    private void LimpiarFormularioRecibo()
+    {
+        reciboForm = new ReciboRequest();
+        fechaEmisionInput = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+        editandoRecibo = false;
+        numeroReciboOriginal = "";
+    }
+
+    private void CancelarEdicion()
+    {
+        LimpiarFormularioCliente();
+        LimpiarMensaje();
+    }
+
+    private void CancelarEdicionRecibo()
+    {
+        LimpiarFormularioRecibo();
+        LimpiarMensaje();
+    }
+
+    private void MostrarError(string mensaje)
+    {
+        this.mensaje = mensaje;
+        this.esError = true;
+    }
+
+    private void MostrarExito(string mensaje)
+    {
+        this.mensaje = mensaje;
+        this.esError = false;
+    }
+
+    private void LimpiarMensaje()
+    {
+        mensaje = "";
+    }
+
+    private async Task OnKeyPressBuscar(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await BuscarClientePorDni();
+        }
+    }
+
+    private async Task<bool> ConfirmarAccion(string mensaje)
+    {
+        // En una aplicación real, usarías un modal de confirmación
+        // Por simplicidad, asumimos confirmación
+        return true;
+    }
+
+    // Modelos DTO para el frontend
+    public class ClienteRequest
+    {
+        public string Dni { get; set; } = "";
+        public string Nombre { get; set; } = "";
+        public string Apellidos { get; set; } = "";
+        public string TipoCliente { get; set; } = "";
+        public decimal? CuotaMaxima { get; set; }
+    }
+
+    public class ClienteUpdateRequest
+    {
+        public string Nombre { get; set; } = "";
+        public string Apellidos { get; set; } = "";
+        public string TipoCliente { get; set; } = "";
+        public decimal? CuotaMaxima { get; set; }
+    }
+
+    public class ClienteResponse
+    {
+        public string Dni { get; set; } = "";
+        public string Nombre { get; set; } = "";
+        public string Apellidos { get; set; } = "";
+        public string TipoCliente { get; set; } = "";
+        public decimal? CuotaMaxima { get; set; }
+        public DateTime FechaAlta { get; set; }
+        public int TotalRecibos { get; set; }
+    }
+
+    public class ReciboRequest
+    {
+        public string NumeroRecibo { get; set; } = "";
+        public string DniCliente { get; set; } = "";
+        public decimal Importe { get; set; }
+        public DateTime? FechaEmision { get; set; }
+    }
+
+    public class ReciboUpdateRequest
+    {
+        public decimal Importe { get; set; }
+        public DateTime? FechaEmision { get; set; }
+    }
+
+    public class ReciboResponse
+    {
+        public string NumeroRecibo { get; set; } = "";
+        public string DniCliente { get; set; } = "";
+        public string NombreCliente { get; set; } = "";
+        public decimal Importe { get; set; }
+        public DateTime FechaEmision { get; set; }
+    }
+}

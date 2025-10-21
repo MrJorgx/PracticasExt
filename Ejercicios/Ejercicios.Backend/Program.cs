@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Ejercicios.Backend.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,13 @@ builder.Services.AddOpenApi();
 
 // Agregar soporte para controladores
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Configurar PostgreSQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 // Configurar CORS para permitir solicitudes desde el frontend Blazor
 builder.Services.AddCors(options =>
@@ -23,14 +33,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Habilitar CORS
-app.UseCors("AllowBlazorApp");
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+// Habilitar CORS
+app.UseCors("AllowBlazorApp");
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
