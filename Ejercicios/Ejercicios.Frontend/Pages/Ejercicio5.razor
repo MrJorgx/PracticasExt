@@ -1,0 +1,454 @@
+@page "/ejercicio5"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 5 - Implementación de clases</PageTitle>
+
+<h1>Sistema de Procesamiento de Items</h1>
+<p>Implementación de la clase ItemSeparator para filtrar cadenas con formato específico.</p>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle"></i> Formato requerido:</h5>
+                <p><strong>ItemName$$##ItemPrice$$##ItemQuantity</strong></p>
+                <p><strong>Ejemplo:</strong> <code>Bread$$##12.5$$##10</code></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-4" id="itemTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "single" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("single"))" type="button">
+                <i class="bi bi-box"></i> Procesar Item Individual
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "multiple" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("multiple"))" type="button">
+                <i class="bi bi-boxes"></i> Procesar Múltiples Items
+            </button>
+        </li>
+    </ul>
+
+    <!-- Contenido de pestañas -->
+    @if (activeTab == "single")
+    {
+        <!-- Pestaña de item individual -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-box"></i> Procesar Item Individual</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label for="rawInput" class="form-label">Cadena de entrada:</label>
+                                <input type="text" class="form-control" id="rawInput" 
+                                       @bind="rawInputSingle" placeholder="Bread$$##12.5$$##10" />
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" @onclick="ProcesarItemIndividual" 
+                                        disabled="@isProcessingSingle">
+                                    @if (isProcessingSingle)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    }
+                                    <i class="bi bi-gear"></i> Procesar
+                                </button>
+                                <button class="btn btn-secondary" @onclick="LimpiarIndividual">
+                                    <i class="bi bi-trash"></i> Limpiar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplo">
+                                    <i class="bi bi-lightbulb"></i> Usar Ejemplo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultado individual -->
+        @if (!string.IsNullOrEmpty(mensajeError))
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i> @mensajeError
+            </div>
+        }
+
+        @if (mostrarResultadoIndividual && resultadoIndividual != null && resultadoIndividual.Success)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5><i class="bi bi-check-circle"></i> Resultado del Procesamiento</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Datos Extraídos:</h6>
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Nombre del Item:</strong></td>
+                                                <td>@resultadoIndividual.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Precio:</strong></td>
+                                                <td>$@resultadoIndividual.Price.ToString("F2")</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Cantidad:</strong></td>
+                                                <td>@resultadoIndividual.Quantity</td>
+                                            </tr>
+                                            <tr class="table-info">
+                                                <td><strong>Valor Total:</strong></td>
+                                                <td><strong>$@((resultadoIndividual.Price * resultadoIndividual.Quantity).ToString("F2"))</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Salida Formateada:</h6>
+                                    <div class="border p-3 bg-light">
+                                        <pre>@resultadoIndividual.FormattedOutput</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    @if (activeTab == "multiple")
+    {
+        <!-- Pestaña de múltiples items -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-boxes"></i> Procesar Múltiples Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="rawInputsMultiple" class="form-label">
+                                    Cadenas de entrada (una por línea):
+                                </label>
+                                <textarea class="form-control" id="rawInputsMultiple" rows="6" 
+                                          @bind="rawInputsMultiple" 
+                                          placeholder="Bread$$##12.5$$##10&#10;Milk$$##3.25$$##5&#10;Eggs$$##4.99$$##12"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button class="btn btn-primary me-2" @onclick="ProcesarMultiplesItems" 
+                                        disabled="@isProcessingMultiple">
+                                    @if (isProcessingMultiple)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    }
+                                    <i class="bi bi-gear"></i> Procesar Todos
+                                </button>
+                                <button class="btn btn-secondary me-2" @onclick="LimpiarMultiple">
+                                    <i class="bi bi-trash"></i> Limpiar
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplosMultiples">
+                                    <i class="bi bi-lightbulb"></i> Usar Ejemplos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultado múltiple -->
+        @if (mostrarResultadoMultiple && resultadoMultiple != null)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5><i class="bi bi-list-check"></i> Resultados del Procesamiento Múltiple</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Resumen -->
+                            <div class="alert alert-success">
+                                <h6><i class="bi bi-info-circle"></i> Resumen:</h6>
+                                <p>@resultadoMultiple.Summary</p>
+                            </div>
+
+                            <!-- Lista de items procesados -->
+                            <h6>Items Procesados:</h6>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Estado</th>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Valor Total</th>
+                                            <th>Error</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < resultadoMultiple.Items.Count; i++)
+                                        {
+                                            var item = resultadoMultiple.Items[i];
+                                            <tr class="@(item.Success ? "" : "table-danger")">
+                                                <td>@(i + 1)</td>
+                                                <td>
+                                                    @if (item.Success)
+                                                    {
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-check-circle"></i> Éxito
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-danger">
+                                                            <i class="bi bi-x-circle"></i> Error
+                                                        </span>
+                                                    }
+                                                </td>
+                                                <td>@(item.Success ? item.Name : "-")</td>
+                                                <td>@(item.Success ? "$" + item.Price.ToString("F2") : "-")</td>
+                                                <td>@(item.Success ? item.Quantity.ToString() : "-")</td>
+                                                <td>@(item.Success ? "$" + (item.Price * item.Quantity).ToString("F2") : "-")</td>
+                                                <td class="text-danger">@(item.Success ? "" : item.ErrorMessage)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    // Variables de estado
+    private string activeTab = "single";
+    private bool isProcessingSingle = false;
+    private bool isProcessingMultiple = false;
+    private string mensajeError = "";
+
+    // Variables para procesamiento individual
+    private string rawInputSingle = "";
+    private bool mostrarResultadoIndividual = false;
+    private ItemResponse? resultadoIndividual;
+
+    // Variables para procesamiento múltiple
+    private string rawInputsMultiple = "";
+    private bool mostrarResultadoMultiple = false;
+    private MultipleItemsResponse? resultadoMultiple;
+
+    private void ChangeTab(string tab)
+    {
+        activeTab = tab;
+        LimpiarMensajes();
+    }
+
+    // === MÉTODOS PARA ITEM INDIVIDUAL ===
+
+    private async Task ProcesarItemIndividual()
+    {
+        try
+        {
+            isProcessingSingle = true;
+            LimpiarMensajes();
+
+            if (string.IsNullOrWhiteSpace(rawInputSingle))
+            {
+                mensajeError = "Por favor, introduce una cadena de entrada válida.";
+                return;
+            }
+
+            var request = new ItemRequest
+            {
+                RawInput = rawInputSingle
+            };
+
+            var response = await Http.PostAsJsonAsync("api/item/procesar", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultadoIndividual = await response.Content.ReadFromJsonAsync<ItemResponse>();
+                if (resultadoIndividual != null && !resultadoIndividual.Success)
+                {
+                    mensajeError = resultadoIndividual.ErrorMessage;
+                }
+                else
+                {
+                    mostrarResultadoIndividual = true;
+                }
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadFromJsonAsync<ItemResponse>();
+                mensajeError = errorContent?.ErrorMessage ?? "Error al procesar el item";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isProcessingSingle = false;
+        }
+    }
+
+    private async Task CargarEjemplo()
+    {
+        try
+        {
+            var response = await Http.GetAsync("api/item/ejemplo");
+            if (response.IsSuccessStatusCode)
+            {
+                rawInputSingle = await response.Content.ReadAsStringAsync();
+                rawInputSingle = rawInputSingle.Trim('"'); // Remover comillas si las hay
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar ejemplo: {ex.Message}";
+        }
+    }
+
+    private void LimpiarIndividual()
+    {
+        rawInputSingle = "";
+        mostrarResultadoIndividual = false;
+        resultadoIndividual = null;
+        LimpiarMensajes();
+    }
+
+    // === MÉTODOS PARA MÚLTIPLES ITEMS ===
+
+    private async Task ProcesarMultiplesItems()
+    {
+        try
+        {
+            isProcessingMultiple = true;
+            LimpiarMensajes();
+
+            if (string.IsNullOrWhiteSpace(rawInputsMultiple))
+            {
+                mensajeError = "Por favor, introduce al menos una cadena de entrada válida.";
+                return;
+            }
+
+            // Separar las líneas y filtrar las vacías
+            var inputs = rawInputsMultiple
+                .Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => line.Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .ToList();
+
+            if (!inputs.Any())
+            {
+                mensajeError = "No se encontraron cadenas de entrada válidas.";
+                return;
+            }
+
+            var request = new MultipleItemsRequest
+            {
+                RawInputs = inputs
+            };
+
+            var response = await Http.PostAsJsonAsync("api/item/procesar-multiples", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultadoMultiple = await response.Content.ReadFromJsonAsync<MultipleItemsResponse>();
+                mostrarResultadoMultiple = true;
+            }
+            else
+            {
+                mensajeError = "Error al procesar los items";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isProcessingMultiple = false;
+        }
+    }
+
+    private void CargarEjemplosMultiples()
+    {
+        rawInputsMultiple = @"Bread$$##12.5$$##10
+Milk$$##3.25$$##5
+Eggs$$##4.99$$##12
+Cheese$$##8.75$$##3
+Rice$$##2.99$$##20";
+    }
+
+    private void LimpiarMultiple()
+    {
+        rawInputsMultiple = "";
+        mostrarResultadoMultiple = false;
+        resultadoMultiple = null;
+        LimpiarMensajes();
+    }
+
+    // === MÉTODOS AUXILIARES ===
+
+    private void LimpiarMensajes()
+    {
+        mensajeError = "";
+    }
+
+    // === MODELOS PARA EL FRONTEND ===
+
+    public class ItemRequest
+    {
+        public string RawInput { get; set; } = "";
+    }
+
+    public class ItemResponse
+    {
+        public string Name { get; set; } = "";
+        public double Price { get; set; }
+        public int Quantity { get; set; }
+        public string FormattedOutput { get; set; } = "";
+        public bool Success { get; set; }
+        public string ErrorMessage { get; set; } = "";
+    }
+
+    public class MultipleItemsRequest
+    {
+        public List<string> RawInputs { get; set; } = new List<string>();
+    }
+
+    public class MultipleItemsResponse
+    {
+        public List<ItemResponse> Items { get; set; } = new List<ItemResponse>();
+        public int TotalItems { get; set; }
+        public double TotalValue { get; set; }
+        public string Summary { get; set; } = "";
+    }
+}

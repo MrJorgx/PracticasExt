@@ -3,6 +3,8 @@
 GET {{Ejercicios.Backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
+# EJERCICIO 1 - Calculadora
+
 POST {{Ejercicios.Backend_HostAddress}}/api/calculadora/calcular
 Content-Type: application/json
 
@@ -14,6 +16,8 @@ Content-Type: application/json
 
 ###
 
+# EJERCICIO 2 - Procesar textos
+
 POST {{Ejercicios.Backend_HostAddress}}/api/texto/procesar
 Content-Type: application/json
 
@@ -22,6 +26,8 @@ Content-Type: application/json
 }
 
 ###
+
+# EJERCICIO 3 - Calcular fechas
 
 POST {{Ejercicios.Backend_HostAddress}}/api/fecha/procesar
 Content-Type: application/json
@@ -33,6 +39,7 @@ Content-Type: application/json
 
 ###
 
+# EJERCICIO 4 - Bases de datos de clientes y recibos
 
 # CRUD Clientes
 POST {{Ejercicios.Backend_HostAddress}}/api/cliente
@@ -45,3 +52,63 @@ Content-Type: application/json
   "tipoCliente": "REGISTRADO",
   "cuotaMaxima": 1000.50
 }
+
+###
+
+# EJERCICIO 5 - ItemSeparator
+# Procesar un solo item
+POST {{Ejercicios.Backend_HostAddress}}/api/item/procesar
+Content-Type: application/json
+
+{
+  "rawInput": "Bread$$##12.5$$##10"
+}
+
+###
+
+# Procesar múltiples items
+POST {{Ejercicios.Backend_HostAddress}}/api/item/procesar-multiples
+Content-Type: application/json
+
+{
+  "rawInputs": [
+    "Bread$$##12.5$$##10",
+    "Milk$$##3.25$$##5",
+    "Eggs$$##4.99$$##12",
+    "InvalidFormat##Wrong"
+  ]
+}
+
+###
+
+# Obtener ejemplo
+GET {{Ejercicios.Backend_HostAddress}}/api/item/ejemplo
+Accept: application/json
+
+###
+
+# EJERCICIO 6 - Generación aleatoria de formas geométricas
+
+# Generar formas aleatorias
+POST {{Ejercicios.Backend_HostAddress}}/api/geometria/generar
+Content-Type: application/json
+
+{
+  "numeroCirculos": 3,
+  "numeroTriangulos": 2,
+  "numeroCuadrados": 4
+}
+
+###
+
+# Generar muchas formas
+POST {{Ejercicios.Backend_HostAddress}}/api/geometria/generar
+Content-Type: application/json
+
+{
+  "numeroCirculos": 10,
+  "numeroTriangulos": 8,
+  "numeroCuadrados": 12
+}
+
+###
