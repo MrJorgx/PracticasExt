@@ -1,0 +1,430 @@
+@page "/ejercicio6"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 6 - Generación aleatoria</PageTitle>
+
+<h1>Generador Aleatorio de Formas Geométricas</h1>
+<p>Genera círculos, triángulos y cuadrados con propiedades aleatorias y visualiza sus datos.</p>
+
+<div class="container">
+    <!-- Formulario de entrada -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-gear"></i> Configurar Generación</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Número de Círculos:</label>
+                            <input type="number" min="0" max="50" class="form-control" @bind="numeroCirculos" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Número de Cuadrados:</label>
+                            <input type="number" min="0" max="50" class="form-control" @bind="numeroCuadrados" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Número de Triángulos:</label>
+                            <input type="number" min="0" max="50" class="form-control" @bind="numeroTriangulos" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn btn-primary me-2" @onclick="GenerarFormas" disabled="@isProcessing">
+                                @if (isProcessing)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                }
+                                <i class="bi bi-magic"></i> Generar Formas
+                            </button>
+                            <button class="btn btn-secondary me-2" @onclick="LimpiarResultados">
+                                <i class="bi bi-trash"></i> Limpiar
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplo">
+                                <i class="bi bi-lightbulb"></i> Usar Ejemplo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes de error -->
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> @mensajeError
+        </div>
+    }
+
+    <!-- Resultados -->
+    @if (mostrarResultados && resultado != null)
+    {
+        <!-- Resumen -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-info-circle"></i> Resumen de Generación:</h6>
+                    <p>@resultado.Resumen</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas -->
+        <ul class="nav nav-tabs mb-4" id="formasTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "todas" ? "active" : "")" 
+                        @onclick="@(() => ChangeTab("todas"))" type="button">
+                    <i class="bi bi-list"></i> Todas las Formas (@resultado.TotalFormas)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "agrupadas" ? "active" : "")" 
+                        @onclick="@(() => ChangeTab("agrupadas"))" type="button">
+                    <i class="bi bi-collection"></i> Agrupadas por Tipo
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(activeTab == "visual" ? "active" : "")" 
+                        @onclick="@(() => ChangeTab("visual"))" type="button">
+                    <i class="bi bi-eye"></i> Vista Visual
+                </button>
+            </li>
+        </ul>
+
+        <!-- Contenido de pestañas -->
+        @if (activeTab == "todas")
+        {
+            <!-- Todas las formas en orden de creación -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-list"></i> Todas las Formas (Orden de Creación)</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (resultado.TodasLasFormas.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Orden</th>
+                                                <th>Tipo</th>
+                                                <th>Propiedades</th>
+                                                <th>Área</th>
+                                                <th>Color</th>
+                                                <th>Centro (X, Y)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var forma in resultado.TodasLasFormas)
+                                            {
+                                                <tr>
+                                                    <td><strong>@forma.OrdenCreacion</strong></td>
+                                                    <td>
+                                                        <span class="badge bg-primary">@forma.Tipo</span>
+                                                    </td>
+                                                    <td>@forma.Propiedades</td>
+                                                    <td>@forma.Area.ToString("F2")</td>
+                                                    <td>
+                                                        <span class="badge" style="background-color: @forma.ColorHex; color: white;">
+                                                            @forma.Color
+                                                        </span>
+                                                    </td>
+                                                    <td>(@forma.CentroX, @forma.CentroY)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No hay formas generadas.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (activeTab == "agrupadas")
+        {
+            <!-- Formas agrupadas por tipo -->
+            <div class="row">
+                <!-- Círculos -->
+                @if (resultado.Circulos.Any())
+                {
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5><i class="bi bi-circle"></i> Círculos (@resultado.Circulos.Count)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach (var circulo in resultado.Circulos)
+                                    {
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card border-info">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Círculo #@circulo.Id</h6>
+                                                    <p class="card-text">@circulo.Propiedades</p>
+                                                    <p><strong>Área:</strong> @circulo.Area.ToString("F2")</p>
+                                                    <p><strong>Centro:</strong> (@circulo.CentroX, @circulo.CentroY)</p>
+                                                    <span class="badge" style="background-color: @circulo.ColorHex; color: white; font-size: 1em;">
+                                                        @circulo.Color
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Cuadrados -->
+                @if (resultado.Cuadrados.Any())
+                {
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5><i class="bi bi-square"></i> Cuadrados (@resultado.Cuadrados.Count)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach (var cuadrado in resultado.Cuadrados)
+                                    {
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card border-success">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Cuadrado #@cuadrado.Id</h6>
+                                                    <p class="card-text">@cuadrado.Propiedades</p>
+                                                    <p><strong>Área:</strong> @cuadrado.Area.ToString("F2")</p>
+                                                    <p><strong>Centro:</strong> (@cuadrado.CentroX, @cuadrado.CentroY)</p>
+                                                    <span class="badge" style="background-color: @cuadrado.ColorHex; color: white; font-size: 1em;">
+                                                        @cuadrado.Color
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Triángulos -->
+                @if (resultado.Triangulos.Any())
+                {
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h5><i class="bi bi-triangle"></i> Triángulos (@resultado.Triangulos.Count)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach (var triangulo in resultado.Triangulos)
+                                    {
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card border-warning">
+                                                <div class="card-body text-center">
+                                                    <h6 class="card-title">Triángulo #@triangulo.Id</h6>
+                                                    <p class="card-text">@triangulo.Propiedades</p>
+                                                    <p><strong>Área:</strong> @triangulo.Area.ToString("F2")</p>
+                                                    <p><strong>Centro:</strong> (@triangulo.CentroX, @triangulo.CentroY)</p>
+                                                    <span class="badge" style="background-color: @triangulo.ColorHex; color: white; font-size: 1em;">
+                                                        @triangulo.Color
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (activeTab == "visual")
+        {
+            <!-- Vista visual -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-eye"></i> Representación Visual</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="position-relative border" style="height: 400px; background-color: #f8f9fa;">
+                                @foreach (var forma in resultado.TodasLasFormas)
+                                {
+                                    <div class="position-absolute" 
+                                         style="left: @(forma.CentroX * 0.8)px; top: @(forma.CentroY * 0.6)px;">
+                                        @if (forma.Tipo == "Círculo")
+                                        {
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                                                 style="width: 40px; height: 40px; background-color: @forma.ColorHex;"
+                                                 title="@forma.Tipo #@forma.Id - @forma.Propiedades - Área: @forma.Area.ToString("F2")">
+                                                @forma.Id
+                                            </div>
+                                        }
+                                        else if (forma.Tipo == "Cuadrado")
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center text-white fw-bold"
+                                                 style="width: 40px; height: 40px; background-color: @forma.ColorHex;"
+                                                 title="@forma.Tipo #@forma.Id - @forma.Propiedades - Área: @forma.Area.ToString("F2")">
+                                                @forma.Id
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center text-white fw-bold"
+                                                 style="width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid @forma.ColorHex; position: relative;"
+                                                 title="@forma.Tipo #@forma.Id - @forma.Propiedades - Área: @forma.Area.ToString("F2")">
+                                                <span style="position: absolute; top: 10px; font-size: 12px;">@forma.Id</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <small class="text-muted mt-2 d-block">
+                                Pasa el cursor sobre las formas para ver sus detalles. 
+                                Círculos = ●, Cuadrados = ■, Triángulos = ▲
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    // Variables de estado
+    private bool isProcessing = false;
+    private bool mostrarResultados = false;
+    private string mensajeError = "";
+    private string activeTab = "todas";
+
+    // Variables de entrada
+    private int numeroCirculos = 3;
+    private int numeroCuadrados = 2;
+    private int numeroTriangulos = 4;
+
+    // Resultado
+    private FormasGeneradasResponse? resultado;
+
+    private void ChangeTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private async Task GenerarFormas()
+    {
+        try
+        {
+            isProcessing = true;
+            mensajeError = "";
+            mostrarResultados = false;
+
+            if (numeroCirculos + numeroCuadrados + numeroTriangulos == 0)
+            {
+                mensajeError = "Debe generar al menos una forma geométrica.";
+                return;
+            }
+
+            if (numeroCirculos < 0 || numeroCuadrados < 0 || numeroTriangulos < 0)
+            {
+                mensajeError = "Los números de formas no pueden ser negativos.";
+                return;
+            }
+
+            var request = new GenerarFormasRequest
+            {
+                NumeroCirculos = numeroCirculos,
+                NumeroCuadrados = numeroCuadrados,
+                NumeroTriangulos = numeroTriangulos
+            };
+
+            var response = await Http.PostAsJsonAsync("api/geometria/generar", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = await response.Content.ReadFromJsonAsync<FormasGeneradasResponse>();
+                mostrarResultados = true;
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                mensajeError = $"Error: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void CargarEjemplo()
+    {
+        numeroCirculos = 5;
+        numeroCuadrados = 3;
+        numeroTriangulos = 4;
+    }
+
+    private void LimpiarResultados()
+    {
+        numeroCirculos = 0;
+        numeroCuadrados = 0;
+        numeroTriangulos = 0;
+        mostrarResultados = false;
+        mensajeError = "";
+        resultado = null;
+        activeTab = "todas";
+    }
+
+    // Modelos para el frontend
+    public class GenerarFormasRequest
+    {
+        public int NumeroCirculos { get; set; }
+        public int NumeroTriangulos { get; set; }
+        public int NumeroCuadrados { get; set; }
+    }
+
+    public class FormaGeometricaResponse
+    {
+        public int Id { get; set; }
+        public string Tipo { get; set; } = "";
+        public string Propiedades { get; set; } = "";
+        public double Area { get; set; }
+        public string Color { get; set; } = "";
+        public string ColorHex { get; set; } = "";
+        public int CentroX { get; set; }
+        public int CentroY { get; set; }
+        public int OrdenCreacion { get; set; }
+    }
+
+    public class FormasGeneradasResponse
+    {
+        public List<FormaGeometricaResponse> TodasLasFormas { get; set; } = new();
+        public List<FormaGeometricaResponse> Circulos { get; set; } = new();
+        public List<FormaGeometricaResponse> Cuadrados { get; set; } = new();
+        public List<FormaGeometricaResponse> Triangulos { get; set; } = new();
+        public int TotalFormas { get; set; }
+        public double AreaTotal { get; set; }
+        public string Resumen { get; set; } = "";
+    }
+}
