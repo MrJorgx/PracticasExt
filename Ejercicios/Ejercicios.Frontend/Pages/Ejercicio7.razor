@@ -1,0 +1,273 @@
+@page "/ejercicio7"
+@inject HttpClient Http
+
+<PageTitle>Ejercicio 7 - Números de Kaprekar</PageTitle>
+
+<h1>Curiosidad matemática: Números de Kaprekar</h1>
+<p>Verifica si un número es un número de Kaprekar y analiza diferentes métodos de cálculo.</p>
+
+<div class="container">
+    <!-- Información sobre números de Kaprekar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle"></i> ¿Qué es un número de Kaprekar?</h5>
+                <p><strong>Definición:</strong> Un número de Kaprekar es un número que, cuando se eleva al cuadrado y se divide en dos partes, la suma de estas partes es igual al número original.</p>
+                <p><strong>Ejemplos:</strong></p>
+                <ul>
+                    <li><strong>9:</strong> 9² = 81 → 8 + 1 = 9</li>
+                    <li><strong>45:</strong> 45² = 2025 → 20 + 25 = 45</li>
+                    <li><strong>297:</strong> 297² = 88209 → 88 + 209 = 297</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de entrada -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-calculator"></i> Verificar número de Kaprekar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Número a verificar:</label>
+                            <input type="number" min="1" max="1000000" class="form-control" @bind="numero" placeholder="Ej: 297" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Método de cálculo:</label>
+                            <select class="form-control" @bind="metodoCalculo">
+                                <option value="OPTIMIZADO">Optimizado</option>
+                                <option value="FUERZA_BRUTA">Fuerza bruta</option>
+                                <option value="MATEMATICO">Matemático</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary me-2" @onclick="VerificarNumero" disabled="@isProcessing">
+                                @if (isProcessing)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                }
+                                <i class="bi bi-search"></i> Verificar
+                            </button>
+                            <button class="btn btn-secondary me-2" @onclick="Limpiar">
+                                <i class="bi bi-trash"></i> Limpiar
+                            </button>
+                            <button class="btn btn-outline-info me-2" @onclick="CargarEjemplo">
+                                <i class="bi bi-lightbulb"></i> Ejemplo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <p class="text-muted mb-0">
+                                <strong>Métodos disponibles:</strong>
+                                <span class="badge bg-primary ms-1">Optimizado</span> = Eficiente |
+                                <span class="badge bg-warning ms-1">Fuerza bruta</span> = Todas las combinaciones |
+                                <span class="badge bg-success ms-1">Matemático</span> = Propiedades matemáticas
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes de error -->
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> @mensajeError
+        </div>
+    }
+
+    <!-- Resultado -->
+    @if (mostrarResultado && resultado != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header @(resultado.EsKaprekar ? "bg-success" : "bg-danger") text-white">
+                        <h5>
+                            <i class="bi bi-@(resultado.EsKaprekar ? "check-circle" : "x-circle")"></i> 
+                            Resultado: @(resultado.EsKaprekar ? "¡Es un número de Kaprekar!" : "No es un número de Kaprekar")
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Información del cálculo:</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Número:</strong></td>
+                                            <td>@resultado.Numero</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Cuadrado:</strong></td>
+                                            <td>@resultado.Cuadrado</td>
+                                        </tr>
+                                        @if (resultado.EsKaprekar)
+                                        {
+                                            <tr class="table-success">
+                                                <td><strong>Descomposición:</strong></td>
+                                                <td>@resultado.Descomposicion</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td><strong>Método usado:</strong></td>
+                                            <td>
+                                                <span class="badge bg-@(resultado.MetodoUtilizado == "OPTIMIZADO" ? "primary" : resultado.MetodoUtilizado == "FUERZA_BRUTA" ? "warning" : "success")">
+                                                    @resultado.MetodoUtilizado
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Operaciones:</strong></td>
+                                            <td>@resultado.NumeroOperaciones</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Explicación:</h6>
+                                <div class="border p-3 bg-light">
+                                    <p>@resultado.Explicacion</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (resultado.PasosCalculo.Any())
+                        {
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h6>Pasos del cálculo:</h6>
+                                    <div class="border p-3 bg-light" style="max-height: 300px; overflow-y: auto;">
+                                        @foreach (var paso in resultado.PasosCalculo)
+                                        {
+                                            <div class="mb-1">• @paso</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Variables de estado
+    private bool isProcessing = false;
+    private bool mostrarResultado = false;
+    private string mensajeError = "";
+
+    // Variables de entrada
+    private int numero = 297;
+    private string metodoCalculo = "OPTIMIZADO";
+
+    // Resultado
+    private KaprekarResponse? resultado;
+
+    private async Task VerificarNumero()
+    {
+        try
+        {
+            isProcessing = true;
+            mensajeError = "";
+            mostrarResultado = false;
+
+            if (numero < 1)
+            {
+                mensajeError = "El número debe ser mayor que 0.";
+                return;
+            }
+
+            if (numero > 1000000)
+            {
+                mensajeError = "El número debe ser menor que 1,000,000.";
+                return;
+            }
+
+            var request = new KaprekarRequest
+            {
+                Numero = numero,
+                MetodoCalculo = metodoCalculo
+            };
+
+            var response = await Http.PostAsJsonAsync("api/kaprekar/verificar", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                resultado = await response.Content.ReadFromJsonAsync<KaprekarResponse>();
+                mostrarResultado = true;
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                mensajeError = $"Error: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error de conexión: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void Limpiar()
+    {
+        numero = 0;
+        mostrarResultado = false;
+        resultado = null;
+        mensajeError = "";
+    }
+
+    private async Task CargarEjemplo()
+    {
+        try
+        {
+            var response = await Http.GetAsync("api/kaprekar/ejemplos");
+            if (response.IsSuccessStatusCode)
+            {
+                var ejemplos = await response.Content.ReadFromJsonAsync<List<int>>();
+                if (ejemplos != null && ejemplos.Any())
+                {
+                    var random = new Random();
+                    numero = ejemplos[random.Next(ejemplos.Count)];
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar ejemplo: {ex.Message}";
+        }
+    }
+
+    // Modelos para el frontend
+    public class KaprekarRequest
+    {
+        public int Numero { get; set; }
+        public string MetodoCalculo { get; set; } = "OPTIMIZADO";
+    }
+
+    public class KaprekarResponse
+    {
+        public int Numero { get; set; }
+        public bool EsKaprekar { get; set; }
+        public string MetodoUtilizado { get; set; } = "";
+        public int NumeroOperaciones { get; set; }
+        public long Cuadrado { get; set; }
+        public string Descomposicion { get; set; } = "";
+        public string Explicacion { get; set; } = "";
+        public List<string> PasosCalculo { get; set; } = new List<string>();
+    }
+}
