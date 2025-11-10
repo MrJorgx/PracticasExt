@@ -1,9 +1,9 @@
 @page "/ejercicio4"
 @inject HttpClient Http
 
-<PageTitle>Ejercicio 4 - Gestión de Agenda</PageTitle>
+<PageTitle>Ejercicio 4 - Gestión de clientes y recibos</PageTitle>
 
-<h1>Sistema de Gestión de Agenda</h1>
+<h1>Sistema de gestión de clientes y recibos</h1>
 <p>Gestión completa de clientes y sus recibos con base de datos PostgreSQL.</p>
 
 <div class="container">
@@ -12,13 +12,13 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link @(activeTab == "clientes" ? "active" : "")" 
                     @onclick="@(() => ChangeTab("clientes"))" type="button">
-                <i class="bi bi-people"></i> Gestión de Clientes
+                <i class="bi bi-people"></i> Gestión de clientes
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link @(activeTab == "recibos" ? "active" : "")" 
                     @onclick="@(() => ChangeTab("recibos"))" type="button">
-                <i class="bi bi-receipt"></i> Gestión de Recibos
+                <i class="bi bi-receipt"></i> Gestión de recibos
             </button>
         </li>
     </ul>
@@ -32,7 +32,7 @@
                 <!-- Formulario para añadir/editar cliente -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5><i class="bi bi-person-plus"></i> @(editandoCliente ? "Editar Cliente" : "Añadir Nuevo Cliente")</h5>
+                        <h5><i class="bi bi-person-plus"></i> @(editandoCliente ? "Editar cliente" : "Añadir nuevo cliente")</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -52,7 +52,7 @@
                                        maxlength="100" placeholder="Apellidos" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Tipo de Cliente:</label>
+                                <label class="form-label">Tipo de cliente:</label>
                                 <select class="form-select" @bind="clienteForm.TipoCliente">
                                     <option value="">Seleccionar...</option>
                                     <option value="REGISTRADO">REGISTRADO</option>
@@ -65,7 +65,7 @@
                         {
                             <div class="row mt-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Cuota Máxima (€):</label>
+                                    <label class="form-label">Cuota máxima (€):</label>
                                     <input type="number" step="0.01" class="form-control" 
                                            @bind="clienteForm.CuotaMaxima" placeholder="1000.00" />
                                 </div>
@@ -95,9 +95,9 @@
                 <!-- Búsqueda y listado de clientes -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5><i class="bi bi-search"></i> Buscar y Listar Clientes</h5>
+                        <h5><i class="bi bi-search"></i> Buscar y listar clientes</h5>
                         <button class="btn btn-outline-primary btn-sm" @onclick="CargarClientes">
-                            <i class="bi bi-arrow-clockwise"></i> Actualizar Lista
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar lista
                         </button>
                     </div>
                     <div class="card-body">
@@ -117,7 +117,7 @@
                                 <label class="form-label">Ordenar por:</label>
                                 <select class="form-select" @bind="ordenarPor" @bind:after="CargarClientes">
                                     <option value="dni">DNI</option>
-                                    <option value="fechaalta">Fecha de Alta</option>
+                                    <option value="fechaalta">Fecha de alta</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -137,10 +137,10 @@
                                     <thead class="table-dark">
                                         <tr>
                                             <th>DNI</th>
-                                            <th>Nombre Completo</th>
+                                            <th>Nombre completo</th>
                                             <th>Tipo</th>
-                                            <th>Cuota Máx.</th>
-                                            <th>Fecha Alta</th>
+                                            <th>Cuota máx.</th>
+                                            <th>Fecha alta</th>
                                             <th>Recibos</th>
                                             <th>Acciones</th>
                                         </tr>
@@ -212,17 +212,17 @@
                 <!-- Formulario para añadir/editar recibo -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5><i class="bi bi-receipt-cutoff"></i> @(editandoRecibo ? "Editar Recibo" : "Añadir Nuevo Recibo")</h5>
+                        <h5><i class="bi bi-receipt-cutoff"></i> @(editandoRecibo ? "Editar recibo" : "Añadir nuevo recibo")</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="form-label">Número de Recibo:</label>
+                                <label class="form-label">Número de recibo:</label>
                                 <input type="text" class="form-control" @bind="reciboForm.NumeroRecibo" 
                                        disabled="@editandoRecibo" maxlength="50" placeholder="REC-Año-001" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">DNI del Cliente:</label>
+                                <label class="form-label">DNI del cliente:</label>
                                 <input type="text" class="form-control" @bind="reciboForm.DniCliente" 
                                        disabled="@editandoRecibo" maxlength="9" placeholder="DNI" />
                             </div>
@@ -232,7 +232,7 @@
                                        placeholder="250.75" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Fecha de Emisión:</label>
+                                <label class="form-label">Fecha de emisión:</label>
                                 <input type="text" class="form-control" @bind="fechaEmisionInput" />
                             </div>
                         </div>
@@ -260,9 +260,9 @@
                 <!-- Búsqueda y listado de recibos -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5><i class="bi bi-list-check"></i> Buscar y Listar Recibos</h5>
+                        <h5><i class="bi bi-list-check"></i> Buscar y listar recibos</h5>
                         <button class="btn btn-outline-primary btn-sm" @onclick="CargarRecibos">
-                            <i class="bi bi-arrow-clockwise"></i> Actualizar Lista
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar lista
                         </button>
                     </div>
                     <div class="card-body">
@@ -281,9 +281,9 @@
                             <div class="col-md-4">
                                 <label class="form-label">Ordenar por:</label>
                                 <select class="form-select" @bind="ordenarRecibosPor" @bind:after="CargarRecibos">
-                                    <option value="fecha">Fecha de Emisión</option>
+                                    <option value="fecha">Fecha de emisión</option>
                                     <option value="cliente">Cliente</option>
-                                    <option value="numero">Número de Recibo</option>
+                                    <option value="numero">Número de recibo</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -306,7 +306,7 @@
                                             <th>Cliente</th>
                                             <th>DNI</th>
                                             <th>Importe</th>
-                                            <th>Fecha Emisión</th>
+                                            <th>Fecha emisión</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>

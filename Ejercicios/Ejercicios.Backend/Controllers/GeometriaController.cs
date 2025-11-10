@@ -132,11 +132,13 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        // Genera un número positivo random
         private double GenerarNumeroPositivo(double min, double max)
         {
             return Math.Round(_random.NextDouble() * (max - min) + min, 2);
         }
 
+        //Genera un color random
         private Color GenerarColorAleatorio()
         {
             var colores = Enum.GetValues<Color>();

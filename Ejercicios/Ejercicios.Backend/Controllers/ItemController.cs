@@ -10,8 +10,10 @@ namespace Ejercicios.Backend.Controllers
         [HttpPost("procesar")]
         public ActionResult<ItemResponse> ProcesarItem([FromBody] ItemRequest request)
         {
+            // Procesamos item individual
             try
             {
+                // Validamos que el texto introducido no es vacío
                 if (request == null || string.IsNullOrWhiteSpace(request.RawInput))
                 {
                     return BadRequest("Se requiere una cadena de entrada válida.");
@@ -58,6 +60,7 @@ namespace Ejercicios.Backend.Controllers
         [HttpPost("procesar-multiples")]
         public ActionResult<MultipleItemsResponse> ProcesarMultiplesItems([FromBody] MultipleItemsRequest request)
         {
+            // Procesar múltiples items
             try
             {
                 if (request == null || request.RawInputs == null || !request.RawInputs.Any())

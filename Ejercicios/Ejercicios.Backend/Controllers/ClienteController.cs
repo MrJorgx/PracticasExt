@@ -42,6 +42,7 @@ namespace Ejercicios.Backend.Controllers
                     return BadRequest("Los clientes REGISTRADO deben tener una cuota máxima");
                 }
 
+                // Validar que clientes SOCIO no tienen cuota
                 if (tipoCliente == TipoCliente.SOCIO && request.CuotaMaxima != null)
                 {
                     return BadRequest("Los clientes SOCIO no deben tener cuota máxima");
@@ -86,6 +87,7 @@ namespace Ejercicios.Backend.Controllers
         [HttpGet("{dni}")]
         public async Task<ActionResult<ClienteResponse>> ObtenerCliente(string dni)
         {
+            // Pedimos el cliente en base al DNI
             try
             {
                 var cliente = await _context.Clientes
@@ -119,6 +121,7 @@ namespace Ejercicios.Backend.Controllers
         [HttpPut("{dni}")]
         public async Task<ActionResult<ClienteResponse>> ActualizarCliente(string dni, [FromBody] ClienteUpdateRequest request)
         {
+            // Actualizar cliente (datos)
             try
             {
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Dni == dni);
@@ -174,6 +177,7 @@ namespace Ejercicios.Backend.Controllers
         [HttpDelete("{dni}")]
         public async Task<IActionResult> EliminarCliente(string dni)
         {
+            // Eliminar cliente
             try
             {
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Dni == dni);

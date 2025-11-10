@@ -35,6 +35,7 @@ namespace Ejercicios.Backend.Controllers
 
                 // 5. Reemplazar "Proconsi" por "Isnocorp"
                 result.TextoReemplazado = request.Texto.Replace("Proncosi", "Isnocorp");
+                result.TextoReemplazado = request.Texto.Replace("proncosi", "isnocorp");
 
                 // 6. Concatenar 1000 veces y medir el tiempo
                 var(tiempo, longitud) = ConcatenarTexto1000Veces(request.Texto);
@@ -68,7 +69,6 @@ namespace Ejercicios.Backend.Controllers
 
             // Contar ocurrencias de cada palabra
             var contadorPalabras = new Dictionary<string, int>();
-
             foreach (string palabra in palabras)
             {
                 if (!string.IsNullOrWhiteSpace(palabra))

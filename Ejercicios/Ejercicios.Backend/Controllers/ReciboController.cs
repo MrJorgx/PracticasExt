@@ -108,6 +108,7 @@ namespace Ejercicios.Backend.Controllers
                     query = descendente ? query.OrderByDescending(r => r.NumeroRecibo) : query.OrderBy(r => r.NumeroRecibo);
                 }
 
+                // Obtener recibos de cliente
                 var recibos = await query.ToListAsync();
 
                 var response = recibos.Select(recibo => new ReciboResponse
@@ -132,6 +133,7 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
+                // Elimar recibo
                 var recibo = await _context.Recibos
                     .Include(r => r.Cliente)
                     .FirstOrDefaultAsync(r => r.NumeroRecibo == numeroRecibo);

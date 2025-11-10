@@ -3,7 +3,7 @@
 
 <PageTitle>Ejercicio 5 - Implementación de clases</PageTitle>
 
-<h1>Sistema de Procesamiento de Items</h1>
+<h1>Sistema de procesamiento de items</h1>
 <p>Implementación de la clase ItemSeparator para filtrar cadenas con formato específico.</p>
 
 <div class="container">
@@ -12,7 +12,7 @@
             <div class="alert alert-info">
                 <h5><i class="bi bi-info-circle"></i> Formato requerido:</h5>
                 <p><strong>ItemName$$##ItemPrice$$##ItemQuantity</strong></p>
-                <p><strong>Ejemplo:</strong> <code>Bread$$##12.5$$##10</code></p>
+                <p><strong>Ejemplo:</strong> <code>Bread$$##12,5$$##10</code></p>
             </div>
         </div>
     </div>
@@ -22,13 +22,13 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link @(activeTab == "single" ? "active" : "")" 
                     @onclick="@(() => ChangeTab("single"))" type="button">
-                <i class="bi bi-box"></i> Procesar Item Individual
+                <i class="bi bi-box"></i> Procesar item individual
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link @(activeTab == "multiple" ? "active" : "")" 
                     @onclick="@(() => ChangeTab("multiple"))" type="button">
-                <i class="bi bi-boxes"></i> Procesar Múltiples Items
+                <i class="bi bi-boxes"></i> Procesar múltiples items
             </button>
         </li>
     </ul>
@@ -41,14 +41,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="bi bi-box"></i> Procesar Item Individual</h5>
+                        <h5><i class="bi bi-box"></i> Procesar item individual</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-8">
                                 <label for="rawInput" class="form-label">Cadena de entrada:</label>
                                 <input type="text" class="form-control" id="rawInput" 
-                                       @bind="rawInputSingle" placeholder="Bread$$##12.5$$##10" />
+                                       @bind="rawInputSingle" placeholder="Bread$$##12,5$$##10" />
                             </div>
                             <div class="col-md-4 d-flex align-items-end">
                                 <button class="btn btn-primary me-2" @onclick="ProcesarItemIndividual" 
@@ -65,13 +65,13 @@
                             </div>
                         </div>
 
-                        <div class="row mt-3">
+                        @* <div class="row mt-3">
                             <div class="col-12">
                                 <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplo">
-                                    <i class="bi bi-lightbulb"></i> Usar Ejemplo
+                                    <i class="bi bi-lightbulb"></i> Usar ejemplo
                                 </button>
                             </div>
-                        </div>
+                        </div> *@
                     </div>
                 </div>
             </div>
@@ -91,16 +91,16 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header bg-success text-white">
-                            <h5><i class="bi bi-check-circle"></i> Resultado del Procesamiento</h5>
+                            <h5><i class="bi bi-check-circle"></i> Resultado del procesamiento</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h6>Datos Extraídos:</h6>
+                                    <h6>Datos extraídos:</h6>
                                     <table class="table table-sm">
                                         <tbody>
                                             <tr>
-                                                <td><strong>Nombre del Item:</strong></td>
+                                                <td><strong>Nombre del item:</strong></td>
                                                 <td>@resultadoIndividual.Name</td>
                                             </tr>
                                             <tr>
@@ -112,14 +112,14 @@
                                                 <td>@resultadoIndividual.Quantity</td>
                                             </tr>
                                             <tr class="table-info">
-                                                <td><strong>Valor Total:</strong></td>
+                                                <td><strong>Valor total:</strong></td>
                                                 <td><strong>$@((resultadoIndividual.Price * resultadoIndividual.Quantity).ToString("F2"))</strong></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="col-md-6">
-                                    <h6>Salida Formateada:</h6>
+                                    <h6>Salida formateada:</h6>
                                     <div class="border p-3 bg-light">
                                         <pre>@resultadoIndividual.FormattedOutput</pre>
                                     </div>
@@ -139,7 +139,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="bi bi-boxes"></i> Procesar Múltiples Items</h5>
+                        <h5><i class="bi bi-boxes"></i> Procesar múltiples items</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -149,7 +149,7 @@
                                 </label>
                                 <textarea class="form-control" id="rawInputsMultiple" rows="6" 
                                           @bind="rawInputsMultiple" 
-                                          placeholder="Bread$$##12.5$$##10&#10;Milk$$##3.25$$##5&#10;Eggs$$##4.99$$##12"></textarea>
+                                          placeholder="Bread$$##12,5$$##10&#10;Milk$$##3,25$$##5&#10;Eggs$$##4,99$$##12"></textarea>
                             </div>
                         </div>
 
@@ -161,14 +161,14 @@
                                     {
                                         <span class="spinner-border spinner-border-sm me-1"></span>
                                     }
-                                    <i class="bi bi-gear"></i> Procesar Todos
+                                    <i class="bi bi-gear"></i> Procesar todos
                                 </button>
                                 <button class="btn btn-secondary me-2" @onclick="LimpiarMultiple">
                                     <i class="bi bi-trash"></i> Limpiar
                                 </button>
-                                <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplosMultiples">
-                                    <i class="bi bi-lightbulb"></i> Usar Ejemplos
-                                </button>
+                                @* <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplosMultiples">
+                                    <i class="bi bi-lightbulb"></i> Usar ejemplos
+                                </button> *@
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header bg-primary text-white">
-                            <h5><i class="bi bi-list-check"></i> Resultados del Procesamiento Múltiple</h5>
+                            <h5><i class="bi bi-list-check"></i> Resultados del procesamiento múltiple</h5>
                         </div>
                         <div class="card-body">
                             <!-- Resumen -->
@@ -203,7 +203,7 @@
                                             <th>Nombre</th>
                                             <th>Precio</th>
                                             <th>Cantidad</th>
-                                            <th>Valor Total</th>
+                                            <th>Valor total</th>
                                             <th>Error</th>
                                         </tr>
                                     </thead>
@@ -400,11 +400,11 @@
 
     private void CargarEjemplosMultiples()
     {
-        rawInputsMultiple = @"Bread$$##12.5$$##10
-Milk$$##3.25$$##5
-Eggs$$##4.99$$##12
-Cheese$$##8.75$$##3
-Rice$$##2.99$$##20";
+        rawInputsMultiple = @"Bread$$##12,5$$##10
+                            Milk$$##3,25$$##5
+                            Eggs$$##4,99$$##12
+                            Cheese$$##8,75$$##3
+                            Rice$$##2,99$$##20";
     }
 
     private void LimpiarMultiple()

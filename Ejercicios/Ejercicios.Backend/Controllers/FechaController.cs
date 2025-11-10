@@ -64,6 +64,7 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        // Valida que las fechas no sean vacías o no tengan el formato yyyy/MM/dd
         private bool ValidarYConvertirFechas(FechaRequest request, out DateTime fecha1, out DateTime fecha2, out string mensajeError)
         {
             fecha1 = default;
@@ -91,6 +92,7 @@ namespace Ejercicios.Backend.Controllers
             return true;
         }
 
+        // Obtiene el número de la semana en base a que día de la semana empieza el año
         private int ObtenerNumeroSemana(DateTime fecha)
         {
             // Usamos el calendario ISO 8601

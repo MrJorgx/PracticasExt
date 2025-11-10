@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ihQtKdMaQqjMJ3KZumN6t99rKBYrABlE3uCrFv8CBU0=",
+  "Hash": "voYBSEvLH8OfGCWyCuXMBT5mS64IeL5WVSpvAre7mUw=",
   "Source": "Ejercicios.Frontend",
   "BasePath": "/",
   "Mode": "Root",
@@ -31,8 +31,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "manifest",
-      "Fingerprint": "ma2uqm8chd",
-      "Integrity": "4qb9iZnl/+OXOdgr+yrpZOXzkRbZQD/BxUCa/ocFd/8=",
+      "Fingerprint": "g1jkebviqr",
+      "Integrity": "ZOcjeuvNMnd6/dxtWgL+tM9Zuk75iSo8dcBobRcheDg=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "obj/Debug/net9.0/blazor.boot.json"
@@ -199,8 +199,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "symbol",
-      "Fingerprint": "zw5rd5f4mn",
-      "Integrity": "s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww=",
+      "Fingerprint": "sjd7cg58kc",
+      "Integrity": "WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "obj/Debug/net9.0/Ejercicios.Frontend.pdb"
@@ -220,8 +220,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "WasmResource",
       "AssetTraitValue": "runtime",
-      "Fingerprint": "nh9f7gy0jq",
-      "Integrity": "y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ=",
+      "Fingerprint": "6ng9lzm4pw",
+      "Integrity": "gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/webcil/Ejercicios.Frontend.wasm"
@@ -7535,7 +7535,7 @@
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Microsoft.Extensions.FileSystemGlobbing.wasm"
     },
     {
-      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-ma2uqm8chd.gz",
+      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-g1jkebviqr.gz",
       "SourceId": "Ejercicios.Frontend",
       "SourceType": "Computed",
       "ContentRoot": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/",
@@ -7549,8 +7549,8 @@
       "RelatedAsset": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/blazor.boot.json",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "6zo2goehqx",
-      "Integrity": "DoWRIMaXjD2KdW6wl58Ot0LZveIxbQXizrNmC/gVaSs=",
+      "Fingerprint": "1oxsudd5hq",
+      "Integrity": "jyTMfgCaUDfkCbZHJdSkxKy+OqhHlaksjMAKNh6qGw0=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/blazor.boot.json"
@@ -8753,12 +8753,12 @@
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/wwwroot/lib/bootstrap/dist/js/bootstrap.js.map"
     },
     {
-      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-nh9f7gy0jq.gz",
+      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-6ng9lzm4pw.gz",
       "SourceId": "Ejercicios.Frontend",
       "SourceType": "Computed",
       "ContentRoot": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/",
       "BasePath": "/",
-      "RelativePath": "_framework/Ejercicios.Frontend#[.{fingerprint=nh9f7gy0jq}]!.wasm.gz",
+      "RelativePath": "_framework/Ejercicios.Frontend#[.{fingerprint=6ng9lzm4pw}]!.wasm.gz",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -8767,8 +8767,8 @@
       "RelatedAsset": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.wasm",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "flvwoifaad",
-      "Integrity": "DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ=",
+      "Fingerprint": "snou1n9qow",
+      "Integrity": "WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.wasm"
@@ -9551,12 +9551,12 @@
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map"
     },
     {
-      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-zw5rd5f4mn.gz",
+      "Identity": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-sjd7cg58kc.gz",
       "SourceId": "Ejercicios.Frontend",
       "SourceType": "Computed",
       "ContentRoot": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/",
       "BasePath": "/",
-      "RelativePath": "_framework/Ejercicios.Frontend#[.{fingerprint=zw5rd5f4mn}]!.pdb.gz",
+      "RelativePath": "_framework/Ejercicios.Frontend#[.{fingerprint=sjd7cg58kc}]!.pdb.gz",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -9565,8 +9565,8 @@
       "RelatedAsset": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.pdb",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "fwmfgr5qrr",
-      "Integrity": "r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc=",
+      "Fingerprint": "mawvd7gr2i",
+      "Integrity": "Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y=",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.pdb"
@@ -10705,11 +10705,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"4qb9iZnl/+OXOdgr+yrpZOXzkRbZQD/BxUCa/ocFd/8=\""
+          "Value": "\"ZOcjeuvNMnd6/dxtWgL+tM9Zuk75iSo8dcBobRcheDg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:04 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10719,18 +10719,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-4qb9iZnl/+OXOdgr+yrpZOXzkRbZQD/BxUCa/ocFd/8="
+          "Value": "sha256-ZOcjeuvNMnd6/dxtWgL+tM9Zuk75iSo8dcBobRcheDg="
         }
       ]
     },
     {
       "Route": "_framework/blazor.boot.json",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-ma2uqm8chd.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-g1jkebviqr.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000080997894"
+          "Quality": "0.000081004455"
         }
       ],
       "ResponseHeaders": [
@@ -10740,15 +10740,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12345"
+          "Value": "12344"
         },
         {
           "Name": "ETag",
-          "Value": "\"DoWRIMaXjD2KdW6wl58Ot0LZveIxbQXizrNmC/gVaSs=\""
+          "Value": "\"jyTMfgCaUDfkCbZHJdSkxKy+OqhHlaksjMAKNh6qGw0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:08:25 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10768,19 +10768,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"4qb9iZnl/+OXOdgr+yrpZOXzkRbZQD/BxUCa/ocFd/8=\""
+          "Value": "W/\"ZOcjeuvNMnd6/dxtWgL+tM9Zuk75iSo8dcBobRcheDg=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-4qb9iZnl/+OXOdgr+yrpZOXzkRbZQD/BxUCa/ocFd/8="
+          "Value": "sha256-ZOcjeuvNMnd6/dxtWgL+tM9Zuk75iSo8dcBobRcheDg="
         }
       ]
     },
     {
       "Route": "_framework/blazor.boot.json.gz",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-ma2uqm8chd.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-g1jkebviqr.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -10789,7 +10789,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12345"
+          "Value": "12344"
         },
         {
           "Name": "Content-Type",
@@ -10797,11 +10797,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"DoWRIMaXjD2KdW6wl58Ot0LZveIxbQXizrNmC/gVaSs=\""
+          "Value": "\"jyTMfgCaUDfkCbZHJdSkxKy+OqhHlaksjMAKNh6qGw0=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:08:25 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10819,7 +10819,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-DoWRIMaXjD2KdW6wl58Ot0LZveIxbQXizrNmC/gVaSs="
+          "Value": "sha256-jyTMfgCaUDfkCbZHJdSkxKy+OqhHlaksjMAKNh6qGw0="
         }
       ]
     },
@@ -12749,7 +12749,7 @@
       ]
     },
     {
-      "Route": "_framework/Ejercicios.Frontend.nh9f7gy0jq.wasm",
+      "Route": "_framework/Ejercicios.Frontend.6ng9lzm4pw.wasm",
       "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.wasm",
       "Selectors": [],
       "ResponseHeaders": [
@@ -12759,7 +12759,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "114965"
+          "Value": "151317"
         },
         {
           "Name": "Content-Type",
@@ -12767,11 +12767,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ=\""
+          "Value": "\"gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:55 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -12781,7 +12781,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "nh9f7gy0jq"
+          "Value": "6ng9lzm4pw"
         },
         {
           "Name": "label",
@@ -12789,18 +12789,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ="
+          "Value": "sha256-gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI="
         }
       ]
     },
     {
-      "Route": "_framework/Ejercicios.Frontend.nh9f7gy0jq.wasm",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-nh9f7gy0jq.gz",
+      "Route": "_framework/Ejercicios.Frontend.6ng9lzm4pw.wasm",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-6ng9lzm4pw.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000027911131"
+          "Quality": "0.000022081392"
         }
       ],
       "ResponseHeaders": [
@@ -12810,15 +12810,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "35827"
+          "Value": "45286"
         },
         {
           "Name": "ETag",
-          "Value": "\"DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ=\""
+          "Value": "\"WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -12838,13 +12838,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ=\""
+          "Value": "W/\"gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "nh9f7gy0jq"
+          "Value": "6ng9lzm4pw"
         },
         {
           "Name": "label",
@@ -12852,13 +12852,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ="
+          "Value": "sha256-gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI="
         }
       ]
     },
     {
-      "Route": "_framework/Ejercicios.Frontend.nh9f7gy0jq.wasm.gz",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-nh9f7gy0jq.gz",
+      "Route": "_framework/Ejercicios.Frontend.6ng9lzm4pw.wasm.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-6ng9lzm4pw.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -12867,7 +12867,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "35827"
+          "Value": "45286"
         },
         {
           "Name": "Content-Type",
@@ -12875,11 +12875,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ=\""
+          "Value": "\"WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -12897,7 +12897,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "nh9f7gy0jq"
+          "Value": "6ng9lzm4pw"
         },
         {
           "Name": "label",
@@ -12905,7 +12905,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ="
+          "Value": "sha256-WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ="
         }
       ]
     },
@@ -12920,7 +12920,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "65392"
+          "Value": "84772"
         },
         {
           "Name": "Content-Type",
@@ -12928,11 +12928,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww=\""
+          "Value": "\"WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:01 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -12942,18 +12942,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww="
+          "Value": "sha256-WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws="
         }
       ]
     },
     {
       "Route": "_framework/Ejercicios.Frontend.pdb",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-zw5rd5f4mn.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-sjd7cg58kc.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000021297440"
+          "Quality": "0.000016482883"
         }
       ],
       "ResponseHeaders": [
@@ -12963,15 +12963,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "46953"
+          "Value": "60668"
         },
         {
           "Name": "ETag",
-          "Value": "\"r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc=\""
+          "Value": "\"Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:04 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -12991,19 +12991,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww=\""
+          "Value": "W/\"WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww="
+          "Value": "sha256-WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws="
         }
       ]
     },
     {
       "Route": "_framework/Ejercicios.Frontend.pdb.gz",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-zw5rd5f4mn.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-sjd7cg58kc.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -13012,7 +13012,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "46953"
+          "Value": "60668"
         },
         {
           "Name": "Content-Type",
@@ -13020,11 +13020,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc=\""
+          "Value": "\"Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:04 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -13042,7 +13042,168 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc="
+          "Value": "sha256-Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y="
+        }
+      ]
+    },
+    {
+      "Route": "_framework/Ejercicios.Frontend.sjd7cg58kc.pdb",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.pdb",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "84772"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/octet-stream"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 07 Nov 2025 09:13:04 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "sjd7cg58kc"
+        },
+        {
+          "Name": "label",
+          "Value": "_framework/Ejercicios.Frontend.pdb"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws="
+        }
+      ]
+    },
+    {
+      "Route": "_framework/Ejercicios.Frontend.sjd7cg58kc.pdb",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-sjd7cg58kc.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000016482883"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "60668"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/octet-stream"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "sjd7cg58kc"
+        },
+        {
+          "Name": "label",
+          "Value": "_framework/Ejercicios.Frontend.pdb"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-WFxUnAi/8YA2AZKjb8TcFkm9qXfWR2wMpYEPKIBMSws="
+        }
+      ]
+    },
+    {
+      "Route": "_framework/Ejercicios.Frontend.sjd7cg58kc.pdb.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-sjd7cg58kc.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "60668"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/octet-stream"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "sjd7cg58kc"
+        },
+        {
+          "Name": "label",
+          "Value": "_framework/Ejercicios.Frontend.pdb.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Ph76EzcRl2Bc3Y0ilZIVJoaoJ++b4iEyjNbuUSrN17Y="
         }
       ]
     },
@@ -13057,7 +13218,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "114965"
+          "Value": "151317"
         },
         {
           "Name": "Content-Type",
@@ -13065,11 +13226,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ=\""
+          "Value": "\"gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:55 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:04 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -13079,18 +13240,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ="
+          "Value": "sha256-gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI="
         }
       ]
     },
     {
       "Route": "_framework/Ejercicios.Frontend.wasm",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-nh9f7gy0jq.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-6ng9lzm4pw.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000027911131"
+          "Quality": "0.000022081392"
         }
       ],
       "ResponseHeaders": [
@@ -13100,15 +13261,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "35827"
+          "Value": "45286"
         },
         {
           "Name": "ETag",
-          "Value": "\"DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ=\""
+          "Value": "\"WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -13128,19 +13289,19 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ=\""
+          "Value": "W/\"gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-y6RzghA3dP9DDu5LqNc/MEYHDEIvboCFdOjCRfbFZtQ="
+          "Value": "sha256-gr3Sri77zpYeS+hb7Jnef8Bje2lOEa5GUGX8z+Dw+vI="
         }
       ]
     },
     {
       "Route": "_framework/Ejercicios.Frontend.wasm.gz",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-nh9f7gy0jq.gz",
+      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-6ng9lzm4pw.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -13149,7 +13310,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "35827"
+          "Value": "45286"
         },
         {
           "Name": "Content-Type",
@@ -13157,11 +13318,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ=\""
+          "Value": "\"WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 23 Oct 2025 10:45:57 GMT"
+          "Value": "Fri, 07 Nov 2025 09:13:05 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -13179,168 +13340,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-DYhTI+0VmzmV4eqCvUc1LrwuHtB0nJm9IVwmpmztoFQ="
-        }
-      ]
-    },
-    {
-      "Route": "_framework/Ejercicios.Frontend.zw5rd5f4mn.pdb",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.pdb",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "65392"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/octet-stream"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:01 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "zw5rd5f4mn"
-        },
-        {
-          "Name": "label",
-          "Value": "_framework/Ejercicios.Frontend.pdb"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww="
-        }
-      ]
-    },
-    {
-      "Route": "_framework/Ejercicios.Frontend.zw5rd5f4mn.pdb",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-zw5rd5f4mn.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.000021297440"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "46953"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:04 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/octet-stream"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww=\""
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "zw5rd5f4mn"
-        },
-        {
-          "Name": "label",
-          "Value": "_framework/Ejercicios.Frontend.pdb"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-s6eiiUA1/vV/aRKwhyIuw/rdUhVQK57qfhzd71J02ww="
-        }
-      ]
-    },
-    {
-      "Route": "_framework/Ejercicios.Frontend.zw5rd5f4mn.pdb.gz",
-      "AssetFile": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-zw5rd5f4mn.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "46953"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "application/octet-stream"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Fri, 24 Oct 2025 08:46:04 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "zw5rd5f4mn"
-        },
-        {
-          "Name": "label",
-          "Value": "_framework/Ejercicios.Frontend.pdb.gz"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-r01Zx7pxuF0MCU5RpKFrZalTAiY+bz8TsybHERxbVhc="
+          "Value": "sha256-WEVGGYx9GMQses2vhtsyUgyCQbw29mUUJjJ8LmySELQ="
         }
       ]
     },
