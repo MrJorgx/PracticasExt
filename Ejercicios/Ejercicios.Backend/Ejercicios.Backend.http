@@ -112,3 +112,61 @@ Content-Type: application/json
 }
 
 ###
+
+# EJERCICIO 7 - Números de Kaprekar
+
+# Verificar un número individual (método optimizado)
+POST {{Ejercicios.Backend_HostAddress}}/api/kaprekar/verificar
+Content-Type: application/json
+
+{
+  "numero": 297,
+  "metodoCalculo": "OPTIMIZADO"
+}
+
+###
+
+# Verificar con método fuerza bruta
+POST {{Ejercicios.Backend_HostAddress}}/api/kaprekar/verificar
+Content-Type: application/json
+
+{
+  "numero": 45,
+  "metodoCalculo": "FUERZA_BRUTA"
+}
+
+###
+
+# Verificar con método matemático
+POST {{Ejercicios.Backend_HostAddress}}/api/kaprekar/verificar
+Content-Type: application/json
+
+{
+  "numero": 9,
+  "metodoCalculo": "MATEMATICO"
+}
+
+###
+
+# Verificar un número que NO es Kaprekar
+POST {{Ejercicios.Backend_HostAddress}}/api/kaprekar/verificar
+Content-Type: application/json
+
+{
+  "numero": 10,
+  "metodoCalculo": "OPTIMIZADO"
+}
+
+###
+
+# Obtener ejemplos conocidos
+GET {{Ejercicios.Backend_HostAddress}}/api/kaprekar/ejemplos
+Accept: application/json
+
+###
+
+# Obtener información sobre números de Kaprekar
+GET {{Ejercicios.Backend_HostAddress}}/api/kaprekar/info
+Accept: application/json
+
+###

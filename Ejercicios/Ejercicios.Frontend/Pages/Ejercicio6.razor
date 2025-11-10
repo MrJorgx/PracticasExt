@@ -3,7 +3,7 @@
 
 <PageTitle>Ejercicio 6 - Generación aleatoria</PageTitle>
 
-<h1>Generador Aleatorio de Formas Geométricas</h1>
+<h1>Generador aleatorio de formas geométricas</h1>
 <p>Genera círculos, triángulos y cuadrados con propiedades aleatorias y visualiza sus datos.</p>
 
 <div class="container">
@@ -12,20 +12,20 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5><i class="bi bi-gear"></i> Configurar Generación</h5>
+                    <h5><i class="bi bi-gear"></i> Configurar generación</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label">Número de Círculos:</label>
+                            <label class="form-label">Número de círculos:</label>
                             <input type="number" min="0" max="50" class="form-control" @bind="numeroCirculos" />
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Número de Cuadrados:</label>
+                            <label class="form-label">Número de cuadrados:</label>
                             <input type="number" min="0" max="50" class="form-control" @bind="numeroCuadrados" />
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Número de Triángulos:</label>
+                            <label class="form-label">Número de triángulos:</label>
                             <input type="number" min="0" max="50" class="form-control" @bind="numeroTriangulos" />
                         </div>
                     </div>
@@ -37,13 +37,13 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1"></span>
                                 }
-                                <i class="bi bi-magic"></i> Generar Formas
+                                <i class="bi bi-magic"></i> Generar formas
                             </button>
                             <button class="btn btn-secondary me-2" @onclick="LimpiarResultados">
                                 <i class="bi bi-trash"></i> Limpiar
                             </button>
-                            <button class="btn btn-outline-info btn-sm" @onclick="CargarEjemplo">
-                                <i class="bi bi-lightbulb"></i> Usar Ejemplo
+                            <button class="btn btn-outline-info me-2" @onclick="CargarEjemplo">
+                                <i class="bi bi-lightbulb"></i> Usar ejemplo
                             </button>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="alert alert-success">
-                    <h6><i class="bi bi-info-circle"></i> Resumen de Generación:</h6>
+                    <h6><i class="bi bi-info-circle"></i> Resumen de generación:</h6>
                     <p>@resultado.Resumen</p>
                 </div>
             </div>
@@ -78,19 +78,19 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link @(activeTab == "todas" ? "active" : "")" 
                         @onclick="@(() => ChangeTab("todas"))" type="button">
-                    <i class="bi bi-list"></i> Todas las Formas (@resultado.TotalFormas)
+                    <i class="bi bi-list"></i> Todas las formas (@resultado.TotalFormas)
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link @(activeTab == "agrupadas" ? "active" : "")" 
                         @onclick="@(() => ChangeTab("agrupadas"))" type="button">
-                    <i class="bi bi-collection"></i> Agrupadas por Tipo
+                    <i class="bi bi-collection"></i> Agrupadas por tipo
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link @(activeTab == "visual" ? "active" : "")" 
                         @onclick="@(() => ChangeTab("visual"))" type="button">
-                    <i class="bi bi-eye"></i> Vista Visual
+                    <i class="bi bi-eye"></i> Vista visual
                 </button>
             </li>
         </ul>
@@ -103,7 +103,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5><i class="bi bi-list"></i> Todas las Formas (Orden de Creación)</h5>
+                            <h5><i class="bi bi-list"></i> Todas las formas (Orden de creación)</h5>
                         </div>
                         <div class="card-body">
                             @if (resultado.TodasLasFormas.Any())
@@ -261,7 +261,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5><i class="bi bi-eye"></i> Representación Visual</h5>
+                            <h5><i class="bi bi-eye"></i> Representación visual</h5>
                         </div>
                         <div class="card-body">
                             <div class="position-relative border" style="height: 400px; background-color: #f8f9fa;">
