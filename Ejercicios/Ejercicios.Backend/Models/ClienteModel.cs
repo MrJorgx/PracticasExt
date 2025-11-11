@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Models
 {
@@ -6,6 +7,26 @@ namespace Ejercicios.Backend.Models
     {
         REGISTRADO,
         SOCIO
+    }
+
+    // Validar DNI
+    public class ValidarDniAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object? value)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return false;
+
+            string dni = value.ToString()!.Trim().ToUpper();
+
+            var patron = @"^[0-9]{8}[A-Z]$";
+            return Regex.IsMatch(dni, patron);
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return "El DNI debe tener 8 dígitos y una letra.";
+        }
     }
 
     public class Cliente
@@ -36,7 +57,7 @@ namespace Ejercicios.Backend.Models
     public class ClienteRequest
     {
         [Required(ErrorMessage = "El DNI es requerido")]
-        [StringLength(9, ErrorMessage = "El DNI debe tener máximo 9 caracteres")]
+        [ValidarDni]
         public string Dni { get; set; } = "";
 
         [Required(ErrorMessage = "El nombre es requerido")]
@@ -87,6 +108,7 @@ namespace Ejercicios.Backend.Models
         public string NumeroRecibo { get; set; } = "";
 
         [Required(ErrorMessage = "El DNI del cliente es requerido")]
+        [ValidarDni]
         public string DniCliente { get; set; } = "";
 
         [Required(ErrorMessage = "El importe es requerido")]

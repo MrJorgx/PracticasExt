@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ejercicios.Backend.Data;
 using Ejercicios.Backend.Models;
+using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Controllers
 {
@@ -16,13 +17,33 @@ namespace Ejercicios.Backend.Controllers
             _context = context;
         }
 
+        // Método para validar formato de DNI
+        private bool ValidarFormatoDni(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            dni = dni.Trim().ToUpper();
+            var patron = @"^[0-9]{8}[A-Z]$";
+            return Regex.IsMatch(dni, patron);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ClienteResponse>> CrearCliente([FromBody] ClienteRequest request)
         {
             try
             {
+                // Normalizar DNI
+                request.Dni = request.Dni?.Trim().ToUpper() ?? "";
+
                 // Log para debugging
                 Console.WriteLine($"Creando cliente: DNI={request.Dni}, Tipo={request.TipoCliente}");
+
+                // Validar formato DNI
+                if (!ValidarFormatoDni(request.Dni))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
                 
                 // Validar que no exista un cliente con el mismo DNI
                 if (await _context.Clientes.AnyAsync(c => c.Dni == request.Dni))
@@ -90,6 +111,15 @@ namespace Ejercicios.Backend.Controllers
             // Pedimos el cliente en base al DNI
             try
             {
+                // Normalizar DNI
+                dni = dni?.Trim().ToUpper() ?? "";
+
+                // Validar formato DNI
+                if (!ValidarFormatoDni(dni))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
+
                 var cliente = await _context.Clientes
                     .Include(c => c.Recibos)
                     .FirstOrDefaultAsync(c => c.Dni == dni);
@@ -124,6 +154,15 @@ namespace Ejercicios.Backend.Controllers
             // Actualizar cliente (datos)
             try
             {
+                // Normalizar DNI
+                dni = dni?.Trim().ToUpper() ?? "";
+
+                // Validar formato DNI
+                if (!ValidarFormatoDni(dni))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
+
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Dni == dni);
 
                 if (cliente == null)
@@ -180,6 +219,15 @@ namespace Ejercicios.Backend.Controllers
             // Eliminar cliente
             try
             {
+                // Normalizar DNI
+                dni = dni?.Trim().ToUpper() ?? "";
+
+                // Validar formato DNI
+                if (!ValidarFormatoDni(dni))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
+
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Dni == dni);
 
                 if (cliente == null)

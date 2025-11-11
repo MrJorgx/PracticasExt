@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ejercicios.Backend.Data;
 using Ejercicios.Backend.Models;
+using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Controllers
 {
@@ -16,11 +17,31 @@ namespace Ejercicios.Backend.Controllers
             _context = context;
         }
 
+        // Método para validar formato de DNI
+        private bool ValidarFormatoDni(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni))
+                return false;
+
+            dni = dni.Trim().ToUpper();
+            var patron = @"^[0-9]{8}[A-Z]$";
+            return Regex.IsMatch(dni, patron);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ReciboResponse>> CrearRecibo([FromBody] ReciboRequest request)
         {
             try
             {
+                // Normalizar DNI
+                request.DniCliente = request.DniCliente?.Trim().ToUpper() ?? "";
+
+                // Validar formato DNI
+                if (!ValidarFormatoDni(request.DniCliente))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
+
                 // Validar que no exista un recibo con el mismo número
                 if (await _context.Recibos.AnyAsync(r => r.NumeroRecibo == request.NumeroRecibo))
                 {
@@ -89,6 +110,19 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
+                // Normalizar DNI
+                // request.DniCliente = request.DniCliente?.Trim().ToUpper() ?? "";
+
+                // Validar formato DNI
+                // if (!ValidarFormatoDni(request.DniCliente))
+
+                dni = dni?.Trim().ToUpper() ?? "";
+
+                if (!ValidarFormatoDni(dni))
+                {
+                    return BadRequest("El DNI debe tener 8 dígitos y una letra.");
+                }
+                
                 // Validar que existe el cliente
                 if (!await _context.Clientes.AnyAsync(c => c.Dni == dni))
                 {
