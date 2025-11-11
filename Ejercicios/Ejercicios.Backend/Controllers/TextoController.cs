@@ -34,8 +34,7 @@ namespace Ejercicios.Backend.Controllers
                 result.PalabrasRepetidas = EncontrarPalabrasRepetidas(request.Texto);
 
                 // 5. Reemplazar "Proconsi" por "Isnocorp"
-                result.TextoReemplazado = request.Texto.Replace("Proncosi", "Isnocorp");
-                result.TextoReemplazado = request.Texto.Replace("proncosi", "isnocorp");
+                result.TextoReemplazado = request.Texto.Replace("Proconsi", "Isnocorp");
 
                 // 6. Concatenar 1000 veces y medir el tiempo
                 var(tiempo, longitud) = ConcatenarTexto1000Veces(request.Texto);

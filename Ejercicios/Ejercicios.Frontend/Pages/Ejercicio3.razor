@@ -36,8 +36,11 @@
                     <text>Calcular operaciones</text>
                 }
             </button>
-            <button class="btn btn-secondary" @onclick="LimpiarResultados" disabled="@isProcessing">
+            <button class="btn btn-secondary me-2" @onclick="LimpiarResultados" disabled="@isProcessing">
                 Limpiar
+            </button>
+            <button class="btn btn-outline-info me-2" @onclick="CargarEjemplo" disabled="@isProcessing">
+                <i class="bi bi-lightbulb"></i> Usar ejemplo
             </button>
         </div>
     </div>
@@ -213,6 +216,16 @@
         finally{
             isProcessing = false;
         }
+    }
+
+    private void CargarEjemplo()
+    {
+        fecha1Text = "2024/02/29";
+        fecha2Text = "2026/01/01";
+
+        mostrarResultados = false;
+        mensajeError = "";
+        resultado = null;
     }
 
     private void LimpiarResultados()

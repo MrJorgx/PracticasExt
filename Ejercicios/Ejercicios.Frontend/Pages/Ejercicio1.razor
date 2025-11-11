@@ -10,16 +10,37 @@
 <div class="container">
     <div class="row mb-3">
         <div class="col-md-4">
-            <label for="cantidad1" class="for-label">Primera cantidad:</label>
-            <input type="number" step="any" class="form-control" id="cantidad1" @bind="cantidad1" />
+            <label for="cantidad1" class="form-label">Primera cantidad:</label>
+            <input type="text" class="form-control @(errorCantidad1 ? "is-invalid" : "")" 
+                   id="cantidad1" @bind="cantidad1Text" placeholder="10.5" />
+            @if (errorCantidad1)
+            {
+                <div class="invalid-feedback">
+                    Debe introducir un número real válido
+                </div>
+            }
         </div>
         <div class="col-md-4">
-            <label for="cantidad2" class="for-label">Segunda cantidad:</label>
-            <input type="number" step="any" class="form-control" id="cantidad2" @bind="cantidad2" />
+            <label for="cantidad2" class="form-label">Segunda cantidad:</label>
+            <input type="text" class="form-control @(errorCantidad2 ? "is-invalid" : "")" 
+                   id="cantidad2" @bind="cantidad2Text" placeholder="3.2" />
+            @if (errorCantidad2)
+            {
+                <div class="invalid-feedback">
+                    Debe introducir un número real válido
+                </div>
+            }
         </div>
         <div class="col-md-4">
-            <label for="decimales" class="for-label">Número de decimales:</label>
-            <input type="number" min="0" max="10" step="any" class="form-control" id="decimales" @bind="numDecimales" />
+            <label for="decimales" class="form-label">Número de decimales:</label>
+            <input type="text" class="form-control @(errorDecimales ? "is-invalid" : "")" 
+                   id="decimales" @bind="numDecimalesText" placeholder="2" />
+            @if (errorDecimales)
+            {
+                <div class="invalid-feedback">
+                    Debe introducir un número entero entre 0 y 10
+                </div>
+            }
         </div>
     </div>
 
@@ -45,7 +66,7 @@
     @if (!string.IsNullOrEmpty(errorMessage))
     {
         <div class="alert alert-danger" role="alert">
-            @errorMessage
+            <i class="bi bi-exclamation-triangle"></i> @errorMessage
         </div>
     }
 
@@ -62,27 +83,27 @@
                             <tbody>
                                 <tr>
                                     <td><strong>Suma:</strong></td>
-                                    <td>@cantidad1 + @cantidad2 = @resultado.Suma</td>
+                                    <td>@cantidad1Calculada + @cantidad2Calculada = @resultado.Suma</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Resta:</strong></td>
-                                    <td>@cantidad1 - @cantidad2 = @resultado.Resta</td>
+                                    <td>@cantidad1Calculada - @cantidad2Calculada = @resultado.Resta</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Multiplicación:</strong></td>
-                                    <td>@cantidad1 * @cantidad2 = @resultado.Multiplicacion</td>
+                                    <td>@cantidad1Calculada * @cantidad2Calculada = @resultado.Multiplicacion</td>
                                 </tr>
                                 <tr>
                                     <td><strong>División:</strong></td>
-                                    <td>@cantidad1 / @cantidad2 = @resultado.Division</td>
+                                    <td>@cantidad1Calculada / @cantidad2Calculada = @resultado.Division</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Módulo:</strong></td>
-                                    <td>@cantidad1 % @cantidad2 = @resultado.Modulo</td>
+                                    <td>@cantidad1Calculada % @cantidad2Calculada = @resultado.Modulo</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Comparación:</strong></td>
-                                    <td>@cantidad1 @resultado.Comparacion @cantidad2</td>
+                                    <td>@cantidad1Calculada @resultado.Comparacion @cantidad2Calculada</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -94,10 +115,20 @@
 </div>
 
 @code {
-    // Variables para las cantidades y decimales
-    private double cantidad1 = 0;
-    private double cantidad2 = 0;
-    private int numDecimales = 2;
+    // Variables para las cantidades como texto (para capturar letras)
+    private string cantidad1Text = "";
+    private string cantidad2Text = "";
+    private string numDecimalesText = "2";
+
+    // Variables para valores parseados
+    private double cantidad1Calculada = 0;
+    private double cantidad2Calculada = 0;
+    private int numDecimalesCalculados = 2;
+
+    // Variables de estado de error por campo
+    private bool errorCantidad1 = false;
+    private bool errorCantidad2 = false;
+    private bool errorDecimales = false;
 
     // Variables para mostrar los resultados
     private bool mostrarResultados = false;
@@ -112,12 +143,74 @@
             isCalculating = true;
             errorMessage = "";
             mostrarResultados = false;
+            
+            // Resetear errores individuales
+            errorCantidad1 = false;
+            errorCantidad2 = false;
+            errorDecimales = false;
+
+            // Validar primera cantidad
+            if (string.IsNullOrWhiteSpace(cantidad1Text))
+            {
+                errorCantidad1 = true;
+                errorMessage = "La primera cantidad es obligatoria.";
+                return;
+            }
+
+            if (!double.TryParse(cantidad1Text.Trim(), out double cantidad1))
+            {
+                errorCantidad1 = true;
+                errorMessage = $"La primera cantidad '{cantidad1Text}' no es un número válido. Por favor, introduzca un número real.";
+                return;
+            }
+
+            // Validar segunda cantidad
+            if (string.IsNullOrWhiteSpace(cantidad2Text))
+            {
+                errorCantidad2 = true;
+                errorMessage = "La segunda cantidad es obligatoria.";
+                return;
+            }
+
+            if (!double.TryParse(cantidad2Text.Trim(), out double cantidad2))
+            {
+                errorCantidad2 = true;
+                errorMessage = $"La segunda cantidad '{cantidad2Text}' no es un número válido. Por favor, introduzca un número real.";
+                return;
+            }
+
+            // Validar número de decimales
+            if (string.IsNullOrWhiteSpace(numDecimalesText))
+            {
+                errorDecimales = true;
+                errorMessage = "El número de decimales es obligatorio.";
+                return;
+            }
+
+            if (!int.TryParse(numDecimalesText.Trim(), out int numDecimales))
+            {
+                errorDecimales = true;
+                errorMessage = $"El número de decimales '{numDecimalesText}' no es un número entero válido.";
+                return;
+            }
+
+            if (numDecimales < 0 || numDecimales > 10)
+            {
+                errorDecimales = true;
+                errorMessage = "El número de decimales debe estar entre 0 y 10.";
+                return;
+            }
+
+            // Si llegamos aquí, todas las validaciones pasaron
+            cantidad1Calculada = cantidad1;
+            cantidad2Calculada = cantidad2;
+            numDecimalesCalculados = numDecimales;
 
             var request = new OperacionRequest
             {
-                Cantidad1 = cantidad1,
-                Cantidad2 = cantidad2,
-                NumDecimales = numDecimales
+                Cantidad1 = cantidad1Calculada,
+                Cantidad2 = cantidad2Calculada,
+                NumDecimales = numDecimalesCalculados
             };
 
             var response = await Http.PostAsJsonAsync("api/calculadora/calcular", request);
@@ -144,10 +237,20 @@
 
     private void LimpiarDatos()
     {
-        // Limpiar los campos de entradas
-        cantidad1 = 0;
-        cantidad2 = 0;
-        numDecimales = 2;
+        // Limpiar los campos de entrada
+        cantidad1Text = "";
+        cantidad2Text = "";
+        numDecimalesText = "2";
+
+        // Limpiar valores calculados
+        cantidad1Calculada = 0;
+        cantidad2Calculada = 0;
+        numDecimalesCalculados = 2;
+
+        // Limpiar errores
+        errorCantidad1 = false;
+        errorCantidad2 = false;
+        errorDecimales = false;
 
         // Limpiar los resultados y mensajes
         mostrarResultados = false;
