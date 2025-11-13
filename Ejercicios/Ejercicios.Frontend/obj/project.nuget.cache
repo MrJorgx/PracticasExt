@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "stwUg8RciPs=",
+  "dgSpecHash": "CZfME3yueRw=",
   "success": true,
   "projectFilePath": "/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/Ejercicios.Frontend.csproj",
   "expectedPackageFiles": [
@@ -28,10 +28,10 @@
     "/home/jorge/.nuget/packages/microsoft.extensions.primitives/9.0.9/microsoft.extensions.primitives.9.0.9.nupkg.sha512",
     "/home/jorge/.nuget/packages/microsoft.jsinterop/9.0.9/microsoft.jsinterop.9.0.9.nupkg.sha512",
     "/home/jorge/.nuget/packages/microsoft.jsinterop.webassembly/9.0.9/microsoft.jsinterop.webassembly.9.0.9.nupkg.sha512",
-    "/home/jorge/.nuget/packages/microsoft.net.illink.tasks/9.0.9/microsoft.net.illink.tasks.9.0.9.nupkg.sha512",
-    "/home/jorge/.nuget/packages/microsoft.net.sdk.webassembly.pack/9.0.9/microsoft.net.sdk.webassembly.pack.9.0.9.nupkg.sha512",
+    "/home/jorge/.nuget/packages/microsoft.net.illink.tasks/9.0.10/microsoft.net.illink.tasks.9.0.10.nupkg.sha512",
+    "/home/jorge/.nuget/packages/microsoft.net.sdk.webassembly.pack/9.0.10/microsoft.net.sdk.webassembly.pack.9.0.10.nupkg.sha512",
     "/home/jorge/.nuget/packages/system.net.http.json/9.0.10/system.net.http.json.9.0.10.nupkg.sha512",
-    "/home/jorge/.nuget/packages/microsoft.netcore.app.runtime.mono.browser-wasm/9.0.9/microsoft.netcore.app.runtime.mono.browser-wasm.9.0.9.nupkg.sha512"
+    "/home/jorge/.nuget/packages/microsoft.netcore.app.runtime.mono.browser-wasm/9.0.10/microsoft.netcore.app.runtime.mono.browser-wasm.9.0.10.nupkg.sha512"
   ],
   "logs": []
 }

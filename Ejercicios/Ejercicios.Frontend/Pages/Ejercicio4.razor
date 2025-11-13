@@ -2,35 +2,39 @@
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Ejercicio 4 - CRUD Clientes y Recibos</PageTitle>
+<PageTitle>Ejercicio 4 - CRUD clientes y recibos</PageTitle>
 
-<h1>Gestión de Clientes y Recibos</h1>
+<h1>Gestión de clientes y recibos</h1>
 
 <div class="container-fluid">
     <!-- Pestañas de navegación -->
-    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+    <ul class="nav nav-tabs mb-4" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="clientes-tab" data-bs-toggle="tab" data-bs-target="#clientes" type="button" role="tab" aria-controls="clientes" aria-selected="true">
+            <button class="nav-link @(activeTab == "clientes" ? "active" : "")"
+                    @onclick="@(() => CambiarPestana("clientes"))"
+                    type="button">
                 <i class="bi bi-people"></i> Clientes
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="recibos-tab" data-bs-toggle="tab" data-bs-target="#recibos" type="button" role="tab" aria-controls="recibos" aria-selected="false">
+            <button class="nav-link @(activeTab == "recibos" ? "active" : "")"
+                    @onclick="@(() => CambiarPestana("recibos"))"
+                    type="button">
                 <i class="bi bi-receipt"></i> Recibos
             </button>
         </li>
     </ul>
 
     <!-- Contenido de las pestañas -->
-    <div class="tab-content" id="myTabContent">
-        
+    @if (activeTab == "clientes")
+    { 
         <!-- PESTAÑA CLIENTES -->
-        <div class="tab-pane fade show active" id="clientes" role="tabpanel" aria-labelledby="clientes-tab">
+        <div>
             
             <!-- Formulario de cliente -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5><i class="bi bi-person-plus"></i> @(clienteEditando != null ? "Editar Cliente" : "Crear Cliente")</h5>
+                    <h5><i class="bi bi-person-plus"></i> @(clienteEditando != null ? "Editar cliente" : "Crear cliente")</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -70,7 +74,7 @@
                             }
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Tipo de Cliente *</label>
+                            <label class="form-label">Tipo de cliente *</label>
                             <select class="form-control @(errorTipoCliente ? "is-invalid" : "")" 
                                     @bind="tipoClienteSeleccionado" @bind:after="OnTipoClienteChanged">
                                 <option value="">Seleccionar...</option>
@@ -130,12 +134,12 @@
             <!-- Buscador de clientes -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5><i class="bi bi-search"></i> Buscar Cliente por DNI</h5>
+                    <h5><i class="bi bi-search"></i> Buscar cliente por DNI</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label">DNI del Cliente</label>
+                            <label class="form-label">DNI del cliente</label>
                             <input type="text" 
                                    class="form-control @(errorDniBusqueda ? "is-invalid" : "")" 
                                    @bind="dniBusqueda" 
@@ -161,7 +165,7 @@
                                 {
                                     <span class="spinner-border spinner-border-sm"></span>
                                 }
-                                <i class="bi bi-list"></i> Listar Todos
+                                <i class="bi bi-list"></i> Listar todos
                             </button>
                         </div>
                     </div>
@@ -181,7 +185,7 @@
             {
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="bi bi-list"></i> Lista de Clientes (@clientes.Count)</h5>
+                        <h5><i class="bi bi-list"></i> Lista de clientes (@clientes.Count)</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -193,7 +197,7 @@
                                         <th>Tipo</th>
                                         <th class="text-end">Cuota máx.</th>
                                         <th class="text-center">Recibos</th>
-                                        <th class="text-center">Fecha Alta</th>
+                                        <th class="text-center">Fecha alta</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
@@ -250,14 +254,16 @@
                 </div>
             }
         </div>
-
+    }
+    else if (activeTab == "recibos")
+    {
         <!-- PESTAÑA RECIBOS -->
-        <div class="tab-pane fade" id="recibos" role="tabpanel" aria-labelledby="recibos-tab">
+        <div>
             
             <!-- Formulario de recibo -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5><i class="bi bi-receipt"></i> @(reciboEditando != null ? "Editar Recibo" : "Crear Recibo")</h5>
+                    <h5><i class="bi bi-receipt"></i> @(reciboEditando != null ? "Editar recibo" : "Crear recibo")</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -337,12 +343,12 @@
             <!-- Buscador de recibos por cliente -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5><i class="bi bi-search"></i> Buscar Recibos por Cliente</h5>
+                    <h5><i class="bi bi-search"></i> Buscar recibos por cliente</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label">DNI del Cliente</label>
+                            <label class="form-label">DNI del cliente</label>
                             <input type="text" 
                                    class="form-control @(errorDniBusquedaRecibo ? "is-invalid" : "")" 
                                    @bind="dniBusquedaRecibo" 
@@ -361,14 +367,14 @@
                                 {
                                     <span class="spinner-border spinner-border-sm"></span>
                                 }
-                                <i class="bi bi-search"></i> Buscar Recibos
+                                <i class="bi bi-search"></i> Buscar recibos
                             </button>
                             <button class="btn btn-success" @onclick="CargarTodosLosRecibos" disabled="@isProcessingListadoRecibo">
                                 @if (isProcessingListadoRecibo)
                                 {
                                     <span class="spinner-border spinner-border-sm"></span>
                                 }
-                                <i class="bi bi-list"></i> Listar Todos
+                                <i class="bi bi-list"></i> Listar todos
                             </button>
                         </div>
                     </div>
@@ -388,7 +394,7 @@
             {
                 <div class="card">
                     <div class="card-header">
-                        <h5><i class="bi bi-list"></i> Lista de Recibos (@recibos.Count)</h5>
+                        <h5><i class="bi bi-list"></i> Lista de recibos (@recibos.Count)</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -396,10 +402,10 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Número</th>
-                                        <th>DNI Cliente</th>
-                                        <th>Nombre Cliente</th>
+                                        <th>DNI cliente</th>
+                                        <th>Nombre cliente</th>
                                         <th class="text-end">Importe</th>
-                                        <th class="text-center">Fecha Emisión</th>
+                                        <th class="text-center">Fecha emisión</th>
                                         <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
@@ -435,10 +441,13 @@
                 </div>
             }
         </div>
-    </div>
+    }
 </div>
 
 @code {
+    // ===== VARIABLE PARA PESTAÑA =====
+    private string activeTab = "clientes";
+
     // ===== VARIABLES DE ESTADO =====
     
     // Estados de procesamiento
@@ -1107,6 +1116,15 @@
         }
     }
 
+    // ===== MÉTODO PARA CAMBIAR PESTAÑAS =====
+    private void CambiarPestana(string pestaña)
+    {
+        activeTab = pestaña;
+        // Limpiar mensajes al cambiar de pestaña
+        mensajeCliente = "";
+        mensajeRecibo = "";
+    }
+
     // ===== MÉTODOS AUXILIARES =====
     
     private void OnTipoClienteChanged()
@@ -1170,28 +1188,20 @@
             dniBusquedaRecibo = dni;
             await BuscarRecibosPorCliente();
             
-            // Cambiar a la pestaña de recibos usando Bootstrap 5
-            await JSRuntime.InvokeVoidAsync("eval", @"
-                // Desactivar pestaña actual
-                document.getElementById('clientes-tab').classList.remove('active');
-                document.getElementById('clientes').classList.remove('show', 'active');
-                
-                // Activar pestaña de recibos
-                document.getElementById('recibos-tab').classList.add('active');
-                document.getElementById('recibos').classList.add('show', 'active');
-                
-                // Actualizar atributos ARIA
-                document.getElementById('clientes-tab').setAttribute('aria-selected', 'false');
-                document.getElementById('recibos-tab').setAttribute('aria-selected', 'true');
-            ");
+            // Cambiar a la pestaña de recibos usando Blazor nativo
+            activeTab = "recibos";
+            
+            mensajeRecibo = $"Mostrando recibos del cliente {dni}. " + mensajeRecibo;
+            esErrorRecibo = false;
         }
         catch (Exception ex)
         {
-            mensajeRecibo = $"Error al cambiar de pestaña: {ex.Message}";
+            mensajeRecibo = $"Error: {ex.Message}";
             esErrorRecibo = true;
         }
     }
 
+    // Métodos para probar el cambio de pestañas
     private void LimpiarFormularioCliente()
     {
         dniCliente = "";
