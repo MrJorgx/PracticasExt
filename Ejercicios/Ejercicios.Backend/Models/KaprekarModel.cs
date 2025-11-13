@@ -3,14 +3,14 @@ namespace Ejercicios.Backend.Models
     public class KaprekarRequest
     {
         public int Numero { get; set; }
-        public string MetodoCalculo { get; set; } = "OPTIMIZADO";   // OPTIMIZADO, FUERZA_BRUTA, MATEMATICO
+        public string MetodoCalculo { get; set; } = "OPTIMIZADO";   // Método por defecto
     }
 
     public class KaprekarResponse
     {
         public int Numero { get; set; }
         public bool EsKaprekar { get; set; }
-        public string MetodoUtilizacion { get; set; } = "";
+        public string MetodoUtilizado { get; set; } = "";
         public int NumeroOperaciones { get; set; }
         public long Cuadrado { get; set; }
         public string Descomposicion { get; set; } = "";
@@ -26,7 +26,7 @@ namespace Ejercicios.Backend.Models
             var response = new KaprekarResponse
             {
                 Numero = numero,
-                MetodoUtilizacion = metodo,
+                MetodoUtilizado = metodo,
                 PasosCalculo = new List<string>()
             };
 
@@ -34,7 +34,7 @@ namespace Ejercicios.Backend.Models
             {
                 response.PasosCalculo.Add($"Verificando si {numero} es un número Kaprekar");
 
-                switch (metodo.ToUpper())
+                switch (metodo.ToUpper())                       // OPTIMIZADO, FUERZA_BRUTA, MATEMATICO
                 {
                     case "OPTIMIZADO":
                         CalcularOptimizado(response);
