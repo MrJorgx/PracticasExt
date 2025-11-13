@@ -1,7 +1,296 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio - Ejercicios prácticos</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container-fluid">
+    <!-- Header principal -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-code-square text-primary"></i>
+                    Ejercicios prácticos de programación
+                </h1>
+                <p class="lead text-muted">
+                    Colección de ejercicios que demuestran diferentes conceptos de programación en C# y Blazor.
+                </p>
+                <hr class="my-4">
+            </div>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <!-- Grid de ejercicios -->
+    <div class="row g-4">
+        
+        <!-- Ejercicio 1 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-calculator"></i> Ejercicio 1
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-primary">Operaciones matemáticas</h6>
+                    <p class="card-text">
+                        Calculadora que realiza operaciones básicas (suma, resta, multiplicación, división, módulo) 
+                        con validación de entrada y control de decimales.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Validación</span>
+                        <span class="badge bg-light text-dark me-1">Matemáticas</span>
+                        <span class="badge bg-light text-dark">Formularios</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio1" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 1
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-fonts"></i> Ejercicio 2
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-success">Procesamiento de texto</h6>
+                    <p class="card-text">
+                        Herramientas para transformar texto: conversión a mayúsculas/minúsculas, 
+                        detección de palabras repetidas, reemplazo de texto y medición de rendimiento.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Diccionarios</span>
+                        <span class="badge bg-light text-dark me-1">Regex</span>
+                        <span class="badge bg-light text-dark">Performance</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio2" class="btn btn-success w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 2
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-calendar3"></i> Ejercicio 3
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-info">Operaciones con fechas</h6>
+                    <p class="card-text">
+                        Calculadora de fechas que determina diferencias entre fechas, años bisiestos, 
+                        número de semana, día de la semana y rangos de años.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">DateTime</span>
+                        <span class="badge bg-light text-dark me-1">Calendarios</span>
+                        <span class="badge bg-light text-dark">Cálculos</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio3" class="btn btn-info w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 3
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-database"></i> Ejercicio 4
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-warning">CRUD clientes y recibos</h6>
+                    <p class="card-text">
+                        Sistema completo de gestión con base de datos para clientes y recibos. 
+                        Incluye validación de DNI, tipos de cliente y operaciones CRUD completas.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Entity Framework</span>
+                        <span class="badge bg-light text-dark me-1">SQLite</span>
+                        <span class="badge bg-light text-dark">CRUD</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio4" class="btn btn-warning w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 4
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-gear"></i> Ejercicio 5
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-secondary">Implementación de clases</h6>
+                    <p class="card-text">
+                        Procesador de cadenas con formato específico (ItemName$$##Price$$##Quantity). 
+                        Demuestra parsing, validación y procesamiento por lotes.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Clases</span>
+                        <span class="badge bg-light text-dark me-1">Parsing</span>
+                        <span class="badge bg-light text-dark">Listas</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio5" class="btn btn-secondary w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 5
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-shapes"></i> Ejercicio 6
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-dark">Generación aleatoria</h6>
+                    <p class="card-text">
+                        Generador de formas geométricas aleatorias (círculos, cuadrados, triángulos) 
+                        con propiedades calculadas y visualización interactiva.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Random</span>
+                        <span class="badge bg-light text-dark me-1">Geometría</span>
+                        <span class="badge bg-light text-dark">Visualización</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio6" class="btn btn-dark w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 6
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-infinity"></i> Ejercicio 7
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-danger">Números de Kaprekar</h6>
+                    <p class="card-text">
+                        Exploración de una curiosidad matemática: números que al elevarse al cuadrado 
+                        y dividirse, sus partes suman el número original. Incluye múltiples algoritmos.
+                    </p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">Algoritmos</span>
+                        <span class="badge bg-light text-dark me-1">Matemáticas</span>
+                        <span class="badge bg-light text-dark">Optimización</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="/ejercicio7" class="btn btn-danger w-100">
+                        <i class="bi bi-arrow-right"></i> Ir al ejercicio 7
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sección de información adicional -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light border-0">
+                <div class="card-body text-center py-4">
+                    <h4 class="text-secondary mb-3">
+                        <i class="bi bi-info-circle"></i> Información del proyecto
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-primary">🎯 Objetivo</h6>
+                            <p class="small text-muted">
+                                Demostrar diferentes aspectos de la programación en C# y el desarrollo web con Blazor
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-success">🛠️ Tecnologías</h6>
+                            <p class="small text-muted">
+                                C# .NET 9, Blazor WebAssembly, Entity Framework Core, SQLite, Bootstrap 5
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-info">📚 Conceptos</h6>
+                            <p class="small text-muted">
+                                CRUD, Validación, Algoritmos, Bases de Datos, APIs REST, Componentes
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer con navegación rápida -->
+    <div class="row mt-4 mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <h5 class="text-secondary mb-3">Navegación rápida</h5>
+                <div class="btn-group-vertical btn-group-sm d-md-none" role="group">
+                    <a href="/ejercicio1" class="btn btn-outline-primary">Ejercicio 1 - Calculadora</a>
+                    <a href="/ejercicio2" class="btn btn-outline-success">Ejercicio 2 - Texto</a>
+                    <a href="/ejercicio3" class="btn btn-outline-info">Ejercicio 3 - Fechas</a>
+                    <a href="/ejercicio4" class="btn btn-outline-warning">Ejercicio 4 - CRUD</a>
+                    <a href="/ejercicio5" class="btn btn-outline-secondary">Ejercicio 5 - Clases</a>
+                    <a href="/ejercicio6" class="btn btn-outline-dark">Ejercicio 6 - Formas</a>
+                    <a href="/ejercicio7" class="btn btn-outline-danger">Ejercicio 7 - Kaprekar</a>
+                </div>
+                <div class="btn-group d-none d-md-flex" role="group">
+                    <a href="/ejercicio1" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-calculator"></i> Ejercicio 1
+                    </a>
+                    <a href="/ejercicio2" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-fonts"></i> Ejercicio 2
+                    </a>
+                    <a href="/ejercicio3" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-calendar3"></i> Ejercicio 3
+                    </a>
+                    <a href="/ejercicio4" class="btn btn-outline-warning btn-sm">
+                        <i class="bi bi-database"></i> Ejercicio 4
+                    </a>
+                    <a href="/ejercicio5" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-gear"></i> Ejercicio 5
+                    </a>
+                    <a href="/ejercicio6" class="btn btn-outline-dark btn-sm">
+                        <i class="bi bi-shapes"></i> Ejercicio 6
+                    </a>
+                    <a href="/ejercicio7" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-infinity"></i> Ejercicio 7
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
