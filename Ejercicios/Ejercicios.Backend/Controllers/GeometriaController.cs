@@ -3,12 +3,20 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para generación aleatoria de formas geométricas
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class GeometriaController : ControllerBase
     {
         private readonly Random _random = new Random();
 
+        /// <summary>
+        /// Genera formas geométricas aleatorias (círculos, cuadrados y triángulos) con propiedades aleatorias
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Colección de formas generadas organizadas por tipo con métricas calculadas</returns>
         [HttpPost("generar")]
         public ActionResult<FormasGeneradasResponse> GenerarFormas([FromBody] GenerarFormasRequest request)
         {
@@ -132,19 +140,32 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
-        // Genera un número positivo random
+        /// <summary>
+        /// Genera un número decimal aleatorio positivo dentro de un rango específico
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns>Número decimal aleatorio redondeado a 2 decimales</returns>
         private double GenerarNumeroPositivo(double min, double max)
         {
             return Math.Round(_random.NextDouble() * (max - min) + min, 2);
         }
 
-        //Genera un color random
+        /// <summary>
+        /// Selecciona un color aleatorio de la enumeración disponible
+        /// </summary>
+        /// <returns>Color aleatorio del enum Color</returns>
         private Color GenerarColorAleatorio()
         {
             var colores = Enum.GetValues<Color>();
             return colores[_random.Next(colores.Length)];
         }
 
+        /// <summary>
+        /// Convierte una forma geométrica del modelo interno a DTO para la respuesta API
+        /// </summary>
+        /// <param name="forma"></param>
+        /// <returns>DTO con toda la informción de la forma para el frontend</returns>
         private FormaGeometricaResponse ConvertirADto(FormaGeometrica forma)
         {
             return new FormaGeometricaResponse

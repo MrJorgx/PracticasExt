@@ -5,10 +5,18 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para operaciones de procesamiento de texto
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class TextoController : ControllerBase
     {
+        /// <summary>
+        /// Procesa un texto realizando diversas transformaciones y análisis
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Resultado con las transformaciones, análisis de palabras repetidas y métricas de tiempo</returns>
         [HttpPost("procesar")]
         public ActionResult<TextoResult> ProcesarTexto([FromBody] TextoRequest request)
         {
@@ -58,6 +66,11 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Encuentra palabras repetidas más de una vez en el texto
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns>Diccionario con las palabras repetidas y número de ocurrencias</returns>
         private Dictionary<string, int> EncontrarPalabrasRepetidas(string texto)
         {
             var palabrasRepetidas = new Dictionary<string, int>();
@@ -95,6 +108,11 @@ namespace Ejercicios.Backend.Controllers
             return palabrasRepetidas;
         }
 
+        /// <summary>
+        /// Concatena el texto 1000 veces y mide el tiempo de ejecución
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns>Tupla con el tiempo en milisegundos y longitud del texto concatenado</returns>
         private (double tiempo, int longitud) ConcatenarTexto1000Veces(string texto)
         {
             // Medir tiempo de concatenacion

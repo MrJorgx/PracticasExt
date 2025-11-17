@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para operaciones CRUD de recibos
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class ReciboController : ControllerBase
@@ -17,7 +20,11 @@ namespace Ejercicios.Backend.Controllers
             _context = context;
         }
 
-        // Método para validar formato de DNI
+        /// <summary>
+        /// Valida que el DNI tenga el formato correcto (8 dígitos y 1 letra)
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <returns>True si el formato es válido, False en caso contrario</returns>
         private bool ValidarFormatoDni(string dni)
         {
             if (string.IsNullOrWhiteSpace(dni))
@@ -28,6 +35,11 @@ namespace Ejercicios.Backend.Controllers
             return Regex.IsMatch(dni, patron);
         }
 
+        /// <summary>
+        /// Crea un nuevo recibo en la base de datos con validaciones de cliente y cuota máxima
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Datos del recibo creado con información del cliente asociado</returns>
         [HttpPost]
         public async Task<ActionResult<ReciboResponse>> CrearRecibo([FromBody] ReciboRequest request)
         {
@@ -102,6 +114,13 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene todos los recibos de un cliente específico
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <param name="ordenarPorFecha"></param>
+        /// <param name="descendente"></param>
+        /// <returns>Lista de recibos del cliente con información completa</returns>
         [HttpGet("cliente/{dni}")]
         public async Task<ActionResult<List<ReciboResponse>>> ObtenerRecibosPorCliente(
             string dni, 
@@ -162,6 +181,12 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Actualiza el importe y fecha de emisión de un recibo existente
+        /// </summary>
+        /// <param name="numeroRecibo"></param>
+        /// <param name="request"></param>
+        /// <returns>Datos actualizados del recibo</returns>
         [HttpPut("{numeroRecibo}")]
         public async Task<ActionResult<ReciboResponse>> ActualizarRecibo(string numeroRecibo, [FromBody] ReciboUpdateRequest request)
         {
@@ -208,6 +233,11 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Elimina un recibo de la base de datos 
+        /// </summary>
+        /// <param name="numeroRecibo"></param>
+        /// <returns>Mensaje de confirmación de la eliminación</returns>
         [HttpDelete("{numeroRecibo}")]
         public async Task<IActionResult> EliminarRecibo(string numeroRecibo)
         {
@@ -231,6 +261,12 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Lista todos los recibos
+        /// </summary>
+        /// <param name="ordenarPor"></param>
+        /// <param name="descendente"></param>
+        /// <returns>Lista de todos los recibos con información completa de clientes</returns>
         [HttpGet]
         public async Task<ActionResult<List<ReciboResponse>>> ListarTodosLosRecibos(
             [FromQuery] string ordenarPor = "fecha", 

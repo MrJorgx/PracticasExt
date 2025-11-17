@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para operaciones CRUDde clientes
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class ClienteController : ControllerBase
@@ -17,7 +20,11 @@ namespace Ejercicios.Backend.Controllers
             _context = context;
         }
 
-        // Método para validar formato de DNI
+        /// <summary>
+        /// Valida que el DNI tenga el formato correcto (8 dígitos y 1 letra)
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <returns>True si el formato es válido, False en caso contrario</returns>
         private bool ValidarFormatoDni(string dni)
         {
             if (string.IsNullOrWhiteSpace(dni))
@@ -28,6 +35,11 @@ namespace Ejercicios.Backend.Controllers
             return Regex.IsMatch(dni, patron);
         }
 
+        /// <summary>
+        /// Crea un nuevo cliente en la base de datos
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Datos del cliente creado con información adicional</returns>
         [HttpPost]
         public async Task<ActionResult<ClienteResponse>> CrearCliente([FromBody] ClienteRequest request)
         {
@@ -105,6 +117,11 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene un cliente específico por su DNI
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <returns>Datos completos del cliente incluyendo el total de recibos</returns>
         [HttpGet("{dni}")]
         public async Task<ActionResult<ClienteResponse>> ObtenerCliente(string dni)
         {
@@ -148,6 +165,12 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Actualiza los datos de un cliente existente (el DNI no se puede cambiar)
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <param name="request"></param>
+        /// <returns>Datos actualizados del cliente</returns>
         [HttpPut("{dni}")]
         public async Task<ActionResult<ClienteResponse>> ActualizarCliente(string dni, [FromBody] ClienteUpdateRequest request)
         {
@@ -213,6 +236,11 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Elimina un cliente de la base de datos
+        /// </summary>
+        /// <param name="dni"></param>
+        /// <returns>Mensaje de confirmación de la eliminación</returns>
         [HttpDelete("{dni}")]
         public async Task<IActionResult> EliminarCliente(string dni)
         {
@@ -246,6 +274,12 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Lista todos los clientes con opciones de ordenamiento
+        /// </summary>
+        /// <param name="ordenarPor"></param>
+        /// <param name="descendente"></param>
+        /// <returns>Lista de todos los clientes con su información y total de recibos</returns>
         [HttpGet]
         public async Task<ActionResult<List<ClienteResponse>>> ListarClientes(
             [FromQuery] string ordenarPor = "dni", 

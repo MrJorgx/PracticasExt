@@ -3,10 +3,18 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para procesamiento de item con formato específico (ItemName$$##Price$$##Quantity)
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class ItemController : ControllerBase
     {
+        /// <summary>
+        /// Procesa un item individual con formato específico y extrae sus componentes
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Item procesado con nombre, precio, cantidad y salida formateada</returns>
         [HttpPost("procesar")]
         public ActionResult<ItemResponse> ProcesarItem([FromBody] ItemRequest request)
         {
@@ -57,6 +65,11 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Procesa múltiples items y calcula estadísticas agregadas
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Lista de items procesados con resumen y valor total</returns>
         [HttpPost("procesar-multiples")]
         public ActionResult<MultipleItemsResponse> ProcesarMultiplesItems([FromBody] MultipleItemsRequest request)
         {
@@ -115,6 +128,10 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Proporciona un ejemplo de formato válido
+        /// </summary>
+        /// <returns>String ejemplo con formato correcto</returns>
         [HttpGet("ejemplo")]
         public ActionResult<string> ObtenerEjemplo()
         {

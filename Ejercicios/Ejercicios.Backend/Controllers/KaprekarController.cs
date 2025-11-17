@@ -3,10 +3,18 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para verificación de números de Kaprekar con diferentes algoritmos
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class KaprekarController : ControllerBase
     {
+        /// <summary>
+        /// Verifica si un número es un número de Kaprekar usando el método especificado
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Resultado detallado de la verificación con pasos, explicación y métricas</returns>
         [HttpPost("verificar")]
         public ActionResult<KaprekarResponse> VerificarKaprekar([FromBody] KaprekarRequest request)
         {
@@ -41,6 +49,10 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Proporciona una lista de números de Kaprekar conocidos para testing
+        /// </summary>
+        /// <returns>Lista de número que son conocidos como números de Kaprekar</returns>
         [HttpGet("ejemplos")]
         public ActionResult<List<int>> ObtenerEjemplos()
         {
@@ -48,6 +60,10 @@ namespace Ejercicios.Backend.Controllers
             return Ok(ejemplos);
         }
 
+        /// <summary>
+        /// Proporciona información sobre los números de Kaprekar y los métodos disponibles de cálculo
+        /// </summary>
+        /// <returns>Objeto con definición, ejemplos y descripción de métodos de cálculo</returns>
         [HttpGet("info")]
         public ActionResult<object> ObtenerInformacion()
         {

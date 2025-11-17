@@ -3,10 +3,18 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para operaciones matemáticas
+    /// <summary>
     [ApiController]
     [Route("api/[controller]")]
     public class CalculadoraController : ControllerBase
     {
+        /// <summary>
+        /// Realiza operaciones matemáticas (suma, resta, multiplicación, división, módulo y comparación) con dos números
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Resultado de todas las operaciones matemáticas</returns>
         [HttpPost("calcular")]
         public ActionResult<OperacionResult> CalcularOperaciones([FromBody] OperacionRequest request)
         {

@@ -1,26 +1,79 @@
 namespace Ejercicios.Backend.Models
 {
+    /// <summary>
+    /// DTO para las solicitudes de verificación de números de Kaprekar
+    /// </summary>
     public class KaprekarRequest
     {
+        /// <summary>
+        /// Número a verificar si es un número de Kaprekar
+        /// </summary>
         public int Numero { get; set; }
+
+        /// <summary>
+        /// Método de cálculo a utilizar (OPTIMIZADO, FUERZA_BRUTA, MATEMÁTICO)
+        /// </summary>
         public string MetodoCalculo { get; set; } = "OPTIMIZADO";   // Método por defecto
     }
 
+    /// <summary>
+    /// DTO para las respuestas de verificación con resultados detallados
+    /// </summary>
     public class KaprekarResponse
     {
+        /// <summary>
+        /// Número que fue verificado
+        /// </summary>
         public int Numero { get; set; }
+
+        /// <summary>
+        /// Indica si el número es un número de Kaprekar o no
+        /// </summary>
         public bool EsKaprekar { get; set; }
+
+        /// <summary>
+        /// Método utilizado para el cálculo
+        /// </summary>
         public string MetodoUtilizado { get; set; } = "";
+
+        /// <summary>
+        /// Número de operaciones realizadas durante el cálculo
+        /// </summary>
         public int NumeroOperaciones { get; set; }
+
+        /// <summary>
+        /// Cuadrado del número original
+        /// </summary>
         public long Cuadrado { get; set; }
+
+        /// <summary>
+        /// Descomposición que demuestra la propiedad Kaprekar (si aplica)
+        /// </summary>
         public string Descomposicion { get; set; } = "";
+
+        /// <summary>
+        /// Explicación detallada del resultado
+        /// </summary>
         public string Explicacion { get; set; } = "";
+
+        /// <summary>
+        /// Lista de pasos del cálculo para seguimiento detallado
+        /// </summary>
         public List<string> PasosCalculo { get; set; } = new List<string>();
     }
 
-    // Clase auxiliar para cálculos
+    /// <summary>
+    /// Clase auxiliar estática para realizar cálculos de números de Kaprekar
+    /// </summary>
     public static class KaprekarCalculator
     {
+
+        /// <summary>
+        /// Calcula si un número es Kaprekar usando el método especificado
+        /// </summary>
+        /// <param name="numero"></param>
+        /// <param name="metodo"></param>
+        /// <returns>Respuesta completa con resultado y detalles del cálculo</returns>
         public static KaprekarResponse CalcularKaprekar(int numero, string metodo)
         {
             var response = new KaprekarResponse
@@ -59,6 +112,10 @@ namespace Ejercicios.Backend.Models
             return response;
         }
 
+        /// <summary>
+        /// Implementación optimizada que prueba solo las divisiones necesarias
+        /// </summary>
+        /// <param name="response"></param>
         private static void CalcularOptimizado(KaprekarResponse response)
         {
             int operaciones = 0;
@@ -114,6 +171,10 @@ namespace Ejercicios.Backend.Models
             response.NumeroOperaciones = operaciones;
         }
 
+        /// <summary>
+        /// Implementación de fuerza bruta que prueba todas las combinaciones posibles
+        /// </summary>
+        /// <param name="response"></param>
         private static void CalcularFuerzaBruta(KaprekarResponse response)
         {
             int operaciones = 0;
@@ -161,6 +222,10 @@ namespace Ejercicios.Backend.Models
             response.NumeroOperaciones = operaciones;
         }
 
+        /// <summary>
+        /// Implementación matemática basada en propiedades algebraicas de los números de Kaprekar
+        /// </summary>
+        /// <param name="response"></param>
         private static void CalcularMatematico(KaprekarResponse response)
         {
             int operaciones = 0;

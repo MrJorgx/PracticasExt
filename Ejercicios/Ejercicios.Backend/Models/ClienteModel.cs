@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Ejercicios.Backend.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum TipoCliente
     {
         REGISTRADO,

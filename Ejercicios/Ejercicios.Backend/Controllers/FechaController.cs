@@ -4,10 +4,18 @@ using Ejercicios.Backend.Models;
 
 namespace Ejercicios.Backend.Controllers
 {
+    /// <summary>
+    /// Controlador para operaciones con fechas y cálculos relacionados
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class FechaController : ControllerBase
     {
+        /// <summary>
+        /// Procesa dos fechas y calcula diversas operaciones y propiedades relacionadas
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Resultado con diferencias, propiedades de años, números de semana y días de la semana</returns>
         [HttpPost("procesar")]
         public ActionResult<FechaResult> ProcesarFechas([FromBody] FechaRequest request)
         {
@@ -64,7 +72,14 @@ namespace Ejercicios.Backend.Controllers
             }
         }
 
-        // Valida que las fechas no sean vacías o no tengan el formato yyyy/MM/dd
+        /// <summary>
+        /// Valida que las fechas no sean vacías y tengan el formato yyyy/MM/dd
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="fecha1"></param>
+        /// <param name="fecha2"></param>
+        /// <param name="mensajeError"></param>
+        /// <returns>True si ambas fechas son validas, False si hay errores</returns>
         private bool ValidarYConvertirFechas(FechaRequest request, out DateTime fecha1, out DateTime fecha2, out string mensajeError)
         {
             fecha1 = default;
@@ -92,7 +107,11 @@ namespace Ejercicios.Backend.Controllers
             return true;
         }
 
-        // Obtiene el número de la semana en base a que día de la semana empieza el año
+        /// <summary>
+        /// Obtiene el número de la semana del año basado en la cultura ISO 8601
+        /// </summary>
+        /// <param name="fecha"></param>
+        /// <returns>Número de semana del año (1-53)</returns>
         private int ObtenerNumeroSemana(DateTime fecha)
         {
             // Usamos el calendario ISO 8601
