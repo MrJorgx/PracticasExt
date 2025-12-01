@@ -32,6 +32,26 @@ namespace Ejercicios.Backend.Models
         }
     }
 
+    // Validar NIE
+    public class ValidarNieAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object? value)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                return false;
+
+            string nie = value.ToString()!.Trim().ToUpper();
+
+            var patron = @"^[XYZ][0-9]{7}[A-Z]$";
+            return Regex.IsMatch(nie, patron);
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return "El NIE debe tener 1 letra (X, Y o Z), 7 dígitos y una letra.";
+        }
+    }
+
     public class Cliente
     {
         public string Dni { get; set; } = "";

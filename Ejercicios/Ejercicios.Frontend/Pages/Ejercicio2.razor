@@ -1,5 +1,6 @@
 @page "/ejercicio2"
 @inject HttpClient Http
+@inject ILogger<Ejercicio2> Logger
 
 <PageTitle>Ejercicio 2 - Operaciones con texto</PageTitle>
 
@@ -40,7 +41,7 @@
     @if (!string.IsNullOrEmpty(errorMessage))
     {
         <div class="alert alert-danger" role="alert">
-            @errorMessage
+            <i class="bi bi-exclamation-triangle"></i> @errorMessage
         </div>
     }
 
@@ -53,7 +54,7 @@
                         <h3>Resultados del procesamiento</h3>
                     </div>
                     <div class="card-body">
-
+                        
                         <!-- Número de caracteres -->
                         <div class="mb-3">
                             <h5>Número de caracteres:</h5>
@@ -128,16 +129,25 @@
     private string errorMessage = "";
     private TextoResult? resultado;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Inicializando componente Ejercicio2 (Procesamiento de texto)");
+    }
+
     private async Task ProcesarTexto()
     {
         if (string.IsNullOrWhiteSpace(textoEntrada))
         {
             errorMessage = "Por favor, introduce el texto para procesar.";
+            Logger.LogWarning("Intento de procesar texto vacío");
             return;
         }
 
         try
         {
+            Logger.LogInformation("Iniciando procesamiento de texto desde el frontend. Longitud: {Longitud} caracteres", 
+                textoEntrada.Length);
+
             isProcessing = true;
             errorMessage = "";
             mostrarResultados = false;
@@ -147,45 +157,69 @@
                 Texto = textoEntrada
             };
 
+            Logger.LogDebug("Enviando solicitud al API para procesar texto");
+
             var response = await Http.PostAsJsonAsync("api/texto/procesar", request);
 
             if (response.IsSuccessStatusCode)
             {
                 resultado = await response.Content.ReadFromJsonAsync<TextoResult>();
                 mostrarResultados = true;
+
+                Logger.LogInformation("Procesamiento de texto completado exitosamente. Caracteres: {Caracteres}, Palabras repetidas: {PalabrasRepetidas}, Tiempo concatenación: {Tiempo}ms", 
+                    resultado?.NumeroCaracteres, resultado?.PalabrasRepetidas?.Count, resultado?.TiempoConcatenacion);
+
+                if (resultado?.PalabrasRepetidas?.Count > 0)
+                {
+                    Logger.LogDebug("Palabras repetidas encontradas: {Palabras}", 
+                        string.Join(", ", resultado.PalabrasRepetidas.Keys));
+                }
             }
             else
             {
+                var errorContent = await response.Content.ReadAsStringAsync();
                 errorMessage = $"Error al procesar la solicitud: {response.StatusCode}";
+                Logger.LogError("Error en la respuesta del API al procesar texto: {StatusCode} - {ErrorContent}", 
+                    response.StatusCode, errorContent);
             }
         }
         catch (Exception ex)
         {
             errorMessage = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al procesar texto de {Longitud} caracteres", 
+                textoEntrada?.Length ?? 0);
         }
         finally
         {
             isProcessing = false;
+            Logger.LogDebug("Finalizando proceso de procesamiento de texto");
         }
     }
 
     private void CargarEjemplo()
     {
-        textoEntrada = "Proconsi es una empresa de Tecnologías de la Información y la Comunicación especializada en el desarrollo e integración de soluciones informáticas para todo tipo de empresas.Más de tres décadas de experiencia avalan a una compañía tan flexible como responsable.Cuenta con un equipo multidisciplinar de más de 120 profesionales cualificados, expertos y comprometidos con un único objetivo: hallar la solución tecnológica exacta para cada cliente. Proconsi es especialista en la creación y el desarrollo de software de gestión, consultoría tecnológica, dirección y gestión de proyectos I+D+i basados en TIC, soporte técnico, aplicaciones móviles y fomento de tendencias en nuevas tecnologías, como el cloud computing.";
+        Logger.LogDebug("Cargando texto de ejemplo");
+
+        textoEntrada = "Proconsi es una empresa de Tecnologías de la Información y la Comunicación especializada en el desarrollo e integración de soluciones informáticas para todo tipo de empresas. Más de tres décadas de experiencia avalan a una compañía tan flexible como responsable. Cuenta con un equipo multidisciplinar de más de 120 profesionales cualificados, expertos y comprometidos con un único objetivo: hallar la solución tecnológica exacta para cada cliente. Proconsi es especialista en la creación y el desarrollo de software de gestión, consultoría tecnológica, dirección y gestión de proyectos I+D+i basados en TIC, soporte técnico, aplicaciones móviles y fomento de tendencias en nuevas tecnologías, como el cloud computing.";
 
         mostrarResultados = false;
         errorMessage = "";
         resultado = null;
+
+        Logger.LogDebug("Texto de ejemplo cargado. Longitud: {Longitud} caracteres", textoEntrada.Length);
     }
 
     private void LimpiarResultados()
     {
+        Logger.LogDebug("Limpiando formulario de procesamiento de texto");
+
         textoEntrada = "";
         mostrarResultados = false;
         errorMessage = "";
         resultado = null;
     }
 
+    // Modelos para el frontend
     public class TextoRequest
     {
         public string Texto { get; set; } = "";

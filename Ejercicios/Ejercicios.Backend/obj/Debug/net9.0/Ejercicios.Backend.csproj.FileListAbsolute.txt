@@ -177,3 +177,12 @@
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.AspNetCore.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Extensions.Hosting.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Extensions.Logging.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Formatting.Compact.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Settings.Configuration.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Sinks.Console.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Sinks.Debug.dll
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/bin/Debug/net9.0/Serilog.Sinks.File.dll

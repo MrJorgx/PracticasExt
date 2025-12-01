@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ejercicios.Backend.Data;
 using Ejercicios.Backend.Models;
 using System.Text.RegularExpressions;
@@ -14,10 +15,12 @@ namespace Ejercicios.Backend.Controllers
     public class ReciboController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<ReciboController> _logger;
 
-        public ReciboController(AppDbContext context)
+        public ReciboController(AppDbContext context, ILogger<ReciboController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         /// <summary>
@@ -45,18 +48,31 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
+                _logger.LogInformation("Iniciando creación de recibo");
+
+                if (request == null)
+                {
+                    _logger.LogWarning("Solicitud de creación de recibo recibida sin datos");
+                    return BadRequest("Los datos de entrada son requeridos");
+                }
+
                 // Normalizar DNI
                 request.DniCliente = request.DniCliente?.Trim().ToUpper() ?? "";
+
+                _logger.LogInformation("Creando recibo: Número={NumeroRecibo}, DNI Cliente={DniCliente}, Importe={Importe}", 
+                    request.NumeroRecibo, request.DniCliente, request.Importe);
 
                 // Validar formato DNI
                 if (!ValidarFormatoDni(request.DniCliente))
                 {
+                    _logger.LogWarning("Formato de DNI inválido en creación de recibo: {DniCliente}", request.DniCliente);
                     return BadRequest("El DNI debe tener 8 dígitos y una letra.");
                 }
 
                 // Validar que no exista un recibo con el mismo número
                 if (await _context.Recibos.AnyAsync(r => r.NumeroRecibo == request.NumeroRecibo))
                 {
+                    _logger.LogWarning("Intento de crear recibo con número duplicado: {NumeroRecibo}", request.NumeroRecibo);
                     return BadRequest($"Ya existe un recibo con número {request.NumeroRecibo}");
                 }
 
@@ -64,6 +80,7 @@ namespace Ejercicios.Backend.Controllers
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Dni == request.DniCliente);
                 if (cliente == null)
                 {
+                    _logger.LogWarning("Intento de crear recibo para cliente inexistente: {DniCliente}", request.DniCliente);
                     return BadRequest($"No existe cliente con DNI {request.DniCliente}");
                 }
 
@@ -72,6 +89,8 @@ namespace Ejercicios.Backend.Controllers
                 {
                     if (request.Importe > cliente.CuotaMaxima)
                     {
+                        _logger.LogWarning("Importe excede cuota máxima: Cliente={DniCliente}, Importe={Importe}, CuotaMaxima={CuotaMaxima}", 
+                            request.DniCliente, request.Importe, cliente.CuotaMaxima);
                         return BadRequest($"El importe {request.Importe} supera la cuota máxima permitida de {cliente.CuotaMaxima}");
                     }
                 }
@@ -87,6 +106,8 @@ namespace Ejercicios.Backend.Controllers
                 _context.Recibos.Add(recibo);
                 await _context.SaveChangesAsync();
 
+                _logger.LogDebug("Recibo guardado en base de datos: {NumeroRecibo}", request.NumeroRecibo);
+
                 // Recargar el recibo con el cliente incluido
                 var reciboConCliente = await _context.Recibos
                     .Include(r => r.Cliente)
@@ -94,6 +115,7 @@ namespace Ejercicios.Backend.Controllers
 
                 if (reciboConCliente == null || reciboConCliente.Cliente == null)
                 {
+                    _logger.LogError("Error al recuperar recibo creado: {NumeroRecibo}", request.NumeroRecibo);
                     return StatusCode(500, "Error al recuperar el recibo creado");
                 }
 
@@ -106,10 +128,15 @@ namespace Ejercicios.Backend.Controllers
                     FechaEmision = reciboConCliente.FechaEmision
                 };
 
+                _logger.LogInformation("Recibo creado exitosamente: {NumeroRecibo} para cliente {DniCliente} - {NombreCliente}, Importe: {Importe}", 
+                    response.NumeroRecibo, response.DniCliente, response.NombreCliente, response.Importe);
+
                 return Ok(response);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al crear recibo: Número={NumeroRecibo}, DNI={DniCliente}", 
+                    request?.NumeroRecibo, request?.DniCliente);
                 return StatusCode(500, $"Error al crear recibo: {ex.Message}");
             }
         }
@@ -129,22 +156,21 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
-                // Normalizar DNI
-                // request.DniCliente = request.DniCliente?.Trim().ToUpper() ?? "";
-
-                // Validar formato DNI
-                // if (!ValidarFormatoDni(request.DniCliente))
+                _logger.LogInformation("Buscando recibos para cliente: {DNI}, OrdenarPorFecha: {OrdenarPorFecha}, Descendente: {Descendente}", 
+                    dni, ordenarPorFecha, descendente);
 
                 dni = dni?.Trim().ToUpper() ?? "";
 
                 if (!ValidarFormatoDni(dni))
                 {
+                    _logger.LogWarning("Formato de DNI inválido en búsqueda de recibos: {DNI}", dni);
                     return BadRequest("El DNI debe tener 8 dígitos y una letra.");
                 }
                 
                 // Validar que existe el cliente
                 if (!await _context.Clientes.AnyAsync(c => c.Dni == dni))
                 {
+                    _logger.LogWarning("Cliente no encontrado para búsqueda de recibos: {DNI}", dni);
                     return NotFound($"No existe cliente con DNI {dni}");
                 }
 
@@ -161,8 +187,9 @@ namespace Ejercicios.Backend.Controllers
                     query = descendente ? query.OrderByDescending(r => r.NumeroRecibo) : query.OrderBy(r => r.NumeroRecibo);
                 }
 
-                // Obtener recibos de cliente
                 var recibos = await query.ToListAsync();
+
+                _logger.LogDebug("Recibos encontrados para cliente {DNI}: {TotalRecibos}", dni, recibos.Count);
 
                 var response = recibos.Select(recibo => new ReciboResponse
                 {
@@ -177,6 +204,7 @@ namespace Ejercicios.Backend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al obtener recibos del cliente: {DNI}", dni);
                 return StatusCode(500, $"Error al obtener recibos del cliente: {ex.Message}");
             }
         }
@@ -192,21 +220,33 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
-                // Elimar recibo
+                _logger.LogInformation("Iniciando actualización de recibo: {NumeroRecibo}", numeroRecibo);
+
+                if (request == null)
+                {
+                    _logger.LogWarning("Solicitud de actualización de recibo recibida sin datos");
+                    return BadRequest("Los datos de entrada son requeridos");
+                }
+
                 var recibo = await _context.Recibos
                     .Include(r => r.Cliente)
                     .FirstOrDefaultAsync(r => r.NumeroRecibo == numeroRecibo);
 
                 if (recibo == null)
                 {
+                    _logger.LogWarning("Recibo no encontrado para actualización: {NumeroRecibo}", numeroRecibo);
                     return NotFound($"No se encontró recibo con número {numeroRecibo}");
                 }
+
+                var importeAnterior = recibo.Importe;
 
                 // Validar cuota máxima para clientes REGISTRADO
                 if (recibo.Cliente.TipoCliente == TipoCliente.REGISTRADO)
                 {
                     if (request.Importe > recibo.Cliente.CuotaMaxima)
                     {
+                        _logger.LogWarning("Actualización: Importe excede cuota máxima: Recibo={NumeroRecibo}, Cliente={DniCliente}, Importe={Importe}, CuotaMaxima={CuotaMaxima}", 
+                            numeroRecibo, recibo.DniCliente, request.Importe, recibo.Cliente.CuotaMaxima);
                         return BadRequest($"El importe {request.Importe} supera la cuota máxima permitida de {recibo.Cliente.CuotaMaxima}");
                     }
                 }
@@ -215,6 +255,9 @@ namespace Ejercicios.Backend.Controllers
                 recibo.FechaEmision = request.FechaEmision ?? recibo.FechaEmision;
 
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Recibo actualizado exitosamente: {NumeroRecibo}, Cliente: {DniCliente}, Importe anterior: {ImporteAnterior}, Importe nuevo: {ImporteNuevo}", 
+                    numeroRecibo, recibo.DniCliente, importeAnterior, recibo.Importe);
 
                 var response = new ReciboResponse
                 {
@@ -229,6 +272,7 @@ namespace Ejercicios.Backend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al actualizar recibo: {NumeroRecibo}", numeroRecibo);
                 return StatusCode(500, $"Error al actualizar recibo: {ex.Message}");
             }
         }
@@ -243,20 +287,31 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
-                var recibo = await _context.Recibos.FirstOrDefaultAsync(r => r.NumeroRecibo == numeroRecibo);
+                _logger.LogInformation("Iniciando eliminación de recibo: {NumeroRecibo}", numeroRecibo);
+
+                var recibo = await _context.Recibos
+                    .Include(r => r.Cliente)
+                    .FirstOrDefaultAsync(r => r.NumeroRecibo == numeroRecibo);
 
                 if (recibo == null)
                 {
+                    _logger.LogWarning("Recibo no encontrado para eliminación: {NumeroRecibo}", numeroRecibo);
                     return NotFound($"No se encontró recibo con número {numeroRecibo}");
                 }
 
+                var infoRecibo = $"Cliente: {recibo.DniCliente}, Importe: {recibo.Importe}";
+
                 _context.Recibos.Remove(recibo);
                 await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Recibo eliminado exitosamente: {NumeroRecibo} - {InfoRecibo}", 
+                    numeroRecibo, infoRecibo);
 
                 return Ok($"Recibo {numeroRecibo} eliminado correctamente");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al eliminar recibo: {NumeroRecibo}", numeroRecibo);
                 return StatusCode(500, $"Error al eliminar recibo: {ex.Message}");
             }
         }
@@ -274,6 +329,9 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
+                _logger.LogInformation("Listando todos los recibos. Ordenar por: {OrdenarPor}, Descendente: {Descendente}", 
+                    ordenarPor, descendente);
+
                 var query = _context.Recibos.Include(r => r.Cliente).AsQueryable();
 
                 query = ordenarPor.ToLower() switch
@@ -286,6 +344,8 @@ namespace Ejercicios.Backend.Controllers
                 };
 
                 var recibos = await query.ToListAsync();
+
+                _logger.LogDebug("Consulta de recibos ejecutada. Total encontrados: {TotalRecibos}", recibos.Count);
 
                 var response = recibos.Select(recibo => new ReciboResponse
                 {
@@ -300,6 +360,7 @@ namespace Ejercicios.Backend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error al listar recibos");
                 return StatusCode(500, $"Error al listar recibos: {ex.Message}");
             }
         }

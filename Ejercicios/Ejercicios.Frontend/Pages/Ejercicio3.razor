@@ -1,5 +1,6 @@
 @page "/ejercicio3"
 @inject HttpClient Http
+@inject ILogger<Ejercicio3> Logger
 
 <PageTitle>Ejercicio 3 - Operaciones con fechas</PageTitle>
 
@@ -28,7 +29,7 @@
             <button class="btn btn-primary me-2" @onclick="ProcesarFechas" disabled="@isProcessing">
                 @if (isProcessing)
                 {
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidder="true"></span>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <text> Procesando...</text>
                 }
                 else
@@ -48,7 +49,7 @@
     @if (!string.IsNullOrEmpty(mensajeError))
     {
         <div class="alert alert-danger" role="alert">
-            @mensajeError
+            <i class="bi bi-exclamation-triangle"></i> @mensajeError
         </div>
     }
 
@@ -65,7 +66,7 @@
                         <!-- Fechas introducidas -->
                         <div class="mb-4">
                             <h5>Fechas introducidas:</h5>
-                            <div class=row>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="border p-2 bg-light">
                                         <strong>Primera fecha:</strong> @resultado.Fecha1.ToString("yyyy/MM/dd")
@@ -182,13 +183,44 @@
     private string mensajeError = "";
     private FechaResult? resultado;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Inicializando componente Ejercicio3 (Operaciones con fechas)");
+    }
+
     private async Task ProcesarFechas()
     {
         try
         {
+            Logger.LogInformation("Iniciando procesamiento de fechas desde el frontend");
+
             isProcessing = true;
             mensajeError = "";
             mostrarResultados = false;
+
+            if (string.IsNullOrWhiteSpace(fecha1Text) && string.IsNullOrWhiteSpace(fecha2Text))
+            {
+                mensajeError = "Por favor, introduce ambas fechas.";
+                Logger.LogWarning("Validación fallida: ambas fechas están vacías");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(fecha1Text))
+            {
+                mensajeError = "Por favor, introduce la primera fecha.";
+                Logger.LogWarning("Validación fallida: primera fecha vacía");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(fecha2Text))
+            {
+                mensajeError = "Por favor, introduce la segunda fecha.";
+                Logger.LogWarning("Validación fallida: segunda fecha vacía");
+                return;
+            }
+
+            Logger.LogDebug("Enviando solicitud al API para procesar fechas: {Fecha1Text}, {Fecha2Text}", 
+                fecha1Text, fecha2Text);
 
             var request = new FechaRequest
             {
@@ -202,34 +234,55 @@
             {
                 resultado = await response.Content.ReadFromJsonAsync<FechaResult>();
                 mostrarResultados = true;
+
+                Logger.LogInformation("Procesamiento de fechas completado exitosamente. Diferencia: {DiferenciaDias} días, Años bisiestos: {Bisiesto1}/{Bisiesto2}", 
+                    resultado?.DiferenciaDias, resultado?.EsBisiesto1, resultado?.EsBisiesto2);
+
+                if (resultado != null)
+                {
+                    Logger.LogDebug("Resultados detallados: Fecha1={Fecha1}, Fecha2={Fecha2}, Semanas={Semana1}/{Semana2}, Días semana={DiaSemana1}/{DiaSemana2}", 
+                        resultado.Fecha1, resultado.Fecha2, resultado.NumeroSemana1, resultado.NumeroSemana2, resultado.DiaSemana1, resultado.DiaSemana2);
+                }
             }
             else
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 mensajeError = $"Error: {errorContent}";
+                Logger.LogError("Error en la respuesta del API al procesar fechas: {StatusCode} - {ErrorContent}", 
+                    response.StatusCode, errorContent);
             }
         }
         catch (Exception ex)
-        {  
-            mensajeError = $"Error de conexion: {ex.Message}";
+        {
+            mensajeError = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al procesar fechas: Fecha1Text='{Fecha1Text}', Fecha2Text='{Fecha2Text}'", 
+                fecha1Text, fecha2Text);
         }
-        finally{
+        finally
+        {
             isProcessing = false;
+            Logger.LogDebug("Finalizando proceso de procesamiento de fechas");
         }
     }
 
     private void CargarEjemplo()
     {
+        Logger.LogDebug("Cargando ejemplo de fechas");
+
         fecha1Text = "2024/02/29";
         fecha2Text = "2026/01/01";
 
         mostrarResultados = false;
         mensajeError = "";
         resultado = null;
+
+        Logger.LogDebug("Ejemplo cargado: Fecha1='{Fecha1Text}', Fecha2='{Fecha2Text}'", fecha1Text, fecha2Text);
     }
 
     private void LimpiarResultados()
     {
+        Logger.LogDebug("Limpiando formulario de operaciones con fechas");
+
         fecha1Text = "";
         fecha2Text = "";
         mostrarResultados = false;

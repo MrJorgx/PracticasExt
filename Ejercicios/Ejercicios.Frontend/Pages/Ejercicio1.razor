@@ -1,5 +1,6 @@
 ﻿@page "/ejercicio1"
 @inject HttpClient Http
+@inject ILogger<Ejercicio1> Logger
 
 <PageTitle>Ejercicio 1 - Operaciones con números</PageTitle>
 
@@ -38,12 +39,12 @@
             @if (errorDecimales)
             {
                 <div class="invalid-feedback">
-                    Debe introducir un número entero entre 0 y 10
+                    Debe ser un número entero entre 0 y 10
                 </div>
             }
         </div>
     </div>
-
+    
     <div class="row mb-3">
         <div class="col-12">
             <button class="btn btn-primary me-2" @onclick="CalcularOperaciones" disabled="@isCalculating">
@@ -136,10 +137,17 @@
     private string errorMessage = "";
     private OperacionResult? resultado;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Inicializando componente Ejercicio1 (Calculadora de operaciones matemáticas)");
+    }
+
     private async Task CalcularOperaciones()
     {
         try
         {
+            Logger.LogInformation("Iniciando cálculo de operaciones matemáticas desde el frontend");
+
             isCalculating = true;
             errorMessage = "";
             mostrarResultados = false;
@@ -154,6 +162,7 @@
             {
                 errorCantidad1 = true;
                 errorMessage = "La primera cantidad es obligatoria.";
+                Logger.LogWarning("Validación fallida: primera cantidad vacía");
                 return;
             }
 
@@ -161,6 +170,7 @@
             {
                 errorCantidad1 = true;
                 errorMessage = $"La primera cantidad '{cantidad1Text}' no es un número válido. Por favor, introduzca un número real.";
+                Logger.LogWarning("Validación fallida: primera cantidad inválida - {Cantidad1Text}", cantidad1Text);
                 return;
             }
 
@@ -169,6 +179,7 @@
             {
                 errorCantidad2 = true;
                 errorMessage = "La segunda cantidad es obligatoria.";
+                Logger.LogWarning("Validación fallida: segunda cantidad vacía");
                 return;
             }
 
@@ -176,14 +187,16 @@
             {
                 errorCantidad2 = true;
                 errorMessage = $"La segunda cantidad '{cantidad2Text}' no es un número válido. Por favor, introduzca un número real.";
+                Logger.LogWarning("Validación fallida: segunda cantidad inválida - {Cantidad2Text}", cantidad2Text);
                 return;
             }
 
-            // Validar número de decimales
+            // Validar decimales
             if (string.IsNullOrWhiteSpace(numDecimalesText))
             {
                 errorDecimales = true;
                 errorMessage = "El número de decimales es obligatorio.";
+                Logger.LogWarning("Validación fallida: número de decimales vacío");
                 return;
             }
 
@@ -191,6 +204,7 @@
             {
                 errorDecimales = true;
                 errorMessage = $"El número de decimales '{numDecimalesText}' no es un número entero válido.";
+                Logger.LogWarning("Validación fallida: número de decimales inválido - {NumDecimalesText}", numDecimalesText);
                 return;
             }
 
@@ -198,6 +212,7 @@
             {
                 errorDecimales = true;
                 errorMessage = "El número de decimales debe estar entre 0 y 10.";
+                Logger.LogWarning("Validación fallida: número de decimales fuera de rango - {NumDecimales}", numDecimales);
                 return;
             }
 
@@ -205,6 +220,9 @@
             cantidad1Calculada = cantidad1;
             cantidad2Calculada = cantidad2;
             numDecimalesCalculados = numDecimales;
+
+            Logger.LogDebug("Validaciones completadas. Enviando solicitud al API: {Cantidad1}, {Cantidad2}, {NumDecimales} decimales", 
+                cantidad1, cantidad2, numDecimales);
 
             var request = new OperacionRequest
             {
@@ -219,24 +237,38 @@
             {
                 resultado = await response.Content.ReadFromJsonAsync<OperacionResult>();
                 mostrarResultados = true;
+
+                Logger.LogInformation("Cálculo completado exitosamente. Cantidad1: {Cantidad1}, Cantidad2: {Cantidad2}, Decimales: {NumDecimales}", 
+                    cantidad1, cantidad2, numDecimales);
+
+                if (cantidad2 == 0)
+                {
+                    Logger.LogDebug("División por cero detectada en el frontend para {Cantidad1} / {Cantidad2}", cantidad1, cantidad2);
+                }
             }
             else
             {
+                var errorContent = await response.Content.ReadAsStringAsync();
                 errorMessage = $"Error al procesar la solicitud: {response.StatusCode}";
+                Logger.LogError("Error en la respuesta del API: {StatusCode} - {ErrorContent}", response.StatusCode, errorContent);
             }
         }
         catch (Exception ex)
         {
             errorMessage = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al calcular operaciones matemáticas");
         }
         finally
         {
             isCalculating = false;
+            Logger.LogDebug("Finalizando proceso de cálculo de operaciones");
         }
     }
 
     private void LimpiarDatos()
     {
+        Logger.LogDebug("Limpiando formulario de calculadora");
+
         // Limpiar los campos de entrada
         cantidad1Text = "";
         cantidad2Text = "";
@@ -258,6 +290,7 @@
         resultado = null;
     }
 
+    // Modelos para el frontend
     public class OperacionRequest
     {
         public double Cantidad1 { get; set; }

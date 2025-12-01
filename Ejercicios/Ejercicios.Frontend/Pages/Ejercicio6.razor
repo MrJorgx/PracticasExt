@@ -1,5 +1,6 @@
 @page "/ejercicio6"
 @inject HttpClient Http
+@inject ILogger<Ejercicio6> Logger
 
 <PageTitle>Ejercicio 6 - Generación aleatoria</PageTitle>
 
@@ -323,8 +324,14 @@
     // Resultado
     private FormasGeneradasResponse? resultado;
 
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Inicializando componente Ejercicio6 (Generador de formas geométricas)");
+    }
+
     private void ChangeTab(string tab)
     {
+        Logger.LogDebug("Cambiando de pestaña: {PestañaAnterior} -> {PestañaNueva}", activeTab, tab);
         activeTab = tab;
     }
 
@@ -332,6 +339,8 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando generación de formas geométricas desde el frontend");
+            
             isProcessing = true;
             mensajeError = "";
             mostrarResultados = false;
@@ -339,14 +348,20 @@
             if (numeroCirculos + numeroCuadrados + numeroTriangulos == 0)
             {
                 mensajeError = "Debe generar al menos una forma geométrica.";
+                Logger.LogWarning("Generación cancelada: no se especificó ninguna forma para generar");
                 return;
             }
 
             if (numeroCirculos < 0 || numeroCuadrados < 0 || numeroTriangulos < 0)
             {
                 mensajeError = "Los números de formas no pueden ser negativos.";
+                Logger.LogWarning("Generación cancelada: números negativos - Círculos: {Circulos}, Cuadrados: {Cuadrados}, Triángulos: {Triangulos}", 
+                    numeroCirculos, numeroCuadrados, numeroTriangulos);
                 return;
             }
+
+            Logger.LogDebug("Enviando solicitud al API para generar: {Circulos} círculos, {Cuadrados} cuadrados, {Triangulos} triángulos", 
+                numeroCirculos, numeroCuadrados, numeroTriangulos);
 
             var request = new GenerarFormasRequest
             {
@@ -361,32 +376,80 @@
             {
                 resultado = await response.Content.ReadFromJsonAsync<FormasGeneradasResponse>();
                 mostrarResultados = true;
+                
+                if (resultado != null)
+                {
+                    Logger.LogInformation("Formas generadas exitosamente: {TotalFormas} formas, Área total: {AreaTotal:F2}. Distribución: {Circulos} círculos, {Cuadrados} cuadrados, {Triangulos} triángulos", 
+                        resultado.TotalFormas, resultado.AreaTotal, resultado.Circulos.Count, resultado.Cuadrados.Count, resultado.Triangulos.Count);
+                    
+                    Logger.LogDebug("Resumen de generación: {Resumen}", resultado.Resumen);
+                    
+                    // Log de colores utilizados
+                    var coloresUtilizados = resultado.TodasLasFormas
+                        .Select(f => f.Color)
+                        .Distinct()
+                        .ToList();
+                    Logger.LogDebug("Colores utilizados en la generación: {Colores}", string.Join(", ", coloresUtilizados));
+                    
+                    // Log de estadísticas por tipo
+                    if (resultado.Circulos.Any())
+                    {
+                        var areaPromedioCirculos = resultado.Circulos.Average(c => c.Area);
+                        Logger.LogDebug("Estadísticas círculos: Cantidad={Cantidad}, Área promedio={AreaPromedio:F2}", 
+                            resultado.Circulos.Count, areaPromedioCirculos);
+                    }
+                    
+                    if (resultado.Cuadrados.Any())
+                    {
+                        var areaPromedioCuadrados = resultado.Cuadrados.Average(c => c.Area);
+                        Logger.LogDebug("Estadísticas cuadrados: Cantidad={Cantidad}, Área promedio={AreaPromedio:F2}", 
+                            resultado.Cuadrados.Count, areaPromedioCuadrados);
+                    }
+                    
+                    if (resultado.Triangulos.Any())
+                    {
+                        var areaPromedioTriangulos = resultado.Triangulos.Average(t => t.Area);
+                        Logger.LogDebug("Estadísticas triángulos: Cantidad={Cantidad}, Área promedio={AreaPromedio:F2}", 
+                            resultado.Triangulos.Count, areaPromedioTriangulos);
+                    }
+                }
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
                 mensajeError = $"Error: {error}";
+                Logger.LogError("Error del API al generar formas: {StatusCode} - {Error}", response.StatusCode, error);
             }
         }
         catch (Exception ex)
         {
             mensajeError = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al generar formas geométricas: Círculos={Circulos}, Cuadrados={Cuadrados}, Triángulos={Triangulos}", 
+                numeroCirculos, numeroCuadrados, numeroTriangulos);
         }
         finally
         {
             isProcessing = false;
+            Logger.LogDebug("Finalizando proceso de generación de formas");
         }
     }
 
     private void CargarEjemplo()
     {
+        Logger.LogDebug("Cargando ejemplo predefinido de formas geométricas");
+        
         numeroCirculos = 5;
         numeroCuadrados = 3;
         numeroTriangulos = 4;
+        
+        Logger.LogInformation("Ejemplo cargado: {Circulos} círculos, {Cuadrados} cuadrados, {Triangulos} triángulos", 
+            numeroCirculos, numeroCuadrados, numeroTriangulos);
     }
 
     private void LimpiarResultados()
     {
+        Logger.LogDebug("Limpiando resultados y formulario de generación de formas");
+        
         numeroCirculos = 0;
         numeroCuadrados = 0;
         numeroTriangulos = 0;
@@ -394,6 +457,8 @@
         mensajeError = "";
         resultado = null;
         activeTab = "todas";
+        
+        Logger.LogInformation("Formulario y resultados limpiados exitosamente");
     }
 
     // Modelos para el frontend

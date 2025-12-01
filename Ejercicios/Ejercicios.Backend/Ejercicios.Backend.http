@@ -61,7 +61,7 @@ POST {{Ejercicios.Backend_HostAddress}}/api/item/procesar
 Content-Type: application/json
 
 {
-  "rawInput": "Bread$$##12.5$$##10"
+  "rawInput": "Bread$$##12,5$$##10"
 }
 
 ###
@@ -72,9 +72,9 @@ Content-Type: application/json
 
 {
   "rawInputs": [
-    "Bread$$##12.5$$##10",
-    "Milk$$##3.25$$##5",
-    "Eggs$$##4.99$$##12",
+    "Bread$$##12,5$$##10",
+    "Milk$$##3,25$$##5",
+    "Eggs$$##4,99$$##12",
     "InvalidFormat##Wrong"
   ]
 }
@@ -121,6 +121,17 @@ Content-Type: application/json
 
 {
   "numero": 297,
+  "metodoCalculo": "OPTIMIZADO"
+}
+
+###
+
+# Verificar que 1 es Kaprekar
+POST {{Ejercicios.Backend_HostAddress}}/api/kaprekar/verificar
+Content-Type: application/json
+
+{
+  "numero": 1,
   "metodoCalculo": "OPTIMIZADO"
 }
 

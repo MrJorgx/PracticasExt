@@ -2158,10 +2158,10 @@
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/qnws08die3-drv0pr9n5o.gz
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/yfwppznlza-ft1frse3cx.gz
 /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/xhbcjpqn7z-h5dft9lir0.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.9tnu1kp116.pdb
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.v9kd6j89jw.wasm
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.v9kd6j89jw.wasm.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.9tnu1kp116.pdb.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-v9kd6j89jw.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-9tnu1kp116.gz
-/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-yo51sl7b3p.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.8czecsz24w.pdb
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.5twcjdjn6r.wasm
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.5twcjdjn6r.wasm.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/bin/Debug/net9.0/wwwroot/_framework/Ejercicios.Frontend.8czecsz24w.pdb.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/u6m15ztu4n-5twcjdjn6r.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/zrxbw8vhds-8czecsz24w.gz
+/home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Frontend/obj/Debug/net9.0/compressed/lsi4el1ezc-3d4roc2erh.gz

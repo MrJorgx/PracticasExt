@@ -1,5 +1,6 @@
 @page "/ejercicio5"
 @inject HttpClient Http
+@inject ILogger<Ejercicio5> Logger
 
 <PageTitle>Ejercicio 5 - Implementación de clases</PageTitle>
 
@@ -149,7 +150,7 @@
                                 </label>
                                 <textarea class="form-control" id="rawInputsMultiple" rows="6" 
                                           @bind="rawInputsMultiple" 
-                                          placeholder="Bread$$##12,5$$##10&#10;Milk$$##3,25$$##5&#10;Eggs$$##4,99$$##12"></textarea>
+                                          placeholder="Bread$$##12,5$$##10&#10"></textarea>
                             </div>
                         </div>
 
@@ -262,8 +263,14 @@
     private bool mostrarResultadoMultiple = false;
     private MultipleItemsResponse? resultadoMultiple;
 
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Inicializando componente Ejercicio5");
+    }
+    
     private void ChangeTab(string tab)
     {
+        Logger.LogDebug("Cambiando pestaña: {PestañaAnterior} -> {PestañaNueva}", activeTab, tab);
         activeTab = tab;
         LimpiarMensajes();
     }
@@ -274,14 +281,19 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando procesamiento de item individual");
+            
             isProcessingSingle = true;
             LimpiarMensajes();
 
             if (string.IsNullOrWhiteSpace(rawInputSingle))
             {
                 mensajeError = "Por favor, introduce una cadena de entrada válida.";
+                Logger.LogWarning("Procesamiento individual cancelado: entrada vacía");
                 return;
             }
+
+            Logger.LogDebug("Enviando item al API para procesamiento: {RawInput}", rawInputSingle);
 
             var request = new ItemRequest
             {
@@ -296,25 +308,35 @@
                 if (resultadoIndividual != null && !resultadoIndividual.Success)
                 {
                     mensajeError = resultadoIndividual.ErrorMessage;
+                    Logger.LogWarning("Procesamiento individual fallido: {Error}", resultadoIndividual.ErrorMessage);
                 }
                 else
                 {
                     mostrarResultadoIndividual = true;
+                    Logger.LogInformation("Item procesado exitosamente: {Name} - ${Price} x {Quantity} = ${Total}", 
+                        resultadoIndividual?.Name, 
+                        resultadoIndividual?.Price, 
+                        resultadoIndividual?.Quantity,
+                        (resultadoIndividual?.Price * resultadoIndividual?.Quantity ?? 0));
                 }
             }
             else
             {
                 var errorContent = await response.Content.ReadFromJsonAsync<ItemResponse>();
                 mensajeError = errorContent?.ErrorMessage ?? "Error al procesar el item";
+                Logger.LogError("Error del API al procesar item individual: {StatusCode} - {Error}", 
+                    response.StatusCode, mensajeError);
             }
         }
         catch (Exception ex)
         {
             mensajeError = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al procesar item individual");
         }
         finally
         {
             isProcessingSingle = false;
+            Logger.LogDebug("Finalizando procesamiento de item individual");
         }
     }
 
@@ -322,21 +344,31 @@
     {
         try
         {
+            Logger.LogDebug("Cargando ejemplo de formato desde el API");
+
             var response = await Http.GetAsync("api/item/ejemplo");
             if (response.IsSuccessStatusCode)
             {
                 rawInputSingle = await response.Content.ReadAsStringAsync();
                 rawInputSingle = rawInputSingle.Trim('"'); // Remover comillas si las hay
+                Logger.LogInformation("Ejemplo cargado exitosamente: {Ejemplo}", rawInputSingle);
+            }
+            else
+            {
+                Logger.LogWarning("No se pudo cargar el ejemplo: {StatusCode}", response.StatusCode);
             }
         }
         catch (Exception ex)
         {
             mensajeError = $"Error al cargar ejemplo: {ex.Message}";
+            Logger.LogError(ex, "Error al cargar ejemplo desde el API");
         }
     }
 
     private void LimpiarIndividual()
     {
+        Logger.LogDebug("Limpiando formulario de procesamiento individual");
+
         rawInputSingle = "";
         mostrarResultadoIndividual = false;
         resultadoIndividual = null;
@@ -349,12 +381,15 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando procesamiento múltiple de items");
+
             isProcessingMultiple = true;
             LimpiarMensajes();
 
             if (string.IsNullOrWhiteSpace(rawInputsMultiple))
             {
                 mensajeError = "Por favor, introduce al menos una cadena de entrada válida.";
+                Logger.LogWarning("Procesamiento múltiple cancelado: entrada vacía");
                 return;
             }
 
@@ -368,8 +403,11 @@
             if (!inputs.Any())
             {
                 mensajeError = "No se encontraron cadenas de entrada válidas.";
+                Logger.LogWarning("Procesamiento múltiple cancelado: no hay líneas válidas después del filtrado");
                 return;
             }
+
+            Logger.LogDebug("Procesando {CantidadItems} items válidos", inputs.Count);
 
             var request = new MultipleItemsRequest
             {
@@ -382,33 +420,51 @@
             {
                 resultadoMultiple = await response.Content.ReadFromJsonAsync<MultipleItemsResponse>();
                 mostrarResultadoMultiple = true;
+
+                if (resultadoMultiple != null)
+                {
+                    var itemsExitosos = resultadoMultiple.Items.Count(i => i.Success);
+                    var itemsFallidos = resultadoMultiple.Items.Count(i => !i.Success);
+
+                    Logger.LogInformation("Procesamiento múltiple completado: {ItemsExitosos} exitosos, {ItemsFallidos} fallidos, Valor total: ${ValorTotal}", 
+                        itemsExitosos, itemsFallidos, resultadoMultiple.TotalValue);
+                }
             }
             else
             {
                 mensajeError = "Error al procesar los items";
+                Logger.LogError("Error del API al procesar items múltiples: {StatusCode}", response.StatusCode);
             }
         }
         catch (Exception ex)
         {
             mensajeError = $"Error de conexión: {ex.Message}";
+            Logger.LogError(ex, "Error de conexión al procesar múltiples items");
         }
         finally
         {
             isProcessingMultiple = false;
+            Logger.LogDebug("Finalizando procesamiento múltiple de items");
         }
     }
 
     private void CargarEjemplosMultiples()
     {
+        Logger.LogDebug("Cargando ejemplos múltiples predefinidos");
+
         rawInputsMultiple = @"Bread$$##12,5$$##10
                             Milk$$##3,25$$##5
                             Eggs$$##4,99$$##12
                             Cheese$$##8,75$$##3
                             Rice$$##2,99$$##20";
+
+        Logger.LogInformation("Ejemplos múltiples cargados: 5 items de prueba");
     }
 
     private void LimpiarMultiple()
     {
+        Logger.LogDebug("Limpiando formulario de procesamiento múltiple");
+
         rawInputsMultiple = "";
         mostrarResultadoMultiple = false;
         resultadoMultiple = null;

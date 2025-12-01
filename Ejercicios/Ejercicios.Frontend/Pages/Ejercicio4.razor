@@ -1,6 +1,7 @@
 @page "/ejercicio4"
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
+@inject ILogger<Ejercicio4> Logger
 
 <PageTitle>Ejercicio 4 - CRUD clientes y recibos</PageTitle>
 
@@ -301,7 +302,7 @@
                             <input type="text" 
                                    class="form-control @(errorImporteRecibo ? "is-invalid" : "")"
                                    @bind="importeReciboTexto" 
-                                   placeholder="50.75" />
+                                   placeholder="50,75" />
                             @if (errorImporteRecibo)
                             {
                                 <div class="invalid-feedback">
@@ -569,6 +570,8 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando {Accion} de cliente", clienteEditando != null ? "actualización" : "creación");
+
             isProcessingCliente = true;
             LimpiarErroresCliente();
             mensajeCliente = "";
@@ -644,6 +647,7 @@
 
             if (hayErrores)
             {
+                Logger.LogWarning("Validación de cliente fallida: DNI={DNI}, Errores múltiples", dniCliente);
                 mensajeCliente = "Corrija los errores en el formulario";
                 esErrorCliente = true;
                 return;
@@ -651,6 +655,8 @@
 
             // Normalizar DNI
             var dniNormalizado = dniCliente.Trim().ToUpper();
+            Logger.LogDebug("Datos validados para cliente: DNI={DNI}, Tipo={Tipo}, CuotaMaxima={CuotaMaxima}",
+                dniNormalizado, tipoClienteSeleccionado, cuotaMaxima);
 
             if (clienteEditando == null)
             {
@@ -668,6 +674,7 @@
                 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.LogInformation("Cliente creado exitosamente: {DNI}", dniNormalizado);
                     var clienteCreado = await response.Content.ReadFromJsonAsync<ClienteResponse>();
                     mensajeCliente = $"Cliente {clienteCreado!.Dni} creado correctamente";
                     esErrorCliente = false;
@@ -676,6 +683,7 @@
                 }
                 else
                 {
+                    Logger.LogError("Error al crear cliente {DNI}: {StatusCode}", dniNormalizado, response.StatusCode);
                     var error = await response.Content.ReadAsStringAsync();
                     mensajeCliente = $"Error al crear cliente: {error}";
                     esErrorCliente = true;
@@ -696,6 +704,7 @@
                 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.LogInformation("Cliente actualizado exitosamente: {DNI}", clienteEditando.Dni);
                     mensajeCliente = $"Cliente {clienteEditando.Dni} actualizado correctamente";
                     esErrorCliente = false;
                     clienteEditando = null;
@@ -704,6 +713,7 @@
                 }
                 else
                 {
+                    Logger.LogError("Error al actualizar cliente {DNI}: {StatusCode}", clienteEditando.Dni, response.StatusCode);
                     var error = await response.Content.ReadAsStringAsync();
                     mensajeCliente = $"Error al actualizar cliente: {error}";
                     esErrorCliente = true;
@@ -712,12 +722,15 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error de conexión al {Accion} cliente con DNI {DNI}",
+                clienteEditando != null ? "actualizar" : "crear", dniCliente);
             mensajeCliente = $"Error de conexión: {ex.Message}";
             esErrorCliente = true;
         }
         finally
         {
             isProcessingCliente = false;
+            Logger.LogDebug("Finalizando proceso de {Accion} cliente", clienteEditando != null ? "actualización" : "creación");
         }
     }
 
@@ -725,6 +738,8 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando búsqueda de clientes por DNI: {DNI}", dniBusqueda);
+
             isProcessingBusqueda = true;
             mensajeCliente = "";
             errorDniBusqueda = false;
@@ -741,16 +756,20 @@
             
             if (!ValidarFormatoDni(dniNormalizado))
             {
+                Logger.LogWarning("Formato de DNI inválido en búsqueda: {DNI}", dniBusqueda);
                 errorDniBusqueda = true;
                 mensajeErrorDniBusqueda = "El DNI debe tener exactamente 8 dígitos seguidos de una letra (ej: 12345678A)";
                 return;
             }
 
+            Logger.LogDebug("Enviando solicitud al API para buscar cliente: {DNI}", dniNormalizado);
             var response = await Http.GetAsync($"api/cliente/{dniNormalizado}");
             
             if (response.IsSuccessStatusCode)
             {
                 var cliente = await response.Content.ReadFromJsonAsync<ClienteResponse>();
+                Logger.LogInformation("Cliente encontrado: {DNI} - {Nombre} {Apellidos}",
+                    dniNormalizado, cliente!.Nombre, cliente.Apellidos);
                 clientes.Clear();
                 clientes.Add(cliente!);
                 mensajeCliente = $"Cliente encontrado: {cliente!.Nombre} {cliente.Apellidos}";
@@ -758,12 +777,14 @@
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
+                Logger.LogWarning("Cliente no encontrado: {DNI}", dniNormalizado);
                 clientes.Clear();
                 mensajeCliente = $"No se encontró ningún cliente con DNI {dniNormalizado}";
                 esErrorCliente = true;
             }
             else
             {
+                Logger.LogError("Error al buscar cliente {DNI}: {StatusCode}", dniNormalizado, response.StatusCode);
                 var error = await response.Content.ReadAsStringAsync();
                 mensajeCliente = $"Error al buscar cliente: {error}";
                 esErrorCliente = true;
@@ -771,12 +792,14 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error de conexión al buscar cliente con DNI {DNI}", dniBusqueda);
             mensajeCliente = $"Error de conexión: {ex.Message}";
             esErrorCliente = true;
         }
         finally
         {
             isProcessingBusqueda = false;
+            Logger.LogDebug("Finalizando búsqueda de cliente");
         }
     }
 
@@ -827,20 +850,27 @@
 
     private async Task EliminarCliente(string dni)
     {
+        Logger.LogInformation("Solicitando confirmación para eliminar cliente: {DNI}", dni);
+
         if (await JSRuntime.InvokeAsync<bool>("confirm", $"¿Está seguro de eliminar el cliente con DNI {dni}?"))
         {
             try
             {
+                Logger.LogInformation("Eliminando cliente: {DNI}", dni);
                 var response = await Http.DeleteAsync($"api/cliente/{dni}");
                 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.LogInformation("Cliente eliminado exitosamente: {DNI}", dni);
+
                     mensajeCliente = $"Cliente {dni} eliminado correctamente";
                     esErrorCliente = false;
                     await CargarTodosLosClientes();
                 }
                 else
                 {
+                    Logger.LogError("Error al eliminar cliente {DNI}: {StatusCode}", dni, response.StatusCode);
+
                     var error = await response.Content.ReadAsStringAsync();
                     mensajeCliente = $"Error al eliminar cliente: {error}";
                     esErrorCliente = true;
@@ -848,9 +878,14 @@
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex, "Error de conexión al eliminar cliente {DNI}", dni);
                 mensajeCliente = $"Error de conexión: {ex.Message}";
                 esErrorCliente = true;
             }
+        }
+        else
+        {
+            Logger.LogDebug("Eliminación de cliente cancelada por el usuario: {DNI}", dni);
         }
     }
 
@@ -860,6 +895,8 @@
     {
         try
         {
+            Logger.LogInformation("Iniciando {Accion} de recibo", reciboEditando != null ? "actualización" : "creación");
+
             isProcessingRecibo = true;
             LimpiarErroresRecibo();
             mensajeRecibo = "";
@@ -903,6 +940,8 @@
 
             if (hayErrores)
             {
+                Logger.LogWarning("Validación de recibo fallida: NumeroRecibo={NumeroRecibo}, DNI={DNI}", 
+                    numeroRecibo, dniClienteRecibo);
                 mensajeRecibo = "Corrija los errores en el formulario";
                 esErrorRecibo = true;
                 return;
@@ -910,6 +949,9 @@
 
             var importeDecimal = decimal.Parse(importeReciboTexto.Trim());
             var dniNormalizado = dniClienteRecibo.Trim().ToUpper();
+
+            Logger.LogDebug("Datos validados para recibo: Numero={NumeroRecibo}, DNI={DNI}, Importe={Importe}", 
+                numeroRecibo, dniNormalizado, importeDecimal);
 
             if (reciboEditando == null)
             {
@@ -926,6 +968,9 @@
                 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.LogInformation("Recibo creado exitosamente: {NumeroRecibo} para cliente {DNI}", 
+                        numeroRecibo, dniNormalizado);
+                    
                     var reciboCreado = await response.Content.ReadFromJsonAsync<ReciboResponse>();
                     mensajeRecibo = $"Recibo {reciboCreado!.NumeroRecibo} creado correctamente";
                     esErrorRecibo = false;
@@ -934,6 +979,8 @@
                 }
                 else
                 {
+                    Logger.LogError("Error al crear recibo {NumeroRecibo}: {StatusCode}", numeroRecibo, response.StatusCode);
+
                     var error = await response.Content.ReadAsStringAsync();
                     mensajeRecibo = $"Error al crear recibo: {error}";
                     esErrorRecibo = true;
@@ -952,6 +999,8 @@
                 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.LogInformation("Recibo actualizado exitosamente: {NumeroRecibo}", reciboEditando.NumeroRecibo);
+
                     mensajeRecibo = $"Recibo {reciboEditando.NumeroRecibo} actualizado correctamente";
                     esErrorRecibo = false;
                     reciboEditando = null;
@@ -960,6 +1009,9 @@
                 }
                 else
                 {
+                    Logger.LogError("Error al actualizar recibo {NumeroRecibo}: {StatusCode}", 
+                        reciboEditando.NumeroRecibo, response.StatusCode);
+
                     var error = await response.Content.ReadAsStringAsync();
                     mensajeRecibo = $"Error al actualizar recibo: {error}";
                     esErrorRecibo = true;
@@ -968,12 +1020,15 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Error de conexión al {Accion} recibo {NumeroRecibo}", 
+                reciboEditando != null ? "actualizar" : "crear", numeroRecibo);
             mensajeRecibo = $"Error de conexión: {ex.Message}";
             esErrorRecibo = true;
         }
         finally
         {
             isProcessingRecibo = false;
+            Logger.LogDebug("Finalizando proceso de {Accion} recibo", reciboEditando != null ? "actualización" : "creación");
         }
     }
 
@@ -1119,6 +1174,8 @@
     // ===== MÉTODO PARA CAMBIAR PESTAÑAS =====
     private void CambiarPestana(string pestaña)
     {
+        Logger.LogDebug("Cambiando de pestaña: {PestañaAnterior} -> {PestañaNueva}", activeTab, pestaña);
+
         activeTab = pestaña;
         // Limpiar mensajes al cambiar de pestaña
         mensajeCliente = "";
@@ -1140,6 +1197,8 @@
 
     private void EditarCliente(ClienteResponse cliente)
     {
+        Logger.LogDebug("Iniciando edición de cliente: {DNI}", cliente.Dni);
+
         clienteEditando = cliente;
         dniCliente = cliente.Dni;
         nombreCliente = cliente.Nombre;
@@ -1154,6 +1213,8 @@
 
     private void EditarRecibo(ReciboResponse recibo)
     {
+        Logger.LogDebug("Iniciando edición de recibo: {NumeroRecibo}", recibo.NumeroRecibo);
+
         reciboEditando = recibo;
         numeroRecibo = recibo.NumeroRecibo;
         dniClienteRecibo = recibo.DniCliente;
@@ -1254,8 +1315,20 @@
     // Cargar datos iniciales
     protected override async Task OnInitializedAsync()
     {
-        await CargarTodosLosClientes();
-        await CargarTodosLosRecibos();
+        Logger.LogInformation("Inicializando componente Ejercicio4 (CRUD clientes y recibos)");
+
+        try
+        {
+            await CargarTodosLosClientes();
+            await CargarTodosLosRecibos();
+
+            Logger.LogDebug("Inicialización completada. Clientes: {CantidadClientes}, Recibos: {CantidadRecibos}",
+                clientes.Count, recibos.Count);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error durante la inicialización del componente");
+        }
     }
 
     // ===== MODELOS PARA EL FRONTEND =====

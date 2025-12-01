@@ -1,0 +1,447 @@
+2025-11-24 12:18:29.456 +01:00 [INF] Iniciando la aplicación
+2025-11-24 12:18:30.725 +01:00 [INF] Aplicacion iniciada correctamente.
+2025-11-24 12:18:31.032 +01:00 [INF] Now listening on: http://localhost:5231
+2025-11-24 12:18:31.044 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-24 12:18:31.046 +01:00 [INF] Hosting environment: Development
+2025-11-24 12:18:31.046 +01:00 [INF] Content root path: /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend
+2025-11-24 12:25:18.732 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - null null
+2025-11-24 12:25:18.870 +01:00 [WRN] Failed to determine the https port for redirect.
+2025-11-24 12:25:18.874 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:18.887 +01:00 [INF] HTTP OPTIONS /api/texto/procesar responded 204 in 18.6079 ms
+2025-11-24 12:25:18.925 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - 204 null null 192.3177ms
+2025-11-24 12:25:18.969 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/texto/procesar - application/json; charset=utf-8 849
+2025-11-24 12:25:18.983 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:18.992 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:19.036 +01:00 [INF] Route matched with {action = "ProcesarTexto", controller = "Texto"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.TextoResult] ProcesarTexto(Ejercicios.Backend.Models.TextoRequest) on controller Ejercicios.Backend.Controllers.TextoController (Ejercicios.Backend).
+2025-11-24 12:25:19.115 +01:00 [INF] Iniciando procesamiento de texto
+2025-11-24 12:25:19.115 +01:00 [INF] Procesando texto de 717 caracteres
+2025-11-24 12:25:19.127 +01:00 [ERR] Error al procesar texto de longitud 717
+System.DivideByZeroException: Attempted to divide by zero.
+   at Ejercicios.Backend.Controllers.TextoController.ProcesarTexto(TextoRequest request) in /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Controllers/TextoController.cs:line 64
+2025-11-24 12:25:19.177 +01:00 [INF] Executing ObjectResult, writing value of type 'Ejercicios.Backend.Models.TextoResult'.
+2025-11-24 12:25:19.232 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend) in 185.338ms
+2025-11-24 12:25:19.233 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:19.236 +01:00 [ERR] HTTP POST /api/texto/procesar responded 500 in 252.9376 ms
+2025-11-24 12:25:19.238 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/texto/procesar - 500 null application/json; charset=utf-8 270.6875ms
+2025-11-24 12:25:22.412 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/texto/procesar - application/json; charset=utf-8 849
+2025-11-24 12:25:22.416 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:22.416 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:22.417 +01:00 [INF] Route matched with {action = "ProcesarTexto", controller = "Texto"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.TextoResult] ProcesarTexto(Ejercicios.Backend.Models.TextoRequest) on controller Ejercicios.Backend.Controllers.TextoController (Ejercicios.Backend).
+2025-11-24 12:25:22.422 +01:00 [INF] Iniciando procesamiento de texto
+2025-11-24 12:25:22.423 +01:00 [INF] Procesando texto de 717 caracteres
+2025-11-24 12:25:22.424 +01:00 [ERR] Error al procesar texto de longitud 717
+System.DivideByZeroException: Attempted to divide by zero.
+   at Ejercicios.Backend.Controllers.TextoController.ProcesarTexto(TextoRequest request) in /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Controllers/TextoController.cs:line 64
+2025-11-24 12:25:22.427 +01:00 [INF] Executing ObjectResult, writing value of type 'Ejercicios.Backend.Models.TextoResult'.
+2025-11-24 12:25:22.431 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend) in 13.0131ms
+2025-11-24 12:25:22.431 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:22.432 +01:00 [ERR] HTTP POST /api/texto/procesar responded 500 in 16.8954 ms
+2025-11-24 12:25:22.434 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/texto/procesar - 500 null application/json; charset=utf-8 21.3291ms
+2025-11-24 12:25:41.498 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/calculadora/calcular - null null
+2025-11-24 12:25:41.499 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:41.500 +01:00 [INF] HTTP OPTIONS /api/calculadora/calcular responded 204 in 0.9457 ms
+2025-11-24 12:25:41.503 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/calculadora/calcular - 204 null null 5.2196ms
+2025-11-24 12:25:41.510 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/calculadora/calcular - application/json; charset=utf-8 50
+2025-11-24 12:25:41.510 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:41.511 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.CalculadoraController.CalcularOperaciones (Ejercicios.Backend)'
+2025-11-24 12:25:41.528 +01:00 [INF] Route matched with {action = "CalcularOperaciones", controller = "Calculadora"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.OperacionResult] CalcularOperaciones(Ejercicios.Backend.Models.OperacionRequest) on controller Ejercicios.Backend.Controllers.CalculadoraController (Ejercicios.Backend).
+2025-11-24 12:25:41.563 +01:00 [INF] Iniciando cálculo de operaciones matemáticas
+2025-11-24 12:25:41.563 +01:00 [INF] Calculando operaciones matemáticas: 105 y 456 con 2 decimales
+2025-11-24 12:25:41.575 +01:00 [INF] Cálculo de operaciones completado exitosamente. Comparación: 105 es menor que 456
+2025-11-24 12:25:41.577 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.OperacionResult'.
+2025-11-24 12:25:41.587 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.CalculadoraController.CalcularOperaciones (Ejercicios.Backend) in 58.3796ms
+2025-11-24 12:25:41.588 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.CalculadoraController.CalcularOperaciones (Ejercicios.Backend)'
+2025-11-24 12:25:41.588 +01:00 [INF] HTTP POST /api/calculadora/calcular responded 200 in 78.2765 ms
+2025-11-24 12:25:41.589 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/calculadora/calcular - 200 null application/json; charset=utf-8 79.6715ms
+2025-11-24 12:25:58.435 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - null null
+2025-11-24 12:25:58.436 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:58.436 +01:00 [INF] HTTP OPTIONS /api/texto/procesar responded 204 in 0.2469 ms
+2025-11-24 12:25:58.436 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - 204 null null 1.4483ms
+2025-11-24 12:25:58.441 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/texto/procesar - application/json; charset=utf-8 849
+2025-11-24 12:25:58.442 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:25:58.443 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:58.446 +01:00 [INF] Route matched with {action = "ProcesarTexto", controller = "Texto"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.TextoResult] ProcesarTexto(Ejercicios.Backend.Models.TextoRequest) on controller Ejercicios.Backend.Controllers.TextoController (Ejercicios.Backend).
+2025-11-24 12:25:58.447 +01:00 [INF] Iniciando procesamiento de texto
+2025-11-24 12:25:58.447 +01:00 [INF] Procesando texto de 717 caracteres
+2025-11-24 12:25:58.450 +01:00 [ERR] Error al procesar texto de longitud 717
+System.DivideByZeroException: Attempted to divide by zero.
+   at Ejercicios.Backend.Controllers.TextoController.ProcesarTexto(TextoRequest request) in /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend/Controllers/TextoController.cs:line 64
+2025-11-24 12:25:58.454 +01:00 [INF] Executing ObjectResult, writing value of type 'Ejercicios.Backend.Models.TextoResult'.
+2025-11-24 12:25:58.455 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend) in 8.5816ms
+2025-11-24 12:25:58.458 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:25:58.460 +01:00 [ERR] HTTP POST /api/texto/procesar responded 500 in 17.5827 ms
+2025-11-24 12:25:58.462 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/texto/procesar - 500 null application/json; charset=utf-8 21.2621ms
+2025-11-24 12:28:14.663 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - null null
+2025-11-24 12:28:14.665 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:14.667 +01:00 [INF] HTTP OPTIONS /api/texto/procesar responded 204 in 2.2777 ms
+2025-11-24 12:28:14.672 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - 204 null null 8.6781ms
+2025-11-24 12:28:14.686 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/texto/procesar - application/json; charset=utf-8 849
+2025-11-24 12:28:14.688 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:14.689 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:28:14.689 +01:00 [INF] Route matched with {action = "ProcesarTexto", controller = "Texto"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.TextoResult] ProcesarTexto(Ejercicios.Backend.Models.TextoRequest) on controller Ejercicios.Backend.Controllers.TextoController (Ejercicios.Backend).
+2025-11-24 12:28:14.701 +01:00 [INF] Iniciando procesamiento de texto
+2025-11-24 12:28:14.702 +01:00 [INF] Procesando texto de 717 caracteres
+2025-11-24 12:28:14.727 +01:00 [INF] Procesamiento de texto completado exitosamente. Caracteres: 717, Palabras repetidas: 17, Tiempo concatenación: 0.5003ms
+2025-11-24 12:28:14.727 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.TextoResult'.
+2025-11-24 12:28:14.736 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend) in 47.165ms
+2025-11-24 12:28:14.737 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:28:14.737 +01:00 [INF] HTTP POST /api/texto/procesar responded 200 in 49.0902 ms
+2025-11-24 12:28:14.738 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/texto/procesar - 200 null application/json; charset=utf-8 51.9583ms
+2025-11-24 12:28:39.014 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/fecha/procesar - null null
+2025-11-24 12:28:39.014 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:39.015 +01:00 [INF] HTTP OPTIONS /api/fecha/procesar responded 204 in 0.2261 ms
+2025-11-24 12:28:39.015 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/fecha/procesar - 204 null null 1.0273ms
+2025-11-24 12:28:39.034 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/fecha/procesar - application/json; charset=utf-8 53
+2025-11-24 12:28:39.039 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:39.040 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend)'
+2025-11-24 12:28:39.046 +01:00 [INF] Route matched with {action = "ProcesarFechas", controller = "Fecha"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.FechaResult] ProcesarFechas(Ejercicios.Backend.Models.FechaRequest) on controller Ejercicios.Backend.Controllers.FechaController (Ejercicios.Backend).
+2025-11-24 12:28:39.053 +01:00 [INF] Iniciando procesamiento de fechas
+2025-11-24 12:28:39.053 +01:00 [INF] Procesando fechas: Fecha1='2024/02/29', Fecha2='2026/01/01'
+2025-11-24 12:28:39.060 +01:00 [INF] Procesamiento de fechas completado exitosamente. Diferencia: -672 días, Semanas: 9/1, Días semana: jueves/jueves
+2025-11-24 12:28:39.061 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.FechaResult'.
+2025-11-24 12:28:39.081 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend) in 34.5124ms
+2025-11-24 12:28:39.082 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend)'
+2025-11-24 12:28:39.082 +01:00 [INF] HTTP POST /api/fecha/procesar responded 200 in 42.7627 ms
+2025-11-24 12:28:39.082 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/fecha/procesar - 200 null application/json; charset=utf-8 48.2348ms
+2025-11-24 12:28:45.882 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/cliente - null null
+2025-11-24 12:28:45.895 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:45.895 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:28:45.909 +01:00 [INF] Route matched with {action = "ListarClientes", controller = "Cliente"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ClienteResponse]]] ListarClientes(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ClienteController (Ejercicios.Backend).
+2025-11-24 12:28:46.603 +01:00 [INF] Listando clientes. Ordenar por: dni, Descendente: false
+2025-11-24 12:28:49.707 +01:00 [INF] Executed DbCommand (66ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente, r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe
+FROM clientes AS c
+LEFT JOIN recibos AS r ON c.dni = r.dni_cliente
+ORDER BY c.dni
+2025-11-24 12:28:50.007 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ClienteResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:28:50.024 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend) in 4114.836ms
+2025-11-24 12:28:50.026 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:28:50.028 +01:00 [INF] HTTP GET /api/cliente responded 200 in 4132.6198 ms
+2025-11-24 12:28:50.068 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/cliente - 200 null application/json; charset=utf-8 4184.9062ms
+2025-11-24 12:28:50.123 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/recibo - null null
+2025-11-24 12:28:50.124 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:28:50.125 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:28:50.137 +01:00 [INF] Route matched with {action = "ListarTodosLosRecibos", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ReciboResponse]]] ListarTodosLosRecibos(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:28:50.145 +01:00 [INF] Listando todos los recibos. Ordenar por: fecha, Descendente: false
+2025-11-24 12:28:50.240 +01:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+ORDER BY r.fecha_emision
+2025-11-24 12:28:50.250 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ReciboResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:28:50.259 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend) in 121.6538ms
+2025-11-24 12:28:50.260 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:28:50.260 +01:00 [INF] HTTP GET /api/recibo responded 200 in 136.1340 ms
+2025-11-24 12:28:50.262 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/recibo - 200 null application/json; charset=utf-8 139.5891ms
+2025-11-24 12:29:19.776 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/cliente - null null
+2025-11-24 12:29:19.777 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:29:19.778 +01:00 [INF] HTTP OPTIONS /api/cliente responded 204 in 0.6215 ms
+2025-11-24 12:29:19.778 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/cliente - 204 null null 1.8494ms
+2025-11-24 12:29:19.783 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/cliente - application/json; charset=utf-8 92
+2025-11-24 12:29:19.784 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:29:19.786 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend)'
+2025-11-24 12:29:19.797 +01:00 [INF] Route matched with {action = "CrearCliente", controller = "Cliente"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ClienteResponse]] CrearCliente(Ejercicios.Backend.Models.ClienteRequest) on controller Ejercicios.Backend.Controllers.ClienteController (Ejercicios.Backend).
+2025-11-24 12:29:19.827 +01:00 [INF] Iniciando creación de cliente
+2025-11-24 12:29:19.828 +01:00 [INF] Creando cliente: DNI=12345678A, Tipo=SOCIO
+2025-11-24 12:29:20.090 +01:00 [INF] Executed DbCommand (20ms) [Parameters=[@__request_Dni_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM clientes AS c
+    WHERE c.dni = @__request_Dni_0)
+2025-11-24 12:29:20.098 +01:00 [WRN] Intento de crear cliente con DNI duplicado: 12345678A
+2025-11-24 12:29:20.098 +01:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.String'.
+2025-11-24 12:29:20.100 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend) in 302.1523ms
+2025-11-24 12:29:20.100 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend)'
+2025-11-24 12:29:20.100 +01:00 [INF] HTTP POST /api/cliente responded 400 in 315.6574 ms
+2025-11-24 12:29:20.101 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/cliente - 400 null text/plain; charset=utf-8 317.9731ms
+2025-11-24 12:29:26.791 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/cliente - null null
+2025-11-24 12:29:26.792 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:29:26.792 +01:00 [INF] HTTP OPTIONS /api/cliente responded 204 in 0.2195 ms
+2025-11-24 12:29:26.792 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/cliente - 204 null null 0.9501ms
+2025-11-24 12:29:26.802 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/cliente - application/json; charset=utf-8 92
+2025-11-24 12:29:26.803 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:29:26.803 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend)'
+2025-11-24 12:29:26.804 +01:00 [INF] Route matched with {action = "CrearCliente", controller = "Cliente"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ClienteResponse]] CrearCliente(Ejercicios.Backend.Models.ClienteRequest) on controller Ejercicios.Backend.Controllers.ClienteController (Ejercicios.Backend).
+2025-11-24 12:29:26.805 +01:00 [INF] Iniciando creación de cliente
+2025-11-24 12:29:26.806 +01:00 [INF] Creando cliente: DNI=12345678U, Tipo=SOCIO
+2025-11-24 12:29:26.822 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[@__request_Dni_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM clientes AS c
+    WHERE c.dni = @__request_Dni_0)
+2025-11-24 12:29:27.217 +01:00 [INF] Executed DbCommand (156ms) [Parameters=[@p0='?', @p1='?', @p2='?' (DbType = Decimal), @p3='?' (DbType = DateTime), @p4='?', @p5='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO clientes (dni, apellidos, cuota_maxima, fecha_alta, nombre, tipo_cliente)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2025-11-24 12:29:27.233 +01:00 [INF] Cliente creado exitosamente: 12345678U - Jhon G, Tipo: "SOCIO"
+2025-11-24 12:29:27.233 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.ClienteResponse'.
+2025-11-24 12:29:27.234 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend) in 430.1769ms
+2025-11-24 12:29:27.235 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ClienteController.CrearCliente (Ejercicios.Backend)'
+2025-11-24 12:29:27.235 +01:00 [INF] HTTP POST /api/cliente responded 200 in 431.7026 ms
+2025-11-24 12:29:27.236 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/cliente - 200 null application/json; charset=utf-8 433.8189ms
+2025-11-24 12:29:27.268 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/cliente - null null
+2025-11-24 12:29:27.268 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:29:27.268 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:29:27.269 +01:00 [INF] Route matched with {action = "ListarClientes", controller = "Cliente"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ClienteResponse]]] ListarClientes(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ClienteController (Ejercicios.Backend).
+2025-11-24 12:29:27.269 +01:00 [INF] Listando clientes. Ordenar por: dni, Descendente: false
+2025-11-24 12:29:27.274 +01:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente, r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe
+FROM clientes AS c
+LEFT JOIN recibos AS r ON c.dni = r.dni_cliente
+ORDER BY c.dni
+2025-11-24 12:29:27.276 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ClienteResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:29:27.277 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend) in 7.7877ms
+2025-11-24 12:29:27.277 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:29:27.277 +01:00 [INF] HTTP GET /api/cliente responded 200 in 8.8985 ms
+2025-11-24 12:29:27.277 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/cliente - 200 null application/json; charset=utf-8 9.834ms
+2025-11-24 12:30:05.739 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/recibo - null null
+2025-11-24 12:30:05.740 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:30:05.740 +01:00 [INF] HTTP OPTIONS /api/recibo responded 204 in 0.6445 ms
+2025-11-24 12:30:05.741 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/recibo - 204 null null 1.8608ms
+2025-11-24 12:30:05.793 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/recibo - application/json; charset=utf-8 114
+2025-11-24 12:30:05.796 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:30:05.796 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.CrearRecibo (Ejercicios.Backend)'
+2025-11-24 12:30:05.828 +01:00 [INF] Route matched with {action = "CrearRecibo", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ReciboResponse]] CrearRecibo(Ejercicios.Backend.Models.ReciboRequest) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:30:05.860 +01:00 [INF] Iniciando creación de recibo
+2025-11-24 12:30:05.860 +01:00 [INF] Creando recibo: Número=REC-2025-005, DNI Cliente=12345678U, Importe=8765
+2025-11-24 12:30:05.928 +01:00 [INF] Executed DbCommand (57ms) [Parameters=[@__request_NumeroRecibo_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM recibos AS r
+    WHERE r.numero_recibo = @__request_NumeroRecibo_0)
+2025-11-24 12:30:05.970 +01:00 [INF] Executed DbCommand (19ms) [Parameters=[@__request_DniCliente_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM clientes AS c
+WHERE c.dni = @__request_DniCliente_0
+LIMIT 1
+2025-11-24 12:30:06.120 +01:00 [INF] Executed DbCommand (118ms) [Parameters=[@p0='?', @p1='?', @p2='?' (DbType = DateTime), @p3='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO recibos (numero_recibo, dni_cliente, fecha_emision, importe)
+VALUES (@p0, @p1, @p2, @p3);
+2025-11-24 12:30:06.145 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[@__recibo_NumeroRecibo_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+WHERE r.numero_recibo = @__recibo_NumeroRecibo_0
+LIMIT 1
+2025-11-24 12:30:06.147 +01:00 [INF] Recibo creado exitosamente: REC-2025-005 para cliente 12345678U - Jhon G, Importe: 8765
+2025-11-24 12:30:06.149 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.ReciboResponse'.
+2025-11-24 12:30:06.151 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.CrearRecibo (Ejercicios.Backend) in 322.4086ms
+2025-11-24 12:30:06.151 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.CrearRecibo (Ejercicios.Backend)'
+2025-11-24 12:30:06.151 +01:00 [INF] HTTP POST /api/recibo responded 200 in 355.7740 ms
+2025-11-24 12:30:06.152 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/recibo - 200 null application/json; charset=utf-8 358.7361ms
+2025-11-24 12:30:06.195 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/recibo - null null
+2025-11-24 12:30:06.196 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:30:06.196 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:30:06.196 +01:00 [INF] Route matched with {action = "ListarTodosLosRecibos", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ReciboResponse]]] ListarTodosLosRecibos(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:30:06.197 +01:00 [INF] Listando todos los recibos. Ordenar por: fecha, Descendente: false
+2025-11-24 12:30:06.201 +01:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+ORDER BY r.fecha_emision
+2025-11-24 12:30:06.203 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ReciboResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:30:06.206 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend) in 10.1826ms
+2025-11-24 12:30:06.208 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:30:06.211 +01:00 [INF] HTTP GET /api/recibo responded 200 in 15.5301 ms
+2025-11-24 12:30:06.215 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/recibo - 200 null application/json; charset=utf-8 19.8695ms
+2025-11-24 12:31:07.025 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/recibo/REC-2025-005 - null null
+2025-11-24 12:31:07.026 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:07.027 +01:00 [INF] HTTP OPTIONS /api/recibo/REC-2025-005 responded 204 in 1.0780 ms
+2025-11-24 12:31:07.028 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/recibo/REC-2025-005 - 204 null null 2.493ms
+2025-11-24 12:31:07.033 +01:00 [INF] Request starting HTTP/1.1 PUT http://localhost:5231/api/recibo/REC-2025-005 - application/json; charset=utf-8 55
+2025-11-24 12:31:07.035 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:07.037 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.ActualizarRecibo (Ejercicios.Backend)'
+2025-11-24 12:31:07.048 +01:00 [INF] Route matched with {action = "ActualizarRecibo", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ReciboResponse]] ActualizarRecibo(System.String, Ejercicios.Backend.Models.ReciboUpdateRequest) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:31:07.059 +01:00 [INF] Iniciando actualización de recibo: REC-2025-005
+2025-11-24 12:31:07.080 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[@__numeroRecibo_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+WHERE r.numero_recibo = @__numeroRecibo_0
+LIMIT 1
+2025-11-24 12:31:07.099 +01:00 [INF] Executed DbCommand (11ms) [Parameters=[@p2='?', @p0='?' (DbType = DateTime), @p1='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+UPDATE recibos SET fecha_emision = @p0, importe = @p1
+WHERE numero_recibo = @p2;
+2025-11-24 12:31:07.100 +01:00 [INF] Recibo actualizado exitosamente: REC-2025-005, Cliente: 12345678U, Importe anterior: 8765.00, Importe nuevo: 87.65
+2025-11-24 12:31:07.100 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.ReciboResponse'.
+2025-11-24 12:31:07.100 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.ActualizarRecibo (Ejercicios.Backend) in 51.7696ms
+2025-11-24 12:31:07.100 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.ActualizarRecibo (Ejercicios.Backend)'
+2025-11-24 12:31:07.101 +01:00 [INF] HTTP PUT /api/recibo/REC-2025-005 responded 200 in 65.7409 ms
+2025-11-24 12:31:07.101 +01:00 [INF] Request finished HTTP/1.1 PUT http://localhost:5231/api/recibo/REC-2025-005 - 200 null application/json; charset=utf-8 67.8066ms
+2025-11-24 12:31:07.132 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/recibo - null null
+2025-11-24 12:31:07.132 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:07.133 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:31:07.133 +01:00 [INF] Route matched with {action = "ListarTodosLosRecibos", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ReciboResponse]]] ListarTodosLosRecibos(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:31:07.133 +01:00 [INF] Listando todos los recibos. Ordenar por: fecha, Descendente: false
+2025-11-24 12:31:07.135 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+ORDER BY r.fecha_emision
+2025-11-24 12:31:07.136 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ReciboResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:31:07.137 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend) in 3.4042ms
+2025-11-24 12:31:07.137 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:31:07.137 +01:00 [INF] HTTP GET /api/recibo responded 200 in 4.5355 ms
+2025-11-24 12:31:07.137 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/recibo - 200 null application/json; charset=utf-8 5.6176ms
+2025-11-24 12:31:28.330 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/item/procesar - null null
+2025-11-24 12:31:28.330 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:28.330 +01:00 [INF] HTTP OPTIONS /api/item/procesar responded 204 in 0.3892 ms
+2025-11-24 12:31:28.331 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/item/procesar - 204 null null 1.2034ms
+2025-11-24 12:31:28.340 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/item/procesar - application/json; charset=utf-8 34
+2025-11-24 12:31:28.343 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:28.343 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend)'
+2025-11-24 12:31:28.346 +01:00 [INF] Route matched with {action = "ProcesarItem", controller = "Item"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ItemResponse] ProcesarItem(Ejercicios.Backend.Models.ItemRequest) on controller Ejercicios.Backend.Controllers.ItemController (Ejercicios.Backend).
+2025-11-24 12:31:28.352 +01:00 [INF] Iniciando procesamiento de item individual
+2025-11-24 12:31:28.362 +01:00 [INF] Item procesado exitosamente: Nombre=Bread, Precio=12.5, Cantidad=10
+2025-11-24 12:31:28.363 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.ItemResponse'.
+2025-11-24 12:31:28.368 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend) in 21.466ms
+2025-11-24 12:31:28.368 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend)'
+2025-11-24 12:31:28.368 +01:00 [INF] HTTP POST /api/item/procesar responded 200 in 25.0053 ms
+2025-11-24 12:31:28.368 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/item/procesar - 200 null application/json; charset=utf-8 27.7386ms
+2025-11-24 12:31:38.819 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/item/procesar - null null
+2025-11-24 12:31:38.820 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:38.820 +01:00 [INF] HTTP OPTIONS /api/item/procesar responded 204 in 0.2766 ms
+2025-11-24 12:31:38.820 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/item/procesar - 204 null null 1.2019ms
+2025-11-24 12:31:38.825 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/item/procesar - application/json; charset=utf-8 34
+2025-11-24 12:31:38.825 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:31:38.826 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend)'
+2025-11-24 12:31:38.827 +01:00 [INF] Route matched with {action = "ProcesarItem", controller = "Item"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.ItemResponse] ProcesarItem(Ejercicios.Backend.Models.ItemRequest) on controller Ejercicios.Backend.Controllers.ItemController (Ejercicios.Backend).
+2025-11-24 12:31:38.827 +01:00 [INF] Iniciando procesamiento de item individual
+2025-11-24 12:31:38.828 +01:00 [ERR] Error de formato al procesar item 'Bread$$##12.5$$##10': El precio debe usar coma como separador decimal (Parameter 'rawInput')
+2025-11-24 12:31:38.829 +01:00 [INF] Executing BadRequestObjectResult, writing value of type 'Ejercicios.Backend.Models.ItemResponse'.
+2025-11-24 12:31:38.830 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend) in 2.7239ms
+2025-11-24 12:31:38.830 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ItemController.ProcesarItem (Ejercicios.Backend)'
+2025-11-24 12:31:38.830 +01:00 [INF] HTTP POST /api/item/procesar responded 400 in 4.5955 ms
+2025-11-24 12:31:38.830 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/item/procesar - 400 null application/json; charset=utf-8 5.4543ms
+2025-11-24 12:35:10.497 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/geometria/generar - null null
+2025-11-24 12:35:10.497 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:35:10.497 +01:00 [INF] HTTP OPTIONS /api/geometria/generar responded 204 in 0.1833 ms
+2025-11-24 12:35:10.498 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/geometria/generar - 204 null null 0.8652ms
+2025-11-24 12:35:10.501 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/geometria/generar - application/json; charset=utf-8 61
+2025-11-24 12:35:10.502 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:35:10.502 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.GeometriaController.GenerarFormas (Ejercicios.Backend)'
+2025-11-24 12:35:10.505 +01:00 [INF] Route matched with {action = "GenerarFormas", controller = "Geometria"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.FormasGeneradasResponse] GenerarFormas(Ejercicios.Backend.Models.GenerarFormasRequest) on controller Ejercicios.Backend.Controllers.GeometriaController (Ejercicios.Backend).
+2025-11-24 12:35:10.517 +01:00 [INF] Iniciando generación de formas geométricas
+2025-11-24 12:35:10.518 +01:00 [INF] Generando formas: 3 círculos, 6 cuadrados, 1 triángulos
+2025-11-24 12:35:10.531 +01:00 [INF] Generación completada exitosamente: 10 formas, Área total: 2393.83. Distribución: 3 círculos, 6 cuadrados, 1 triángulos
+2025-11-24 12:35:10.531 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.FormasGeneradasResponse'.
+2025-11-24 12:35:10.540 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.GeometriaController.GenerarFormas (Ejercicios.Backend) in 34.3766ms
+2025-11-24 12:35:10.540 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.GeometriaController.GenerarFormas (Ejercicios.Backend)'
+2025-11-24 12:35:10.540 +01:00 [INF] HTTP POST /api/geometria/generar responded 200 in 38.7513 ms
+2025-11-24 12:35:10.541 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/geometria/generar - 200 null application/json; charset=utf-8 39.8134ms
+2025-11-24 12:35:26.079 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - null null
+2025-11-24 12:35:26.079 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:35:26.080 +01:00 [INF] HTTP OPTIONS /api/kaprekar/verificar responded 204 in 0.2174 ms
+2025-11-24 12:35:26.080 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - 204 null null 1.0676ms
+2025-11-24 12:35:26.086 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - application/json; charset=utf-8 42
+2025-11-24 12:35:26.092 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:35:26.092 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:35:26.098 +01:00 [INF] Route matched with {action = "VerificarKaprekar", controller = "Kaprekar"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.KaprekarResponse] VerificarKaprekar(Ejercicios.Backend.Models.KaprekarRequest) on controller Ejercicios.Backend.Controllers.KaprekarController (Ejercicios.Backend).
+2025-11-24 12:35:26.106 +01:00 [INF] Iniciando verificación de número de Kaprekar
+2025-11-24 12:35:26.106 +01:00 [INF] Verificando si 99 es Kaprekar usando método OPTIMIZADO
+2025-11-24 12:35:26.116 +01:00 [INF] Verificación completada para 99. Resultado: true, Operaciones: 5
+2025-11-24 12:35:26.117 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.KaprekarResponse'.
+2025-11-24 12:35:26.129 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend) in 31.3591ms
+2025-11-24 12:35:26.130 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:35:26.130 +01:00 [INF] HTTP POST /api/kaprekar/verificar responded 200 in 38.1484 ms
+2025-11-24 12:35:26.131 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - 200 null application/json; charset=utf-8 44.3334ms
+2025-11-24 12:40:16.789 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - null null
+2025-11-24 12:40:16.791 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:40:16.791 +01:00 [INF] HTTP OPTIONS /api/kaprekar/verificar responded 204 in 0.2553 ms
+2025-11-24 12:40:16.794 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - 204 null null 4.0932ms
+2025-11-24 12:40:16.804 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - application/json; charset=utf-8 41
+2025-11-24 12:40:16.808 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:40:16.808 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:40:16.809 +01:00 [INF] Route matched with {action = "VerificarKaprekar", controller = "Kaprekar"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.KaprekarResponse] VerificarKaprekar(Ejercicios.Backend.Models.KaprekarRequest) on controller Ejercicios.Backend.Controllers.KaprekarController (Ejercicios.Backend).
+2025-11-24 12:40:16.811 +01:00 [INF] Iniciando verificación de número de Kaprekar
+2025-11-24 12:40:16.811 +01:00 [INF] Verificando si 1 es Kaprekar usando método OPTIMIZADO
+2025-11-24 12:40:16.813 +01:00 [INF] Verificación completada para 1. Resultado: false, Operaciones: 1
+2025-11-24 12:40:16.814 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.KaprekarResponse'.
+2025-11-24 12:40:16.817 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend) in 6.1174ms
+2025-11-24 12:40:16.819 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:40:16.822 +01:00 [INF] HTTP POST /api/kaprekar/verificar responded 200 in 13.5430 ms
+2025-11-24 12:40:16.824 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - 200 null application/json; charset=utf-8 19.7379ms
+2025-11-24 12:44:04.589 +01:00 [INF] Iniciando la aplicación
+2025-11-24 12:44:05.443 +01:00 [INF] Aplicacion iniciada correctamente.
+2025-11-24 12:44:05.704 +01:00 [INF] Now listening on: http://localhost:5231
+2025-11-24 12:44:05.713 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-11-24 12:44:05.714 +01:00 [INF] Hosting environment: Development
+2025-11-24 12:44:05.714 +01:00 [INF] Content root path: /home/jorge/CLASES/PracticasExternas/Repositorio/Ejercicios/Ejercicios.Backend
+2025-11-24 12:46:38.787 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - null null
+2025-11-24 12:46:38.897 +01:00 [WRN] Failed to determine the https port for redirect.
+2025-11-24 12:46:38.901 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:38.909 +01:00 [INF] HTTP OPTIONS /api/kaprekar/verificar responded 204 in 12.8846 ms
+2025-11-24 12:46:38.940 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/kaprekar/verificar - 204 null null 153.8887ms
+2025-11-24 12:46:38.953 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - application/json; charset=utf-8 42
+2025-11-24 12:46:38.965 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:38.972 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:46:38.998 +01:00 [INF] Route matched with {action = "VerificarKaprekar", controller = "Kaprekar"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.KaprekarResponse] VerificarKaprekar(Ejercicios.Backend.Models.KaprekarRequest) on controller Ejercicios.Backend.Controllers.KaprekarController (Ejercicios.Backend).
+2025-11-24 12:46:39.084 +01:00 [INF] Iniciando verificación de número de Kaprekar
+2025-11-24 12:46:39.085 +01:00 [INF] Verificando si 99 es Kaprekar usando método OPTIMIZADO
+2025-11-24 12:46:39.095 +01:00 [INF] Verificación completada para 99. Resultado: true, Operaciones: 5
+2025-11-24 12:46:39.105 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.KaprekarResponse'.
+2025-11-24 12:46:39.152 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend) in 145.3779ms
+2025-11-24 12:46:39.152 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.KaprekarController.VerificarKaprekar (Ejercicios.Backend)'
+2025-11-24 12:46:39.153 +01:00 [INF] HTTP POST /api/kaprekar/verificar responded 200 in 189.5105 ms
+2025-11-24 12:46:39.155 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/kaprekar/verificar - 200 null application/json; charset=utf-8 202.0568ms
+2025-11-24 12:46:53.765 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - null null
+2025-11-24 12:46:53.772 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:53.773 +01:00 [INF] HTTP OPTIONS /api/texto/procesar responded 204 in 1.4881 ms
+2025-11-24 12:46:53.774 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/texto/procesar - 204 null null 9.1132ms
+2025-11-24 12:46:53.782 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/texto/procesar - application/json; charset=utf-8 849
+2025-11-24 12:46:53.783 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:53.783 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:46:53.797 +01:00 [INF] Route matched with {action = "ProcesarTexto", controller = "Texto"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.TextoResult] ProcesarTexto(Ejercicios.Backend.Models.TextoRequest) on controller Ejercicios.Backend.Controllers.TextoController (Ejercicios.Backend).
+2025-11-24 12:46:53.811 +01:00 [INF] Iniciando procesamiento de texto
+2025-11-24 12:46:53.812 +01:00 [INF] Procesando texto de 717 caracteres
+2025-11-24 12:46:53.833 +01:00 [INF] Procesamiento de texto completado exitosamente. Caracteres: 717, Palabras repetidas: 17, Tiempo concatenación: 0.3567ms
+2025-11-24 12:46:53.834 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.TextoResult'.
+2025-11-24 12:46:53.855 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend) in 57.6761ms
+2025-11-24 12:46:53.857 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.TextoController.ProcesarTexto (Ejercicios.Backend)'
+2025-11-24 12:46:53.858 +01:00 [INF] HTTP POST /api/texto/procesar responded 200 in 75.0479 ms
+2025-11-24 12:46:53.860 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/texto/procesar - 200 null application/json; charset=utf-8 77.9841ms
+2025-11-24 12:46:57.438 +01:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5231/api/fecha/procesar - null null
+2025-11-24 12:46:57.439 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:57.440 +01:00 [INF] HTTP OPTIONS /api/fecha/procesar responded 204 in 0.5039 ms
+2025-11-24 12:46:57.441 +01:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5231/api/fecha/procesar - 204 null null 3.5645ms
+2025-11-24 12:46:57.450 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5231/api/fecha/procesar - application/json; charset=utf-8 53
+2025-11-24 12:46:57.451 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:57.451 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend)'
+2025-11-24 12:46:57.461 +01:00 [INF] Route matched with {action = "ProcesarFechas", controller = "Fecha"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Ejercicios.Backend.Models.FechaResult] ProcesarFechas(Ejercicios.Backend.Models.FechaRequest) on controller Ejercicios.Backend.Controllers.FechaController (Ejercicios.Backend).
+2025-11-24 12:46:57.481 +01:00 [INF] Iniciando procesamiento de fechas
+2025-11-24 12:46:57.481 +01:00 [INF] Procesando fechas: Fecha1='2024/02/29', Fecha2='2026/01/01'
+2025-11-24 12:46:57.489 +01:00 [INF] Procesamiento de fechas completado exitosamente. Diferencia: -672 días, Semanas: 9/1, Días semana: jueves/jueves
+2025-11-24 12:46:57.490 +01:00 [INF] Executing OkObjectResult, writing value of type 'Ejercicios.Backend.Models.FechaResult'.
+2025-11-24 12:46:57.510 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend) in 47.5178ms
+2025-11-24 12:46:57.510 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.FechaController.ProcesarFechas (Ejercicios.Backend)'
+2025-11-24 12:46:57.511 +01:00 [INF] HTTP POST /api/fecha/procesar responded 200 in 59.7815 ms
+2025-11-24 12:46:57.511 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5231/api/fecha/procesar - 200 null application/json; charset=utf-8 61.1068ms
+2025-11-24 12:46:58.664 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/cliente - null null
+2025-11-24 12:46:58.685 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:46:58.686 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:46:58.707 +01:00 [INF] Route matched with {action = "ListarClientes", controller = "Cliente"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ClienteResponse]]] ListarClientes(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ClienteController (Ejercicios.Backend).
+2025-11-24 12:46:58.995 +01:00 [INF] Listando clientes. Ordenar por: dni, Descendente: false
+2025-11-24 12:47:01.893 +01:00 [INF] Executed DbCommand (53ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente, r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe
+FROM clientes AS c
+LEFT JOIN recibos AS r ON c.dni = r.dni_cliente
+ORDER BY c.dni
+2025-11-24 12:47:02.405 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ClienteResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:47:02.434 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend) in 3726.2694ms
+2025-11-24 12:47:02.436 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ClienteController.ListarClientes (Ejercicios.Backend)'
+2025-11-24 12:47:02.438 +01:00 [INF] HTTP GET /api/cliente responded 200 in 3752.5122 ms
+2025-11-24 12:47:02.477 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/cliente - 200 null application/json; charset=utf-8 3812.8527ms
+2025-11-24 12:47:02.531 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5231/api/recibo - null null
+2025-11-24 12:47:02.533 +01:00 [INF] CORS policy execution successful.
+2025-11-24 12:47:02.534 +01:00 [INF] Executing endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:47:02.543 +01:00 [INF] Route matched with {action = "ListarTodosLosRecibos", controller = "Recibo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Ejercicios.Backend.Models.ReciboResponse]]] ListarTodosLosRecibos(System.String, Boolean) on controller Ejercicios.Backend.Controllers.ReciboController (Ejercicios.Backend).
+2025-11-24 12:47:02.550 +01:00 [INF] Listando todos los recibos. Ordenar por: fecha, Descendente: false
+2025-11-24 12:47:02.619 +01:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r.numero_recibo, r.dni_cliente, r.fecha_emision, r.importe, c.dni, c.apellidos, c.cuota_maxima, c.fecha_alta, c.nombre, c.tipo_cliente
+FROM recibos AS r
+INNER JOIN clientes AS c ON r.dni_cliente = c.dni
+ORDER BY r.fecha_emision
+2025-11-24 12:47:02.628 +01:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Ejercicios.Backend.Models.ReciboResponse, Ejercicios.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-11-24 12:47:02.637 +01:00 [INF] Executed action Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend) in 93.6504ms
+2025-11-24 12:47:02.638 +01:00 [INF] Executed endpoint 'Ejercicios.Backend.Controllers.ReciboController.ListarTodosLosRecibos (Ejercicios.Backend)'
+2025-11-24 12:47:02.638 +01:00 [INF] HTTP GET /api/recibo responded 200 in 104.7000 ms
+2025-11-24 12:47:02.639 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5231/api/recibo - 200 null application/json; charset=utf-8 108.3095ms

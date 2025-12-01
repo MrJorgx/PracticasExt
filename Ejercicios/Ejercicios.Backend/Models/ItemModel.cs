@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Ejercicios.Backend.Models
 {
     /// <summary>
@@ -47,9 +49,16 @@ namespace Ejercicios.Backend.Models
                 throw new ArgumentException("El nombre no puede estar vacío", nameof(rawInput));
             }
 
-            if (!double.TryParse(parts[1].Trim(), out double price))
+            string priceText = parts[1].Trim();
+            if (priceText.Contains('.'))
             {
-                throw new ArgumentException("El precio debe ser un número válido", nameof(rawInput));
+                throw new ArgumentException("El precio debe usar coma como separador decimal", nameof(rawInput));
+            }
+            
+            string priceForParsing = priceText.Replace(',', '.');
+            if (!double.TryParse(priceForParsing, NumberStyles.Float, CultureInfo.InvariantCulture, out double price))
+            {
+                throw new ArgumentException("El precio debe ser un número válido con coma decimal", nameof(rawInput));
             }
             Price = price;
 
