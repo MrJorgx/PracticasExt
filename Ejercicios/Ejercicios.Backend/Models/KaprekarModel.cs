@@ -87,6 +87,20 @@ namespace Ejercicios.Backend.Models
             {
                 response.PasosCalculo.Add($"Verificando si {numero} es un número Kaprekar");
 
+                // Excepción especial para el número 1
+                if (numero == 1)
+                {
+                    response.EsKaprekar = true;
+                    response.Cuadrado = 1;
+                    response.Descomposicion = "0 + 1 = 1";
+                    response.Explicacion = "1 es un número de Kaprekar porque 1² = 1 y se puede expresar como 0 + 1 = 1";
+                    response.PasosCalculo.Add("Caso especial: El número 1 es considerado Kaprekar por definición");
+                    response.PasosCalculo.Add("1² = 1");
+                    response.PasosCalculo.Add("Dividiendo 1 como: 0 + 1 = 1");
+                    response.NumeroOperaciones = 1;
+                    return response;
+                }
+
                 switch (metodo.ToUpper())                       // OPTIMIZADO, FUERZA_BRUTA, MATEMATICO
                 {
                     case "OPTIMIZADO":
@@ -120,6 +134,17 @@ namespace Ejercicios.Backend.Models
         {
             int operaciones = 0;
             int numero = response.Numero;
+
+            // Verificación adicional del caso especial número 1
+            if (numero == 1)
+            {
+                response.EsKaprekar = true;
+                response.Cuadrado = 1;
+                response.Descomposicion = "0 + 1 = 1";
+                response.Explicacion = "1 es un número de Kaprekar porque 1² = 1 y se puede expresar como 0 + 1 = 1";
+                response.NumeroOperaciones = 1;
+                return;
+            }
 
             response.PasosCalculo.Add($"Paso 1: Calculando {numero}²");
             long cuadrado = (long)numero * numero;
@@ -180,6 +205,17 @@ namespace Ejercicios.Backend.Models
             int operaciones = 0;
             int numero = response.Numero;
 
+            // Verificación adicional del caso especial número 1
+            if (numero == 1)
+            {
+                response.EsKaprekar = true;
+                response.Cuadrado = 1;
+                response.Descomposicion = "0 + 1 = 1";
+                response.Explicacion = "1 es un número de Kaprekar porque 1² = 1 y se puede expresar como 0 + 1 = 1";
+                response.NumeroOperaciones = 1;
+                return;
+            }
+
             response.PasosCalculo.Add($"Método fuerza bruta: Probando todas las combinaciones posibles.");
 
             long cuadrado = (long)numero * numero;
@@ -230,6 +266,17 @@ namespace Ejercicios.Backend.Models
         {
             int operaciones = 0;
             int numero = response.Numero;
+
+            // Verificación adicional del caso especial número 1
+            if (numero == 1)
+            {
+                response.EsKaprekar = true;
+                response.Cuadrado = 1;
+                response.Descomposicion = "0 + 1 = 1";
+                response.Explicacion = "1 es un número de Kaprekar porque 1² = 1 y se puede expresar como 0 + 1 = 1";
+                response.NumeroOperaciones = 1;
+                return;
+            }
 
             response.PasosCalculo.Add($"Método matemático: Usando propiedades matemáticas de Kaprekar");
 
