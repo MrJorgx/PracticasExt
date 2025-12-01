@@ -1,15 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Ejercicios.Backend.Data;
 using Serilog;
+using Serilog.Events;
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "Ejercicios.Backend")
+    .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development")
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .WriteTo.File("logs/log-.txt", 
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .WriteTo.Seq("http://localhost:5341", apiKey: null, controlLevelSwitch: null)
     .CreateLogger();
 
 try
 {
-    Log.Information("Iniciando la aplicación");
+    Log.Information("=== INICIANDO APLICACIÓN EJERCICIOS.BACKEND ===");
+    Log.Information("Configurando Seq en http://localhost:5341");
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +67,17 @@ try
     }
 
     // Agregar middleware de Serilog para logging de requests HTTP
-    app.UseSerilogRequestLogging();
+    app.UseSerilogRequestLogging(configure =>
+    {
+        configure.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
+        configure.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+        {
+            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+            diagnosticContext.Set("UserAgent", httpContext.Request.Headers.UserAgent.FirstOrDefault());
+            diagnosticContext.Set("RemoteIP", httpContext.Connection.RemoteIpAddress?.ToString());
+        };
+    });
 
     app.UseHttpsRedirection();
 
@@ -66,15 +89,18 @@ try
     // Mapear los controladores
     app.MapControllers();
 
-    Log.Information("Aplicacion iniciada correctamente.");
+    Log.Information("=== APLICACIÓN INICIADA CORRECTAMENTE ===");
+    Log.Information("Swagger disponible en: http://localhost:5231/swagger");
+    Log.Information("Seq dashboard disponible en: http://localhost:5341");
     app.Run();
 
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "La aplicación terminó de forma inesperada");
+    Log.Fatal(ex, "=== LA APLICACIÓN TERMINÓ DE FORMA INESPERADA ===");
 }
 finally
 {
+    Log.Information("=== CERRANDO APLICACIÓN ===");
     Log.CloseAndFlush();
 }
