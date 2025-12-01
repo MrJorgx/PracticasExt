@@ -1,0 +1,120 @@
+@using Ejercicios.Frontend.Services
+@inject AuthService AuthService
+@inject ILogger<Login> Logger
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5><i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión</h5>
+    </div>
+    <div class="card-body">
+        <EditForm Model="loginRequest" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            
+            <div class="mb-3">
+                <label class="form-label">Email:</label>
+                <InputText @bind-Value="loginRequest.Email" 
+                          class="form-control" 
+                          placeholder="email@ejemplo.com" />
+                <ValidationMessage For="() => loginRequest.Email" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña:</label>
+                <InputText @bind-Value="loginRequest.Password" 
+                          type="password" 
+                          class="form-control" 
+                          placeholder="Tu contraseña" />
+                <ValidationMessage For="() => loginRequest.Password" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+                    <i class="bi bi-@(esError ? "exclamation-triangle" : "check-circle")"></i>
+                    @mensaje
+                    <button type="button" class="btn-close" @onclick="LimpiarMensaje"></button>
+                </div>
+            }
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" disabled="@isProcessing">
+                    @if (isProcessing)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                </button>
+            </div>
+        </EditForm>
+        
+        <hr>
+        <div class="text-center">
+            @* <small class="text-muted">
+                ¿No tienes cuenta? 
+                <button type="button" class="btn btn-link btn-sm p-0" @onclick="HandleLoginSuccess">
+                    Regístrate aquí
+                </button>
+            </small> *@
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnLoginSuccess { get; set; }
+    
+    private LoginRequest loginRequest = new LoginRequest();
+    private bool isProcessing = false;
+    private string mensaje = "";
+    private bool esError = false;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+            
+            // Cambiar esta línea para usar la tupla
+            var (success, message) = await AuthService.LoginAsync(loginRequest);
+            
+            if (success)
+            {
+                mensaje = "¡Login exitoso! Redirigiendo...";
+                esError = false;
+                Logger.LogInformation("Login exitoso para usuario {Email}", loginRequest.Email);
+                
+                await Task.Delay(500);
+                await OnLoginSuccess.InvokeAsync();
+            }
+            else
+            {
+                mensaje = message; // Usar el mensaje del backend
+                esError = true;
+                Logger.LogWarning("Login fallido para {Email}: {Mensaje}", 
+                    loginRequest.Email, message);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+            Logger.LogError(ex, "Error durante el login para {Email}", loginRequest.Email);
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task HandleLoginSuccess()
+    {
+        await OnLoginSuccess.InvokeAsync();
+    }
+
+    private void LimpiarMensaje()
+    {
+        mensaje = "";
+        esError = false;
+    }
+}

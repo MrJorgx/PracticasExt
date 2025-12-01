@@ -1,0 +1,13 @@
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Si no está autenticado, redirigir al login
+        if (!AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/auth", true);
+        }
+    }
+}

@@ -1,0 +1,68 @@
+@page "/auth"
+@page "/"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ILogger<Auth> Logger
+
+<PageTitle>Autenticación</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (mostrarLogin)
+            {
+                <Ejercicios.Frontend.Components.Login OnLoginSuccess="OnLoginSuccess" />
+            }
+            else
+            {
+                <Ejercicios.Frontend.Components.Register OnRegisterSuccess="OnRegisterSuccess" />
+            }
+            
+            <div class="text-center mt-3">
+                <button class="btn btn-link" @onclick="CambiarModo">
+                    @if (mostrarLogin)
+                    {
+                        <span>¿No tienes cuenta? Regístrate</span>
+                    }
+                    else
+                    {
+                        <span>¿Ya tienes cuenta? Inicia sesión</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool mostrarLogin = true;
+
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Inicializando componente Auth");
+        
+        // Si ya está autenticado, redirigir al inicio
+        if (AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/home");
+        }
+    }
+
+    private void CambiarModo()
+    {
+        mostrarLogin = !mostrarLogin;
+    }
+
+    private void OnLoginSuccess()
+    {
+        Logger.LogInformation("Login exitoso, redirigiendo al inicio");
+        Navigation.NavigateTo("/home");
+    }
+
+    private void OnRegisterSuccess()
+    {
+        // El componente Register ya maneja la redirección
+        // Este método se mantiene por compatibilidad pero no se usa
+        Logger.LogInformation("Callback de registro recibido");
+    }
+}

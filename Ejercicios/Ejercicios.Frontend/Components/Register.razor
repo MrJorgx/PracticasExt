@@ -1,0 +1,142 @@
+@using Ejercicios.Frontend.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ILogger<Register> Logger
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5><i class="bi bi-person-plus"></i> Crear Cuenta</h5>
+    </div>
+    <div class="card-body">
+        <EditForm Model="registroRequest" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+            
+            <div class="mb-3">
+                <label class="form-label">Nombre de Usuario:</label>
+                <InputText @bind-Value="registroRequest.NombreUsuario" 
+                          class="form-control" 
+                          placeholder="nombre_usuario" />
+                <ValidationMessage For="() => registroRequest.NombreUsuario" />
+                <small class="form-text text-muted">Mínimo 3 caracteres, máximo 50</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email:</label>
+                <InputText @bind-Value="registroRequest.Email" 
+                          type="email" 
+                          class="form-control" 
+                          placeholder="tu@email.com" />
+                <ValidationMessage For="() => registroRequest.Email" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña:</label>
+                <InputText @bind-Value="registroRequest.Password" 
+                          type="password" 
+                          class="form-control" 
+                          placeholder="Mínimo 6 caracteres" />
+                <ValidationMessage For="() => registroRequest.Password" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirmar Contraseña:</label>
+                <InputText @bind-Value="registroRequest.ConfirmPassword" 
+                          type="password" 
+                          class="form-control" 
+                          placeholder="Repite la contraseña" />
+                <ValidationMessage For="() => registroRequest.ConfirmPassword" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+                    <i class="bi bi-@(esError ? "exclamation-triangle" : "check-circle")"></i>
+                    @mensaje
+                    <button type="button" class="btn-close" @onclick="LimpiarMensaje"></button>
+                </div>
+            }
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success" disabled="@isProcessing">
+                    @if (isProcessing)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    <i class="bi bi-person-plus"></i> Crear Cuenta
+                </button>
+            </div>
+        </EditForm>
+        
+        <hr>
+        <div class="text-center">
+            @* <small class="text-muted">
+                ¿Ya tienes cuenta? 
+                <button type="button" class="btn btn-link btn-sm p-0" @onclick="HandleRegisterSuccess">
+                    Inicia sesión aquí
+                </button>
+            </small> *@
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnRegisterSuccess { get; set; }
+    
+    private RegistroRequest registroRequest = new RegistroRequest();
+    private bool isProcessing = false;
+    private string mensaje = "";
+    private bool esError = false;
+
+    private async Task HandleRegister()
+    {
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+            
+            // Cambiar esta línea para usar la tupla
+            var (success, message) = await AuthService.RegistrarAsync(registroRequest);
+            
+            if (success)
+            {
+                mensaje = "¡Cuenta creada exitosamente! Redirigiendo...";
+                esError = false;
+                
+                Logger.LogInformation("Registro exitoso para usuario {Usuario}, redirigiendo a home", 
+                    registroRequest.NombreUsuario);
+                
+                await Task.Delay(1000);
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                mensaje = message; // Usar el mensaje del backend
+                esError = true;
+                Logger.LogWarning("Registro fallido para usuario {Usuario}: {Mensaje}", 
+                    registroRequest.NombreUsuario, message);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+            Logger.LogError(ex, "Error durante el registro de {Usuario}", registroRequest.NombreUsuario);
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task HandleRegisterSuccess()
+    {
+        await OnRegisterSuccess.InvokeAsync();
+    }
+
+    private void LimpiarMensaje()
+    {
+        mensaje = "";
+        esError = false;
+    }
+}
