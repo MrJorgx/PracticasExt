@@ -1,6 +1,19 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Ejercicios.Frontend.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Ejercicios</a>
+        @if (AuthService.IsAuthenticated)
+        {
+            <small class="text-light">
+                <i class="bi bi-person-circle"></i> @AuthService.Usuario?.NombreUsuario
+            </small>
+            <button class="btn btn-outline-light btn-sm ms-2" @onclick="Logout">
+                <i class="bi bi-box-arrow-right"></i> Salir
+            </button>
+        }
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,46 +22,57 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio1">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 1
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio2">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 2
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio3">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 3
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio4">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 4
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio5">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 5
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio6">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 6
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ejercicio7">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 7
-            </NavLink>
-        </div>
+        @if (AuthService.IsAuthenticated)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="home" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio1">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 1
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio2">
+                    <span class="bi bi-journal-text-nav-menu" aria-hidden="true"></span> Ejercicio 2
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio3">
+                    <span class="bi bi-calendar3-nav-menu" aria-hidden="true"></span> Ejercicio 3
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio4">
+                    <span class="bi bi-database-nav-menu" aria-hidden="true"></span> Ejercicio 4
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio5">
+                    <span class="bi bi-gear-nav-menu" aria-hidden="true"></span> Ejercicio 5
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio6">
+                    <span class="bi bi-shapes-nav-menu" aria-hidden="true"></span> Ejercicio 6
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ejercicio7">
+                    <span class="bi bi-infinity-nav-menu" aria-hidden="true"></span> Ejercicio 7
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="auth">
+                    <span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Iniciar sesión
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
@@ -60,5 +84,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void Logout()
+    {
+        AuthService.Logout();
+        Navigation.NavigateTo("/auth");
     }
 }

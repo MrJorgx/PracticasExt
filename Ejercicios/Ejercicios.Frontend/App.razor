@@ -1,12 +1,49 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeView>
+                <Authorized>
+                    <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                </Authorized>
+                <NotAuthorized>
+                    @if (routeData.PageType == typeof(Pages.Auth))
+                    {
+                        <!-- Permitir acceso a la página de autenticación -->
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                    }
+                    else
+                    {
+                        <!-- Redirigir a auth para cualquier otra página -->
+                        <RedirectToAuth />
+                    }
+                </NotAuthorized>
+            </AuthorizeView>
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <div class="text-center mt-5">
+                    <h3>Página no encontrada</h3>
+                    <p>Lo sentimos, la página que buscas no existe.</p>
+                    <a href="/auth" class="btn btn-primary">Volver al login</a>
+                </div>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    protected override void OnInitialized()
+    {
+        try
+        {
+            Console.WriteLine("Aplicación inicializada");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en inicialización: {ex.Message}");
+        }
+    }
+}
