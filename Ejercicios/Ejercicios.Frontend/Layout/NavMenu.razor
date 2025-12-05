@@ -7,10 +7,13 @@
         <a class="navbar-brand" href="">Ejercicios</a>
         @if (AuthService.IsAuthenticated)
         {
-            <small class="text-light">
+            <!-- Hacer el nombre de usuario clicable -->
+            <button class="btn btn-link text-light text-decoration-none p-0 me-3" 
+                    @onclick="NavigateToProfile"
+                    style="border: none; background: none;">
                 <i class="bi bi-person-circle"></i> @AuthService.Usuario?.NombreUsuario
-            </small>
-            <button class="btn btn-outline-light btn-sm ms-2" @onclick="Logout">
+            </button>
+            <button class="btn btn-outline-light btn-sm" @onclick="Logout">
                 <i class="bi bi-box-arrow-right"></i> Salir
             </button>
         }
@@ -29,6 +32,14 @@
                     <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                 </NavLink>
             </div>
+            
+            <!-- Agregar enlace al perfil en el menú lateral también -->
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="profile">
+                    <span class="bi bi-person-circle" aria-hidden="true"></span> Mi Perfil
+                </NavLink>
+            </div>
+            
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ejercicio1">
                     <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Ejercicio 1
@@ -46,22 +57,22 @@
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ejercicio4">
-                    <span class="bi bi-database-nav-menu" aria-hidden="true"></span> Ejercicio 4
+                    <span class="bi bi-table" aria-hidden="true"></span> Ejercicio 4
                 </NavLink>
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ejercicio5">
-                    <span class="bi bi-gear-nav-menu" aria-hidden="true"></span> Ejercicio 5
+                    <span class="bi bi-gear" aria-hidden="true"></span> Ejercicio 5
                 </NavLink>
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ejercicio6">
-                    <span class="bi bi-shapes-nav-menu" aria-hidden="true"></span> Ejercicio 6
+                    <span class="bi bi-shapes" aria-hidden="true"></span> Ejercicio 6
                 </NavLink>
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ejercicio7">
-                    <span class="bi bi-infinity-nav-menu" aria-hidden="true"></span> Ejercicio 7
+                    <span class="bi bi-infinity" aria-hidden="true"></span> Ejercicio 7
                 </NavLink>
             </div>
         }
@@ -84,6 +95,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void NavigateToProfile()
+    {
+        Navigation.NavigateTo("/profile");
     }
 
     private void Logout()

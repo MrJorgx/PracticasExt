@@ -1,0 +1,263 @@
+@page "/profile"
+@attribute [Authorize]
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ILogger<Profile> Logger
+
+<PageTitle>Mi Perfil - Ejercicios</PageTitle>
+
+<div class="container mt-4">
+    <!-- Encabezado del perfil -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center py-5">
+                    <div class="avatar-circle mx-auto mb-3">
+                        <i class="bi bi-person-circle display-1"></i>
+                    </div>
+                    <h2 class="mb-1">@AuthService.Usuario?.NombreCompleto</h2>
+                    <p class="lead mb-0">@@@AuthService.Usuario?.NombreUsuario</p>
+                    <small class="opacity-75">
+                        Miembro desde @(AuthService.Usuario?.FechaRegistro.ToString("dd/MM/yyyy"))
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del usuario -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-lines-fill text-primary"></i> Información Personal
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong>Nombre de usuario:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @AuthService.Usuario?.NombreUsuario
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong>Email:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @AuthService.Usuario?.Email
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong>Nombre completo:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @AuthService.Usuario?.NombreCompleto
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Fecha de registro:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @AuthService.Usuario?.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas de uso -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-graph-up text-success"></i> Estadísticas de Uso
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <h3 class="text-primary">@diasActivo</h3>
+                                <small class="text-muted">Días activo</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <h3 class="text-success">7</h3>
+                                <small class="text-muted">Ejercicios disponibles</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="progress mb-2" style="height: 25px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%">
+                                    100% Completado
+                                </div>
+                            </div>
+                            <small class="text-muted">Acceso completo a todos los ejercicios</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ejercicios favoritos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-star-fill text-warning"></i> Ejercicios Disponibles
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var ejercicio in ejerciciosDisponibles)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <i class="@ejercicio.Icono @ejercicio.ColorClase display-6 mb-2"></i>
+                                        <h6 class="card-title">@ejercicio.Titulo</h6>
+                                        <p class="card-text small text-muted">@ejercicio.Descripcion</p>
+                                        <a href="@ejercicio.Url" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-arrow-right"></i> Ir al ejercicio
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuración de cuenta -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-gear-fill text-secondary"></i> Configuración de Cuenta
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-outline-primary w-100" @onclick="EditarPerfil">
+                                <i class="bi bi-pencil"></i> Editar Perfil
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-outline-secondary w-100" @onclick="CambiarPassword">
+                                <i class="bi bi-key"></i> Cambiar Contraseña
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <a href="/home" class="btn btn-primary me-3">
+                <i class="bi bi-house"></i> Volver al Inicio
+            </a>
+            <button class="btn btn-outline-danger" @onclick="CerrarSesion">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .stat-card h3 {
+        margin-bottom: 0.25rem;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    private int diasActivo = 0;
+
+    private List<EjercicioInfo> ejerciciosDisponibles = new List<EjercicioInfo>
+    {
+        new EjercicioInfo { Titulo = "Ejercicio 1", Descripcion = "Calculadora matemática", Url = "/ejercicio1", Icono = "bi bi-calculator", ColorClase = "text-primary" },
+        new EjercicioInfo { Titulo = "Ejercicio 2", Descripcion = "Procesamiento de texto", Url = "/ejercicio2", Icono = "bi bi-fonts", ColorClase = "text-success" },
+        new EjercicioInfo { Titulo = "Ejercicio 3", Descripcion = "Operaciones con fechas", Url = "/ejercicio3", Icono = "bi bi-calendar3", ColorClase = "text-info" },
+        new EjercicioInfo { Titulo = "Ejercicio 4", Descripcion = "CRUD de clientes", Url = "/ejercicio4", Icono = "bi bi-database", ColorClase = "text-warning" },
+        new EjercicioInfo { Titulo = "Ejercicio 5", Descripcion = "Implementación de clases", Url = "/ejercicio5", Icono = "bi bi-gear", ColorClase = "text-secondary" },
+        new EjercicioInfo { Titulo = "Ejercicio 6", Descripcion = "Formas geométricas", Url = "/ejercicio6", Icono = "bi bi-shapes", ColorClase = "text-dark" },
+        new EjercicioInfo { Titulo = "Ejercicio 7", Descripcion = "Números de Kaprekar", Url = "/ejercicio7", Icono = "bi bi-infinity", ColorClase = "text-danger" }
+    };
+
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Inicializando página de perfil de usuario: {Usuario}", 
+            AuthService.Usuario?.NombreUsuario);
+
+        // Calcular días activo
+        if (AuthService.Usuario?.FechaRegistro != null)
+        {
+            diasActivo = (DateTime.Now - AuthService.Usuario.FechaRegistro).Days + 1;
+        }
+    }
+
+    private void EditarPerfil()
+    {
+        Logger.LogInformation("Usuario {Usuario} solicitó editar perfil", 
+            AuthService.Usuario?.NombreUsuario);
+        // TODO: Implementar edición de perfil
+        // Podrías navegar a una página de edición o mostrar un modal
+    }
+
+    private void CambiarPassword()
+    {
+        Logger.LogInformation("Usuario {Usuario} solicitó cambiar contraseña", 
+            AuthService.Usuario?.NombreUsuario);
+        // TODO: Implementar cambio de contraseña
+    }
+
+    private async Task CerrarSesion()
+    {
+        Logger.LogInformation("Usuario {Usuario} cerró sesión desde perfil", 
+            AuthService.Usuario?.NombreUsuario);
+        
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/auth");
+    }
+
+    public class EjercicioInfo
+    {
+        public string Titulo { get; set; } = "";
+        public string Descripcion { get; set; } = "";
+        public string Url { get; set; } = "";
+        public string Icono { get; set; } = "";
+        public string ColorClase { get; set; } = "";
+    }
+}
