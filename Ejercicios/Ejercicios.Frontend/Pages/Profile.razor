@@ -3,6 +3,7 @@
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 @inject ILogger<Profile> Logger
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Mi Perfil - Ejercicios</PageTitle>
 
@@ -25,139 +26,300 @@
         </div>
     </div>
 
-    <!-- Información del usuario -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-person-lines-fill text-primary"></i> Información Personal
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <strong>Nombre de usuario:</strong>
-                        </div>
-                        <div class="col-sm-8">
-                            @AuthService.Usuario?.NombreUsuario
-                        </div>
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "info" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("info"))" type="button">
+                <i class="bi bi-person-lines-fill"></i> Información
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "edit" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("edit"))" type="button">
+                <i class="bi bi-pencil"></i> Editar Perfil
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "password" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("password"))" type="button">
+                <i class="bi bi-key"></i> Cambiar Contraseña
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "exercises" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("exercises"))" type="button">
+                <i class="bi bi-star"></i> Ejercicios
+            </button>
+        </li>
+    </ul>
+
+    <!-- Contenido de pestañas -->
+    @if (activeTab == "info")
+    {
+        <!-- Información del usuario -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-lines-fill text-primary"></i> Información Personal
+                        </h5>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <strong>Email:</strong>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Nombre de usuario:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @AuthService.Usuario?.NombreUsuario
+                            </div>
                         </div>
-                        <div class="col-sm-8">
-                            @AuthService.Usuario?.Email
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @AuthService.Usuario?.Email
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <strong>Nombre completo:</strong>
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong>Nombre completo:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @AuthService.Usuario?.NombreCompleto
+                            </div>
                         </div>
-                        <div class="col-sm-8">
-                            @AuthService.Usuario?.NombreCompleto
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <strong>Fecha de registro:</strong>
-                        </div>
-                        <div class="col-sm-8">
-                            @AuthService.Usuario?.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>Fecha de registro:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                @AuthService.Usuario?.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Estadísticas de uso -->
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-graph-up text-success"></i> Estadísticas de Uso
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 mb-3">
-                            <div class="stat-card">
-                                <h3 class="text-primary">@diasActivo</h3>
-                                <small class="text-muted">Días activo</small>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="stat-card">
-                                <h3 class="text-success">7</h3>
-                                <small class="text-muted">Ejercicios disponibles</small>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="progress mb-2" style="height: 25px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%">
-                                    100% Completado
+            <!-- Estadísticas de uso -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up text-success"></i> Estadísticas de Uso
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="stat-card">
+                                    <h3 class="text-primary">@diasActivo</h3>
+                                    <small class="text-muted">Días activo</small>
                                 </div>
                             </div>
-                            <small class="text-muted">Acceso completo a todos los ejercicios</small>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card">
+                                    <h3 class="text-success">7</h3>
+                                    <small class="text-muted">Ejercicios disponibles</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+    else if (activeTab == "edit")
+    {
+        <!-- Editar perfil -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-pencil text-primary"></i> Editar Información Personal
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <EditForm Model="updateProfileRequest" OnValidSubmit="UpdateProfile">
+                            <DataAnnotationsValidator />
 
-    <!-- Ejercicios favoritos -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">
-                        <i class="bi bi-star-fill text-warning"></i> Ejercicios Disponibles
-                    </h5>
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de usuario:</label>
+                                <InputText @bind-Value="updateProfileRequest.NombreUsuario" 
+                                          class="form-control" />
+                                <ValidationMessage For="() => updateProfileRequest.NombreUsuario" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Email:</label>
+                                <InputText @bind-Value="updateProfileRequest.Email" 
+                                          type="email" 
+                                          class="form-control" />
+                                <ValidationMessage For="() => updateProfileRequest.Email" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nombre completo:</label>
+                                <InputText @bind-Value="updateProfileRequest.NombreCompleto" 
+                                          class="form-control" />
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(mensajeProfile))
+                            {
+                                <div class="alert @(esErrorProfile ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-@(esErrorProfile ? "exclamation-triangle" : "check-circle")"></i>
+                                    @mensajeProfile
+                                    <button type="button" class="btn-close" @onclick="@(() => mensajeProfile = "")"></button>
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-secondary me-md-2" @onclick="CancelEditProfile">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary" disabled="@isProcessingProfile">
+                                    @if (isProcessingProfile)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    <i class="bi bi-check-circle"></i> Actualizar Perfil
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach (var ejercicio in ejerciciosDisponibles)
-                        {
-                            <div class="col-md-4 mb-3">
-                                <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-body text-center">
-                                        <i class="@ejercicio.Icono @ejercicio.ColorClase display-6 mb-2"></i>
-                                        <h6 class="card-title">@ejercicio.Titulo</h6>
-                                        <p class="card-text small text-muted">@ejercicio.Descripcion</p>
-                                        <a href="@ejercicio.Url" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-arrow-right"></i> Ir al ejercicio
-                                        </a>
+            </div>
+        </div>
+    }
+    else if (activeTab == "password")
+    {
+        <!-- Cambiar contraseña -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-key text-warning"></i> Cambiar Contraseña
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword">
+                            <DataAnnotationsValidator />
+
+                            <div class="mb-3">
+                                <label class="form-label">Contraseña actual:</label>
+                                <InputText @bind-Value="changePasswordRequest.CurrentPassword" 
+                                          type="password" 
+                                          class="form-control" />
+                                <ValidationMessage For="() => changePasswordRequest.CurrentPassword" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nueva contraseña:</label>
+                                <InputText @bind-Value="changePasswordRequest.NewPassword" 
+                                          type="password" 
+                                          class="form-control" />
+                                <ValidationMessage For="() => changePasswordRequest.NewPassword" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Confirmar nueva contraseña:</label>
+                                <InputText @bind-Value="changePasswordRequest.ConfirmNewPassword" 
+                                          type="password" 
+                                          class="form-control" />
+                                <ValidationMessage For="() => changePasswordRequest.ConfirmNewPassword" />
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(mensajePassword))
+                            {
+                                <div class="alert @(esErrorPassword ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-@(esErrorPassword ? "exclamation-triangle" : "check-circle")"></i>
+                                    @mensajePassword
+                                    <button type="button" class="btn-close" @onclick="@(() => mensajePassword = "")"></button>
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-secondary me-md-2" @onclick="CancelChangePassword">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-warning" disabled="@isProcessingPassword">
+                                    @if (isProcessingPassword)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                    }
+                                    <i class="bi bi-key"></i> Cambiar Contraseña
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (activeTab == "exercises")
+    {
+        <!-- Ejercicios disponibles -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-star-fill text-warning"></i> Ejercicios Disponibles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var ejercicio in ejerciciosDisponibles)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body text-center">
+                                            <i class="@ejercicio.Icono @ejercicio.ColorClase display-6 mb-2"></i>
+                                            <h6 class="card-title">@ejercicio.Titulo</h6>
+                                            <p class="card-text small text-muted">@ejercicio.Descripcion</p>
+                                            <a href="@ejercicio.Url" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-arrow-right"></i> Ir al ejercicio
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 
-    <!-- Configuración de cuenta -->
-    <div class="row mb-4">
+    <!-- Zona de peligro -->
+    <div class="row mt-5">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-light">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-gear-fill text-secondary"></i> Configuración de Cuenta
+                        <i class="bi bi-exclamation-triangle-fill"></i> Zona de Peligro
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-outline-primary w-100" @onclick="EditarPerfil">
-                                <i class="bi bi-pencil"></i> Editar Perfil
-                            </button>
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="text-danger">Eliminar cuenta permanentemente</h6>
+                            <p class="text-muted mb-0">
+                                Una vez eliminada tu cuenta, no podrás recuperar tus datos. 
+                                Esta acción es irreversible.
+                            </p>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-outline-secondary w-100" @onclick="CambiarPassword">
-                                <i class="bi bi-key"></i> Cambiar Contraseña
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <button class="btn btn-outline-danger" @onclick="ConfirmDeleteAccount" disabled="@isProcessingDelete">
+                                @if (isProcessingDelete)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                <i class="bi bi-trash"></i> Eliminar Cuenta
                             </button>
                         </div>
                     </div>
@@ -166,13 +328,13 @@
         </div>
     </div>
 
-    <!-- Botones de acción -->
-    <div class="row mb-4">
+    <!-- Botones de navegación -->
+    <div class="row mt-4 mb-4">
         <div class="col-12 text-center">
             <a href="/home" class="btn btn-primary me-3">
                 <i class="bi bi-house"></i> Volver al Inicio
             </a>
-            <button class="btn btn-outline-danger" @onclick="CerrarSesion">
+            <button class="btn btn-outline-secondary" @onclick="CerrarSesion">
                 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
             </button>
         </div>
@@ -194,16 +356,37 @@
         padding: 1rem;
         border-radius: 8px;
         background: rgba(0, 0, 0, 0.02);
+        transition: background-color 0.2s ease;
     }
 
     .stat-card h3 {
         margin-bottom: 0.25rem;
         font-weight: bold;
     }
+
+    .stat-card:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
 </style>
 
 @code {
     private int diasActivo = 0;
+    private string activeTab = "info";
+
+    // Variables para editar perfil
+    private UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
+    private bool isProcessingProfile = false;
+    private string mensajeProfile = "";
+    private bool esErrorProfile = false;
+
+    // Variables para cambiar contraseña
+    private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+    private bool isProcessingPassword = false;
+    private string mensajePassword = "";
+    private bool esErrorPassword = false;
+
+    // Variables para eliminar cuenta
+    private bool isProcessingDelete = false;
 
     private List<EjercicioInfo> ejerciciosDisponibles = new List<EjercicioInfo>
     {
@@ -226,21 +409,207 @@
         {
             diasActivo = (DateTime.Now - AuthService.Usuario.FechaRegistro).Days + 1;
         }
+
+        // Inicializar formulario de edición con datos actuales
+        if (AuthService.Usuario != null)
+        {
+            var userId = AuthService.GetUserId();
+            if (userId.HasValue)
+            {
+                updateProfileRequest = new UpdateProfileRequest
+                {
+                    UserId = userId.Value,
+                    NombreUsuario = AuthService.Usuario.NombreUsuario,
+                    Email = AuthService.Usuario.Email,
+                    NombreCompleto = AuthService.Usuario.NombreCompleto
+                };
+
+                changePasswordRequest = new ChangePasswordRequest
+                {
+                    UserId = userId.Value
+                };
+            }
+        }
     }
 
-    private void EditarPerfil()
+    private void ChangeTab(string tab)
     {
-        Logger.LogInformation("Usuario {Usuario} solicitó editar perfil", 
-            AuthService.Usuario?.NombreUsuario);
-        // TODO: Implementar edición de perfil
-        // Podrías navegar a una página de edición o mostrar un modal
+        activeTab = tab;
+        
+        // Limpiar mensajes al cambiar de pestaña
+        mensajeProfile = "";
+        mensajePassword = "";
     }
 
-    private void CambiarPassword()
+    private async Task UpdateProfile()
     {
-        Logger.LogInformation("Usuario {Usuario} solicitó cambiar contraseña", 
-            AuthService.Usuario?.NombreUsuario);
-        // TODO: Implementar cambio de contraseña
+        try
+        {
+            isProcessingProfile = true;
+            mensajeProfile = "";
+            esErrorProfile = false;
+
+            Logger.LogInformation("Actualizando perfil para usuario: {Usuario}", updateProfileRequest.NombreUsuario);
+
+            var (success, message) = await AuthService.UpdateProfileAsync(updateProfileRequest);
+
+            if (success)
+            {
+                mensajeProfile = message;
+                esErrorProfile = false;
+                
+                Logger.LogInformation("Perfil actualizado exitosamente para usuario: {Usuario}", 
+                    updateProfileRequest.NombreUsuario);
+
+                // Esperar un momento y cambiar a la pestaña de información
+                await Task.Delay(1500);
+                activeTab = "info";
+                mensajeProfile = "";
+            }
+            else
+            {
+                mensajeProfile = message;
+                esErrorProfile = true;
+                Logger.LogWarning("Error al actualizar perfil: {Error}", message);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeProfile = $"Error: {ex.Message}";
+            esErrorProfile = true;
+            Logger.LogError(ex, "Error al actualizar perfil");
+        }
+        finally
+        {
+            isProcessingProfile = false;
+        }
+    }
+
+    private async Task ChangePassword()
+    {
+        try
+        {
+            isProcessingPassword = true;
+            mensajePassword = "";
+            esErrorPassword = false;
+
+            Logger.LogInformation("Cambiando contraseña para usuario: {Usuario}", AuthService.Usuario?.NombreUsuario);
+
+            var (success, message) = await AuthService.ChangePasswordAsync(changePasswordRequest);
+
+            if (success)
+            {
+                mensajePassword = message;
+                esErrorPassword = false;
+                
+                Logger.LogInformation("Contraseña actualizada exitosamente para usuario: {Usuario}", 
+                    AuthService.Usuario?.NombreUsuario);
+
+                // Limpiar formulario
+                changePasswordRequest.CurrentPassword = "";
+                changePasswordRequest.NewPassword = "";
+                changePasswordRequest.ConfirmNewPassword = "";
+
+                // Esperar un momento y cambiar a la pestaña de información
+                await Task.Delay(1500);
+                activeTab = "info";
+                mensajePassword = "";
+            }
+            else
+            {
+                mensajePassword = message;
+                esErrorPassword = true;
+                Logger.LogWarning("Error al cambiar contraseña: {Error}", message);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajePassword = $"Error: {ex.Message}";
+            esErrorPassword = true;
+            Logger.LogError(ex, "Error al cambiar contraseña");
+        }
+        finally
+        {
+            isProcessingPassword = false;
+        }
+    }
+
+    private async Task ConfirmDeleteAccount()
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", 
+            "¿Estás seguro de que quieres eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.");
+
+        if (confirmed)
+        {
+            await DeleteAccount();
+        }
+    }
+
+    private async Task DeleteAccount()
+    {
+        try
+        {
+            isProcessingDelete = true;
+            
+            var userId = AuthService.GetUserId();
+            if (!userId.HasValue)
+            {
+                Logger.LogError("No se pudo obtener el ID del usuario para eliminar la cuenta");
+                return;
+            }
+
+            Logger.LogWarning("Eliminando cuenta para usuario: {Usuario}", AuthService.Usuario?.NombreUsuario);
+
+            var (success, message) = await AuthService.DeleteAccountAsync(userId.Value);
+
+            if (success)
+            {
+                Logger.LogWarning("Cuenta eliminada exitosamente para usuario: {Usuario}", AuthService.Usuario?.NombreUsuario);
+                
+                // Mostrar mensaje y redirigir
+                await JSRuntime.InvokeVoidAsync("alert", "Tu cuenta ha sido eliminada correctamente.");
+                Navigation.NavigateTo("/auth");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Error al eliminar la cuenta: {message}");
+                Logger.LogError("Error al eliminar cuenta: {Error}", message);
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error: {ex.Message}");
+            Logger.LogError(ex, "Error al eliminar cuenta");
+        }
+        finally
+        {
+            isProcessingDelete = false;
+        }
+    }
+
+    private void CancelEditProfile()
+    {
+        // Restaurar valores originales
+        if (AuthService.Usuario != null)
+        {
+            updateProfileRequest.NombreUsuario = AuthService.Usuario.NombreUsuario;
+            updateProfileRequest.Email = AuthService.Usuario.Email;
+            updateProfileRequest.NombreCompleto = AuthService.Usuario.NombreCompleto;
+        }
+        
+        mensajeProfile = "";
+        activeTab = "info";
+    }
+
+    private void CancelChangePassword()
+    {
+        // Limpiar formulario
+        changePasswordRequest.CurrentPassword = "";
+        changePasswordRequest.NewPassword = "";
+        changePasswordRequest.ConfirmNewPassword = "";
+        
+        mensajePassword = "";
+        activeTab = "info";
     }
 
     private async Task CerrarSesion()

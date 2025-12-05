@@ -83,4 +83,37 @@ namespace Ejercicios.Backend.Models
             return HashPassword(password) == hash;
         }
     }
+
+    public class UpdateProfileRequest
+    {
+        [Required(ErrorMessage = "El ID de usuario es requerido")]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "El nombre de usuario es requerido")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de usuario debe tener entre 3 y 50 caracteres")]
+        public string NombreUsuario { get; set; } = "";
+
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        public string Email { get; set; } = "";
+
+        public string NombreCompleto { get; set; } = "";
+    }
+
+    public class ChangePasswordRequest
+    {
+        [Required(ErrorMessage = "El ID de usuario es requerido")]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "La contraseña actual es requerida")]
+        public string CurrentPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "La nueva contraseña es requerida")]
+        [MinLength(6, ErrorMessage = "La nueva contraseña debe tener al menos 6 caracteres")]
+        public string NewPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "Confirma la nueva contraseña")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Las contraseñas no coinciden")]
+        public string ConfirmNewPassword { get; set; } = "";
+    }
 }

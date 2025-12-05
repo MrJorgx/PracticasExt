@@ -168,5 +168,135 @@ namespace Ejercicios.Backend.Controllers
                 return StatusCode(500, "Error interno del servidor");
             }
         }
+
+        [HttpPut("update-profile")]
+        public async Task<ActionResult<LoginResponse>> UpdateProfile([FromBody] UpdateProfileRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Actualizando perfil para usuario ID: {UserId}", request.UserId);
+
+                var usuario = await _context.Usuarios.FindAsync(request.UserId);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                // Verificar si el nuevo nombre de usuario ya existe (si cambió)
+                if (usuario.NombreUsuario != request.NombreUsuario)
+                {
+                    var existeUsuario = await _context.Usuarios
+                        .AnyAsync(u => u.NombreUsuario.ToLower() == request.NombreUsuario.ToLower() && u.Id != request.UserId);
+                    
+                    if (existeUsuario)
+                    {
+                        return BadRequest("Ya existe un usuario con ese nombre de usuario");
+                    }
+                }
+
+                // Verificar si el nuevo email ya existe (si cambió)
+                if (usuario.Email != request.Email.ToLower())
+                {
+                    var existeEmail = await _context.Usuarios
+                        .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower() && u.Id != request.UserId);
+                    
+                    if (existeEmail)
+                    {
+                        return BadRequest("Ya existe un usuario con ese email");
+                    }
+                }
+
+                // Actualizar datos
+                usuario.NombreUsuario = request.NombreUsuario.Trim();
+                usuario.Email = request.Email.Trim().ToLower();
+                usuario.NombreCompleto = !string.IsNullOrWhiteSpace(request.NombreCompleto) ? 
+                                        request.NombreCompleto.Trim() : 
+                                        request.NombreUsuario.Trim();
+
+                await _context.SaveChangesAsync();
+
+                var response = new LoginResponse
+                {
+                    Id = usuario.Id,
+                    NombreUsuario = usuario.NombreUsuario,
+                    Email = usuario.Email,
+                    NombreCompleto = usuario.NombreCompleto,
+                    Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}",
+                    FechaRegistro = usuario.FechaRegistro
+                };
+
+                _logger.LogInformation("Perfil actualizado exitosamente para usuario: {NombreUsuario}", usuario.NombreUsuario);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando perfil para usuario ID: {UserId}", request.UserId);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Cambio de contraseña solicitado para usuario ID: {UserId}", request.UserId);
+
+                var usuario = await _context.Usuarios.FindAsync(request.UserId);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                // Verificar contraseña actual
+                if (!PasswordHelper.VerifyPassword(request.CurrentPassword, usuario.PasswordHash))
+                {
+                    _logger.LogWarning("Intento de cambio de contraseña con contraseña incorrecta para usuario ID: {UserId}", request.UserId);
+                    return BadRequest("La contraseña actual es incorrecta");
+                }
+
+                // Actualizar contraseña
+                usuario.PasswordHash = PasswordHelper.HashPassword(request.NewPassword);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Contraseña actualizada exitosamente para usuario: {NombreUsuario}", usuario.NombreUsuario);
+                return Ok(new { message = "Contraseña actualizada correctamente" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cambiando contraseña para usuario ID: {UserId}", request.UserId);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpDelete("delete-account/{userId}")]
+        public async Task<IActionResult> DeleteAccount(int userId)
+        {
+            try
+            {
+                _logger.LogWarning("Solicitud de eliminación de cuenta para usuario ID: {UserId}", userId);
+
+                var usuario = await _context.Usuarios.FindAsync(userId);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                var nombreUsuario = usuario.NombreUsuario;
+                
+                _context.Usuarios.Remove(usuario);
+                await _context.SaveChangesAsync();
+
+                _logger.LogWarning("Cuenta eliminada permanentemente para usuario: {NombreUsuario} (ID: {UserId})", 
+                    nombreUsuario, userId);
+                
+                return Ok(new { message = "Cuenta eliminada correctamente" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error eliminando cuenta para usuario ID: {UserId}", userId);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
     }
 }
