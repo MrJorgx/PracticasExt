@@ -300,6 +300,49 @@ namespace Ejercicios.Frontend.Services
             }
         }
 
+        public async Task<(bool Success, string Message)> ForgotPasswordAsync(string email)
+        {
+            try
+            {
+                var request = new ForgotPasswordRequest { Email = email };
+                var response = await _httpClient.PostAsJsonAsync("api/auth/forgot-password", request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<MessageResponse>();
+                    return (true, result?.Message ?? "Email enviado");
+                }
+                
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, error);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/auth/reset-password", request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<MessageResponse>();
+                    return (true, result?.Message ?? "Contraseña restablecida");
+                }
+                
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, error);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
         public int? GetUserId()
         {
             if (Token != null && Token.StartsWith("token_"))
@@ -418,5 +461,35 @@ namespace Ejercicios.Frontend.Services
         [Required(ErrorMessage = "Confirma la nueva contraseña")]
         [Compare(nameof(NewPassword), ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmNewPassword { get; set; } = "";
+    }
+
+    public class ForgotPasswordRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        public string Email { get; set; } = "";
+    }
+
+    public class ResetPasswordRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "El token es requerido")]
+        public string Token { get; set; } = "";
+
+        [Required(ErrorMessage = "La nueva contraseña es requerida")]
+        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
+        public string NewPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "Confirma la nueva contraseña")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Las contraseñas no coinciden")]
+        public string ConfirmNewPassword { get; set; } = "";
+    }
+
+    public class MessageResponse
+    {
+        public string Message { get; set; } = "";
     }
 }

@@ -29,6 +29,9 @@ namespace Ejercicios.Backend.Models
         public string? TwoFactorCode { get; set;}
         public DateTime? TwoFactorCodeExpiry { get; set; }
         public int FailedTwoFactorAttempts { get; set; } = 0;
+
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
     }
 
     // DTOs para autenticación
@@ -146,6 +149,31 @@ namespace Ejercicios.Backend.Models
 
         [Required(ErrorMessage = "La nueva contraseña es requerida")]
         [MinLength(6, ErrorMessage = "La nueva contraseña debe tener al menos 6 caracteres")]
+        public string NewPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "Confirma la nueva contraseña")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Las contraseñas no coinciden")]
+        public string ConfirmNewPassword { get; set; } = "";
+    }
+
+    public class ForgotPasswordRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        public string Email { get; set; } = "";
+    }
+
+    public class ResetPasswordRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        [EmailAddress(ErrorMessage = "Formato de email inválido")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "El token es requerido")]
+        public string Token { get; set; } = "";
+
+        [Required(ErrorMessage = "La nueva contraseña es requerida")]
+        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
         public string NewPassword { get; set; } = "";
 
         [Required(ErrorMessage = "Confirma la nueva contraseña")]

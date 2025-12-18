@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ejercicios.Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251218193220_InitialCreateWithAuth")]
-    partial class InitialCreateWithAuth
+    [Migration("20251218203000_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,12 @@ namespace Ejercicios.Backend.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpiry")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TwoFactorCode")
                         .HasColumnType("text");

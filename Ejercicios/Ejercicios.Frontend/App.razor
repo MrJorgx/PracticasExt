@@ -7,7 +7,9 @@
                     <FocusOnNavigate RouteData="@routeData" Selector="h1" />
                 </Authorized>
                 <NotAuthorized>
-                    @if (routeData.PageType == typeof(Pages.Auth))
+                    @if (routeData.PageType == typeof(Pages.Auth) || 
+                         routeData.PageType == typeof(Pages.ForgotPassword) || 
+                         routeData.PageType == typeof(Pages.ResetPassword))
                     {
                         <!-- Permitir acceso a la página de autenticación -->
                         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />

@@ -1,5 +1,6 @@
 @using Ejercicios.Frontend.Services
 @inject AuthService AuthService
+@inject NavigationManager Navigation
 @inject ILogger<Login> Logger
 
 <div class="card">
@@ -36,7 +37,7 @@
                 </div>
             }
 
-            <div class="d-grid gap-2">
+            <div class="d-grid gap-2 mb-3">
                 <button type="submit" class="btn btn-primary" disabled="@isProcessing">
                     @if (isProcessing)
                     {
@@ -44,6 +45,15 @@
                     }
                     <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                 </button>
+            </div>
+
+            <!-- NUEVO: Enlace a recuperación de contraseña -->
+            <div class="text-center mb-3">
+                <a href="/forgot-password" class="text-decoration-none">
+                    <small>
+                        <i class="bi bi-question-circle"></i> ¿Olvidaste tu contraseña?
+                    </small>
+                </a>
             </div>
         </EditForm>
         
@@ -75,12 +85,10 @@
             mensaje = "";
             esError = false;
             
-            // CORREGIDO: Capturar los 3 valores de la tupla
             var (success, message, requiresTwoFactor) = await AuthService.LoginAsync(loginRequest);
             
             if (requiresTwoFactor)
             {
-                // Si requiere 2FA, el usuario será redirigido en Auth.razor
                 Logger.LogInformation("Login requiere 2FA, manejado por Auth.razor");
                 return;
             }

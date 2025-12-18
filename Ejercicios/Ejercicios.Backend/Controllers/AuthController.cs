@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Ejercicios.Backend.Data;
 using Ejercicios.Backend.Models;
 using Ejercicios.Backend.Services;
+using System.Security.Cryptography;
 
 namespace Ejercicios.Backend.Controllers
 {
@@ -461,6 +462,93 @@ namespace Ejercicios.Backend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error eliminando cuenta para usuario ID: {UserId}", userId);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Solicitud de recuperación de contraseña para: {Email}", request.Email);
+
+                var usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
+                // Por seguridad, siempre devolver OK aunque el usuario no exista
+                if (usuario == null)
+                {
+                    _logger.LogWarning("Solicitud de recuperación para email inexistente: {Email}", request.Email);
+                    return Ok(new { message = "Si el email existe, recibirás instrucciones para restablecer tu contraseña" });
+                }
+
+                // Generar token único
+                var resetToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+                usuario.PasswordResetToken = resetToken;
+                usuario.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(1); // Expira en 1 hora
+
+                await _context.SaveChangesAsync();
+
+                // Enviar email
+                await _emailService.SendPasswordResetEmailAsync(usuario.Email, usuario.NombreCompleto, resetToken);
+
+                _logger.LogInformation("Token de recuperación generado para usuario: {Email}", usuario.Email);
+                
+                return Ok(new { message = "Si el email existe, recibirás instrucciones para restablecer tu contraseña" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en solicitud de recuperación de contraseña para: {Email}", request.Email);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Intento de reseteo de contraseña para: {Email}", request.Email);
+
+                var usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
+                if (usuario == null)
+                {
+                    return BadRequest("Token inválido o expirado");
+                }
+
+                // Verificar token
+                if (string.IsNullOrEmpty(usuario.PasswordResetToken) || usuario.PasswordResetToken != request.Token)
+                {
+                    _logger.LogWarning("Token inválido para usuario: {Email}", request.Email);
+                    return BadRequest("Token inválido o expirado");
+                }
+
+                // Verificar expiración
+                if (usuario.PasswordResetTokenExpiry == null || usuario.PasswordResetTokenExpiry < DateTime.UtcNow)
+                {
+                    _logger.LogWarning("Token expirado para usuario: {Email}", request.Email);
+                    return BadRequest("Token inválido o expirado");
+                }
+
+                // Actualizar contraseña
+                usuario.PasswordHash = PasswordHelper.HashPassword(request.NewPassword);
+                
+                // Limpiar token
+                usuario.PasswordResetToken = null;
+                usuario.PasswordResetTokenExpiry = null;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Contraseña restablecida exitosamente para usuario: {Email}", usuario.Email);
+                
+                return Ok(new { message = "Contraseña restablecida exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error restableciendo contraseña para: {Email}", request.Email);
                 return StatusCode(500, "Error interno del servidor");
             }
         }
