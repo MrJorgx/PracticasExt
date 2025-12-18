@@ -75,8 +75,15 @@
             mensaje = "";
             esError = false;
             
-            // Cambiar esta línea para usar la tupla
-            var (success, message) = await AuthService.LoginAsync(loginRequest);
+            // CORREGIDO: Capturar los 3 valores de la tupla
+            var (success, message, requiresTwoFactor) = await AuthService.LoginAsync(loginRequest);
+            
+            if (requiresTwoFactor)
+            {
+                // Si requiere 2FA, el usuario será redirigido en Auth.razor
+                Logger.LogInformation("Login requiere 2FA, manejado por Auth.razor");
+                return;
+            }
             
             if (success)
             {
@@ -89,7 +96,7 @@
             }
             else
             {
-                mensaje = message; // Usar el mensaje del backend
+                mensaje = message;
                 esError = true;
                 Logger.LogWarning("Login fallido para {Email}: {Mensaje}", 
                     loginRequest.Email, message);

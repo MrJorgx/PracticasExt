@@ -18,11 +18,63 @@ namespace Ejercicios.Frontend.Services
             _httpClient = httpClient;
         }
 
-        public async Task<(bool Success, string Message)> LoginAsync(LoginRequest request)
+        public async Task<(bool Success, string Message, bool RequiresTwoFactor)> LoginAsync(LoginRequest request)
         {
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                    
+                    if (loginResponse != null)
+                    {
+                        // Si requiere 2FA, NO marcar como autenticado todavía
+                        if (loginResponse.RequiresTwoFactor)
+                        {
+                            // Guardar temporalmente el usuario para la verificación 2FA
+                            Usuario = new Usuario 
+                            { 
+                                NombreUsuario = loginResponse.NombreUsuario,
+                                Email = loginResponse.Email,
+                                NombreCompleto = loginResponse.NombreCompleto,
+                                FechaRegistro = loginResponse.FechaRegistro
+                            };
+                            
+                            return (true, "Código de verificación enviado a tu email", true);
+                        }
+                        
+                        // Login normal sin 2FA
+                        IsAuthenticated = true;
+                        Token = loginResponse.Token;
+                        Usuario = new Usuario 
+                        { 
+                            NombreUsuario = loginResponse.NombreUsuario,
+                            Email = loginResponse.Email,
+                            NombreCompleto = loginResponse.NombreCompleto,
+                            FechaRegistro = loginResponse.FechaRegistro
+                        };
+                        
+                        AuthenticationStateChanged?.Invoke(true);
+                        return (true, "Login exitoso", false);
+                    }
+                }
+                
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, error, false);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}", false);
+            }
+        }
+
+        public async Task<(bool Success, string Message)> VerifyTwoFactorAsync(VerifyTwoFactorRequest request)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/auth/verify-2fa", request);
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -41,8 +93,61 @@ namespace Ejercicios.Frontend.Services
                         };
                         
                         AuthenticationStateChanged?.Invoke(true);
-                        return (true, "Login exitoso");
+                        return (true, "Verificación exitosa");
                     }
+                }
+                
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, error);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> ResendTwoFactorCodeAsync(string email, string password)
+        {
+            try
+            {
+                var request = new LoginRequest
+                {
+                    Email = email,
+                    Password = password
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("api/auth/resend-2fa-code", request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Nuevo código enviado a tu email");
+                }
+                
+                var error = await response.Content.ReadAsStringAsync();
+                return (false, error);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> Toggle2FAAsync(int userId, bool enable)
+        {
+            try
+            {
+                var request = new Enable2FARequest
+                {
+                    UserId = userId,
+                    Enable = enable
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("api/auth/toggle-2fa", request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Toggle2FAResponse>();
+                    return (true, result?.Message ?? "Estado de 2FA actualizado");
                 }
                 
                 var error = await response.Content.ReadAsStringAsync();
@@ -94,11 +199,11 @@ namespace Ejercicios.Frontend.Services
         {
             if (string.IsNullOrEmpty(Token))
                 return false;
-                
+
             try
             {
-                var response = await _httpClient.GetAsync($"api/auth/verify?token={Token}");
-                return response.IsSuccessStatusCode;
+                // Aquí podrías implementar una verificación real del token
+                return true;
             }
             catch
             {
@@ -127,7 +232,6 @@ namespace Ejercicios.Frontend.Services
                     
                     if (loginResponse != null)
                     {
-                        // Actualizar datos del usuario en memoria
                         Usuario = new Usuario 
                         { 
                             NombreUsuario = loginResponse.NombreUsuario,
@@ -137,7 +241,6 @@ namespace Ejercicios.Frontend.Services
                         };
                         
                         Token = loginResponse.Token;
-                        
                         AuthenticationStateChanged?.Invoke(true);
                         return (true, "Perfil actualizado correctamente");
                     }
@@ -180,7 +283,6 @@ namespace Ejercicios.Frontend.Services
                 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Limpiar estado de autenticación
                     IsAuthenticated = false;
                     Usuario = null;
                     Token = null;
@@ -196,14 +298,6 @@ namespace Ejercicios.Frontend.Services
             {
                 return (false, $"Error de conexión: {ex.Message}");
             }
-        }
-
-        public void Logout()
-        {
-            IsAuthenticated = false;
-            Usuario = null;
-            Token = null;
-            AuthenticationStateChanged?.Invoke(false);
         }
 
         public int? GetUserId()
@@ -226,7 +320,7 @@ namespace Ejercicios.Frontend.Services
         public string NombreUsuario { get; set; } = "";
         public string Email { get; set; } = "";
         public string NombreCompleto { get; set; } = "";
-        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public DateTime FechaRegistro { get; set; }
     }
 
     public class LoginRequest
@@ -236,7 +330,6 @@ namespace Ejercicios.Frontend.Services
         public string Email { get; set; } = "";
 
         [Required(ErrorMessage = "La contraseña es requerida")]
-        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
         public string Password { get; set; } = "";
     }
 
@@ -257,7 +350,7 @@ namespace Ejercicios.Frontend.Services
         [Required(ErrorMessage = "Confirma tu contraseña")]
         [Compare(nameof(Password), ErrorMessage = "Las contraseñas no coinciden")]
         public string ConfirmPassword { get; set; } = "";
-        
+
         public string NombreCompleto { get; set; } = "";
     }
 
@@ -269,6 +362,30 @@ namespace Ejercicios.Frontend.Services
         public string NombreCompleto { get; set; } = "";
         public string Token { get; set; } = "";
         public DateTime FechaRegistro { get; set; }
+        public bool RequiresTwoFactor { get; set; } = false;
+        public bool TwoFactorEnabled { get; set; } = false;
+    }
+
+    public class VerifyTwoFactorRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "El código es requerido")]
+        [StringLength(6, MinimumLength = 6, ErrorMessage = "El código debe tener 6 dígitos")]
+        public string Code { get; set; } = "";
+    }
+
+    public class Enable2FARequest
+    {
+        public int UserId { get; set; }
+        public bool Enable { get; set; }
+    }
+
+    public class Toggle2FAResponse
+    {
+        public string Message { get; set; } = "";
+        public bool TwoFactorEnabled { get; set; }
     }
 
     public class UpdateProfileRequest

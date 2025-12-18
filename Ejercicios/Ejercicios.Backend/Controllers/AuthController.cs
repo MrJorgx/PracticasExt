@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ejercicios.Backend.Data;
 using Ejercicios.Backend.Models;
+using Ejercicios.Backend.Services;
 
 namespace Ejercicios.Backend.Controllers
 {
@@ -11,11 +12,13 @@ namespace Ejercicios.Backend.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ILogger<AuthController> _logger;
+        private readonly IEmailService _emailService;
 
-        public AuthController(AppDbContext context, ILogger<AuthController> logger)
+        public AuthController(AppDbContext context, ILogger<AuthController> logger, IEmailService emailService)
         {
             _context = context;
             _logger = logger;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -45,14 +48,45 @@ namespace Ejercicios.Backend.Controllers
                     return Unauthorized("Credenciales inválidas");
                 }
 
+                // Si tiene 2FA habilitado, generar y enviar código
+                if (usuario.TwoFactorEnabled)
+                {
+                    var code = PasswordHelper.GenerateTwoFactorCode();
+                    usuario.TwoFactorCode = code;
+                    usuario.TwoFactorCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+                    usuario.FailedTwoFactorAttempts = 0;
+                    
+                    await _context.SaveChangesAsync();
+
+                    // Enviar código por email
+                    await _emailService.SendTwoFactorCodeAsync(usuario.Email, usuario.NombreCompleto, code);
+
+                    _logger.LogInformation("Código 2FA generado y enviado para usuario: {Email}", usuario.Email);
+
+                    return Ok(new LoginResponse
+                    {
+                        Id = usuario.Id,
+                        NombreUsuario = usuario.NombreUsuario,
+                        Email = usuario.Email,
+                        NombreCompleto = usuario.NombreCompleto,
+                        Token = "",
+                        FechaRegistro = usuario.FechaRegistro,
+                        RequiresTwoFactor = true,
+                        TwoFactorEnabled = true
+                    });
+                }
+
+                // Login exitoso sin 2FA
                 var response = new LoginResponse
                 {
                     Id = usuario.Id,
                     NombreUsuario = usuario.NombreUsuario,
                     Email = usuario.Email,
                     NombreCompleto = usuario.NombreCompleto,
-                    Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}", // Token simplificado
-                    FechaRegistro = usuario.FechaRegistro
+                    Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}",
+                    FechaRegistro = usuario.FechaRegistro,
+                    RequiresTwoFactor = false,
+                    TwoFactorEnabled = false
                 };
 
                 _logger.LogInformation("Login exitoso para usuario: {NombreUsuario} ({Email})", usuario.NombreUsuario, usuario.Email);
@@ -60,7 +94,158 @@ namespace Ejercicios.Backend.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error durante el login para email: {Email}", request?.Email);
+                _logger.LogError(ex, "Error en login para email: {Email}", request.Email);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("verify-2fa")]
+        public async Task<ActionResult<LoginResponse>> VerifyTwoFactor([FromBody] VerifyTwoFactorRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Verificación 2FA para email: {Email}", request.Email);
+
+                var usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
+                if (usuario == null)
+                {
+                    return Unauthorized("Usuario no encontrado");
+                }
+
+                // Verificar si el código ha expirado
+                if (usuario.TwoFactorCodeExpiry == null || usuario.TwoFactorCodeExpiry < DateTime.UtcNow)
+                {
+                    _logger.LogWarning("Código 2FA expirado para usuario: {Email}", request.Email);
+                    return BadRequest("El código ha expirado. Por favor, solicita uno nuevo.");
+                }
+
+                // Verificar límite de intentos fallidos
+                if (usuario.FailedTwoFactorAttempts >= 3)
+                {
+                    _logger.LogWarning("Demasiados intentos fallidos de 2FA para usuario: {Email}", request.Email);
+                    usuario.TwoFactorCode = null;
+                    usuario.TwoFactorCodeExpiry = null;
+                    await _context.SaveChangesAsync();
+                    return BadRequest("Demasiados intentos fallidos. Por favor, inicia sesión nuevamente.");
+                }
+
+                // Verificar el código
+                if (usuario.TwoFactorCode != request.Code)
+                {
+                    usuario.FailedTwoFactorAttempts++;
+                    await _context.SaveChangesAsync();
+                    
+                    _logger.LogWarning("Código 2FA incorrecto para usuario: {Email}. Intentos fallidos: {Attempts}", 
+                        request.Email, usuario.FailedTwoFactorAttempts);
+                    
+                    return BadRequest($"Código incorrecto. Intentos restantes: {3 - usuario.FailedTwoFactorAttempts}");
+                }
+
+                // Código correcto - limpiar datos 2FA
+                usuario.TwoFactorCode = null;
+                usuario.TwoFactorCodeExpiry = null;
+                usuario.FailedTwoFactorAttempts = 0;
+                await _context.SaveChangesAsync();
+
+                var response = new LoginResponse
+                {
+                    Id = usuario.Id,
+                    NombreUsuario = usuario.NombreUsuario,
+                    Email = usuario.Email,
+                    NombreCompleto = usuario.NombreCompleto,
+                    Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}",
+                    FechaRegistro = usuario.FechaRegistro,
+                    RequiresTwoFactor = false,
+                    TwoFactorEnabled = true
+                };
+
+                _logger.LogInformation("Verificación 2FA exitosa para usuario: {NombreUsuario}", usuario.NombreUsuario);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en verificación 2FA para email: {Email}", request.Email);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("resend-2fa-code")]
+        public async Task<IActionResult> ResendTwoFactorCode([FromBody] LoginRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Reenvío de código 2FA solicitado para: {Email}", request.Email);
+
+                var usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
+                if (usuario == null || !PasswordHelper.VerifyPassword(request.Password, usuario.PasswordHash))
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+
+                if (!usuario.TwoFactorEnabled)
+                {
+                    return BadRequest("2FA no está habilitado para este usuario");
+                }
+
+                var code = PasswordHelper.GenerateTwoFactorCode();
+                usuario.TwoFactorCode = code;
+                usuario.TwoFactorCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+                usuario.FailedTwoFactorAttempts = 0;
+                
+                await _context.SaveChangesAsync();
+                await _emailService.SendTwoFactorCodeAsync(usuario.Email, usuario.NombreCompleto, code);
+
+                _logger.LogInformation("Código 2FA reenviado para usuario: {Email}", usuario.Email);
+                return Ok(new { message = "Código enviado nuevamente" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error reenviando código 2FA para: {Email}", request.Email);
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("toggle-2fa")]
+        public async Task<IActionResult> Toggle2FA([FromBody] Enable2FARequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Solicitud de cambio de 2FA para usuario ID: {UserId}, Habilitar: {Enable}", 
+                    request.UserId, request.Enable);
+
+                var usuario = await _context.Usuarios.FindAsync(request.UserId);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                usuario.TwoFactorEnabled = request.Enable;
+                
+                // Limpiar códigos existentes si se deshabilita
+                if (!request.Enable)
+                {
+                    usuario.TwoFactorCode = null;
+                    usuario.TwoFactorCodeExpiry = null;
+                    usuario.FailedTwoFactorAttempts = 0;
+                }
+                
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("2FA {Action} para usuario: {NombreUsuario}", 
+                    request.Enable ? "habilitado" : "deshabilitado", usuario.NombreUsuario);
+
+                return Ok(new { 
+                    message = request.Enable ? "Autenticación de dos factores habilitada" : "Autenticación de dos factores deshabilitada",
+                    twoFactorEnabled = usuario.TwoFactorEnabled
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cambiando estado de 2FA para usuario ID: {UserId}", request.UserId);
                 return StatusCode(500, "Error interno del servidor");
             }
         }
@@ -78,7 +263,6 @@ namespace Ejercicios.Backend.Controllers
                     return BadRequest("Datos de registro requeridos");
                 }
 
-                // Verificar si el usuario ya existe
                 var usuarioExistente = await _context.Usuarios
                     .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower() || 
                                   u.NombreUsuario.ToLower() == request.NombreUsuario.ToLower());
@@ -90,7 +274,6 @@ namespace Ejercicios.Backend.Controllers
                     return BadRequest("Ya existe un usuario con ese email o nombre de usuario");
                 }
 
-                // Crear nuevo usuario
                 var usuario = new Usuario
                 {
                     NombreUsuario = request.NombreUsuario.Trim(),
@@ -99,11 +282,25 @@ namespace Ejercicios.Backend.Controllers
                     NombreCompleto = !string.IsNullOrWhiteSpace(request.NombreCompleto) ? 
                                     request.NombreCompleto.Trim() : 
                                     request.NombreUsuario.Trim(),
-                    FechaRegistro = DateTime.UtcNow
+                    FechaRegistro = DateTime.UtcNow,
+                    TwoFactorEnabled = false
                 };
 
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
+
+                // Enviar email de bienvenida (sin bloquear el registro)
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _emailService.SendWelcomeEmailAsync(usuario.Email, usuario.NombreCompleto);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error enviando email de bienvenida a {Email}", usuario.Email);
+                    }
+                });
 
                 var response = new LoginResponse
                 {
@@ -112,60 +309,36 @@ namespace Ejercicios.Backend.Controllers
                     Email = usuario.Email,
                     NombreCompleto = usuario.NombreCompleto,
                     Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}",
-                    FechaRegistro = usuario.FechaRegistro
+                    FechaRegistro = usuario.FechaRegistro,
+                    RequiresTwoFactor = false,
+                    TwoFactorEnabled = false
                 };
 
-                _logger.LogInformation("Usuario registrado exitosamente: {NombreUsuario} ({Email}) con ID: {Id}", 
-                    usuario.NombreUsuario, usuario.Email, usuario.Id);
+                _logger.LogInformation("Usuario registrado exitosamente: {NombreUsuario} ({Email})", 
+                    usuario.NombreUsuario, usuario.Email);
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error durante el registro para usuario: {NombreUsuario}, Email: {Email}", 
-                    request?.NombreUsuario, request?.Email);
+                _logger.LogError(ex, "Error en registro para: {NombreUsuario}, {Email}", 
+                    request.NombreUsuario, request.Email);
                 return StatusCode(500, "Error interno del servidor");
             }
         }
 
-        [HttpGet("verify")]
-        public async Task<ActionResult<LoginResponse>> VerifyToken([FromQuery] string token)
+        [HttpPost("verify")]
+        public async Task<ActionResult<bool>> Verify()
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(token) || !token.StartsWith("token_"))
-                {
-                    return Unauthorized("Token inválido");
-                }
-
-                var parts = token.Split('_');
-                if (parts.Length != 3 || !int.TryParse(parts[1], out var userId))
-                {
-                    return Unauthorized("Token inválido");
-                }
-
-                var usuario = await _context.Usuarios.FindAsync(userId);
-                if (usuario == null)
-                {
-                    return Unauthorized("Usuario no encontrado");
-                }
-
-                var response = new LoginResponse
-                {
-                    Id = usuario.Id,
-                    NombreUsuario = usuario.NombreUsuario,
-                    Email = usuario.Email,
-                    NombreCompleto = usuario.NombreCompleto,
-                    Token = token,
-                    FechaRegistro = usuario.FechaRegistro
-                };
-
-                return Ok(response);
+                _logger.LogInformation("Verificación de token solicitada");
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error verificando token: {Token}", token);
-                return StatusCode(500, "Error interno del servidor");
+                _logger.LogError(ex, "Error en verificación de token");
+                return StatusCode(500, false);
             }
         }
 
@@ -174,7 +347,7 @@ namespace Ejercicios.Backend.Controllers
         {
             try
             {
-                _logger.LogInformation("Actualizando perfil para usuario ID: {UserId}", request.UserId);
+                _logger.LogInformation("Actualización de perfil solicitada para usuario ID: {UserId}", request.UserId);
 
                 var usuario = await _context.Usuarios.FindAsync(request.UserId);
                 if (usuario == null)
@@ -182,36 +355,33 @@ namespace Ejercicios.Backend.Controllers
                     return NotFound("Usuario no encontrado");
                 }
 
-                // Verificar si el nuevo nombre de usuario ya existe (si cambió)
-                if (usuario.NombreUsuario != request.NombreUsuario)
+                // Verificar si el nuevo nombre de usuario ya existe
+                if (request.NombreUsuario != usuario.NombreUsuario)
                 {
-                    var existeUsuario = await _context.Usuarios
+                    var nombreExiste = await _context.Usuarios
                         .AnyAsync(u => u.NombreUsuario.ToLower() == request.NombreUsuario.ToLower() && u.Id != request.UserId);
                     
-                    if (existeUsuario)
+                    if (nombreExiste)
                     {
-                        return BadRequest("Ya existe un usuario con ese nombre de usuario");
+                        return BadRequest("El nombre de usuario ya está en uso");
                     }
                 }
 
-                // Verificar si el nuevo email ya existe (si cambió)
-                if (usuario.Email != request.Email.ToLower())
+                // Verificar si el nuevo email ya existe
+                if (request.Email != usuario.Email)
                 {
-                    var existeEmail = await _context.Usuarios
+                    var emailExiste = await _context.Usuarios
                         .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower() && u.Id != request.UserId);
                     
-                    if (existeEmail)
+                    if (emailExiste)
                     {
-                        return BadRequest("Ya existe un usuario con ese email");
+                        return BadRequest("El email ya está en uso");
                     }
                 }
 
-                // Actualizar datos
                 usuario.NombreUsuario = request.NombreUsuario.Trim();
                 usuario.Email = request.Email.Trim().ToLower();
-                usuario.NombreCompleto = !string.IsNullOrWhiteSpace(request.NombreCompleto) ? 
-                                        request.NombreCompleto.Trim() : 
-                                        request.NombreUsuario.Trim();
+                usuario.NombreCompleto = request.NombreCompleto?.Trim() ?? usuario.NombreUsuario;
 
                 await _context.SaveChangesAsync();
 
@@ -222,7 +392,9 @@ namespace Ejercicios.Backend.Controllers
                     Email = usuario.Email,
                     NombreCompleto = usuario.NombreCompleto,
                     Token = $"token_{usuario.Id}_{DateTime.UtcNow.Ticks}",
-                    FechaRegistro = usuario.FechaRegistro
+                    FechaRegistro = usuario.FechaRegistro,
+                    RequiresTwoFactor = false,
+                    TwoFactorEnabled = usuario.TwoFactorEnabled
                 };
 
                 _logger.LogInformation("Perfil actualizado exitosamente para usuario: {NombreUsuario}", usuario.NombreUsuario);
@@ -248,18 +420,16 @@ namespace Ejercicios.Backend.Controllers
                     return NotFound("Usuario no encontrado");
                 }
 
-                // Verificar contraseña actual
                 if (!PasswordHelper.VerifyPassword(request.CurrentPassword, usuario.PasswordHash))
                 {
-                    _logger.LogWarning("Intento de cambio de contraseña con contraseña incorrecta para usuario ID: {UserId}", request.UserId);
+                    _logger.LogWarning("Contraseña actual incorrecta para usuario ID: {UserId}", request.UserId);
                     return BadRequest("La contraseña actual es incorrecta");
                 }
 
-                // Actualizar contraseña
                 usuario.PasswordHash = PasswordHelper.HashPassword(request.NewPassword);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Contraseña actualizada exitosamente para usuario: {NombreUsuario}", usuario.NombreUsuario);
+                _logger.LogInformation("Contraseña cambiada exitosamente para usuario: {NombreUsuario}", usuario.NombreUsuario);
                 return Ok(new { message = "Contraseña actualizada correctamente" });
             }
             catch (Exception ex)
@@ -282,14 +452,10 @@ namespace Ejercicios.Backend.Controllers
                     return NotFound("Usuario no encontrado");
                 }
 
-                var nombreUsuario = usuario.NombreUsuario;
-                
                 _context.Usuarios.Remove(usuario);
                 await _context.SaveChangesAsync();
 
-                _logger.LogWarning("Cuenta eliminada permanentemente para usuario: {NombreUsuario} (ID: {UserId})", 
-                    nombreUsuario, userId);
-                
+                _logger.LogWarning("Cuenta eliminada para usuario: {NombreUsuario} ({Email})", usuario.NombreUsuario, usuario.Email);
                 return Ok(new { message = "Cuenta eliminada correctamente" });
             }
             catch (Exception ex)

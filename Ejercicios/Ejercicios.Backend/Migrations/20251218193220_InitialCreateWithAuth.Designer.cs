@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ejercicios.Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251201173405_AddUsuarioTable")]
-    partial class AddUsuarioTable
+    [Migration("20251218193220_InitialCreateWithAuth")]
+    partial class InitialCreateWithAuth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,9 @@ namespace Ejercicios.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("FailedTwoFactorAttempts")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("FechaRegistro")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -116,6 +119,15 @@ namespace Ejercicios.Backend.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("TwoFactorCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("TwoFactorCodeExpiry")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

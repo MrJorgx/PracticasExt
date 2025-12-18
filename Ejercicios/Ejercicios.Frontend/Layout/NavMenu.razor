@@ -102,9 +102,9 @@
         Navigation.NavigateTo("/profile");
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        AuthService.Logout();
+        await AuthService.LogoutAsync();
         Navigation.NavigateTo("/auth");
     }
 }

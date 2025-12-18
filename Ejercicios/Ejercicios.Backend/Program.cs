@@ -42,6 +42,8 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
 
+    builder.Services.AddScoped<Ejercicios.Backend.Services.IEmailService, Ejercicios.Backend.Services.EmailService>();
+
     // Configurar CORS para permitir solicitudes desde el frontend Blazor
     builder.Services.AddCors(options =>
     {

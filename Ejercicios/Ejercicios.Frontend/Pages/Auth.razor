@@ -1,68 +1,524 @@
 @page "/auth"
-@page "/"
 @inject AuthService AuthService
 @inject NavigationManager Navigation
 @inject ILogger<Auth> Logger
 
-<PageTitle>Autenticación</PageTitle>
+<PageTitle>@(modoLogin ? "Iniciar Sesión" : "Registro") - Ejercicios</PageTitle>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            @if (mostrarLogin)
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>
+                <i class="bi bi-@(modoLogin ? "box-arrow-in-right" : "person-plus")"></i>
+                @(modoLogin ? "Iniciar Sesión" : "Crear Cuenta")
+            </h2>
+            <p class="text-muted">
+                @(modoLogin ? "Ingresa tus credenciales para continuar" : "Completa el formulario para registrarte")
+            </p>
+        </div>
+
+        <div class="auth-body">
+            @if (requiresTwoFactor)
             {
-                <Ejercicios.Frontend.Components.Login OnLoginSuccess="OnLoginSuccess" />
+                <!-- Formulario de verificación 2FA -->
+                <EditForm Model="twoFactorRequest" OnValidSubmit="VerifyTwoFactor">
+                    <DataAnnotationsValidator />
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-shield-check"></i>
+                        <strong>Verificación en dos pasos</strong>
+                        <p class="mb-0 mt-2">Hemos enviado un código de 6 dígitos a tu email: <strong>@tempEmail</strong></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Código de verificación:</label>
+                        <InputText @bind-Value="twoFactorRequest.Code" 
+                                  class="form-control form-control-lg text-center" 
+                                  placeholder="000000"
+                                  maxlength="6"
+                                  style="letter-spacing: 0.5em; font-size: 1.5rem;" />
+                        <ValidationMessage For="() => twoFactorRequest.Code" />
+                        <small class="form-text text-muted">El código expira en 10 minutos</small>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(mensaje))
+                    {
+                        <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show">
+                            <i class="bi bi-@(esError ? "exclamation-triangle" : "check-circle")"></i>
+                            @mensaje
+                            <button type="button" class="btn-close" @onclick="@(() => mensaje = "")"></button>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" disabled="@isProcessing">
+                            @if (isProcessing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="bi bi-check-circle"></i> Verificar Código
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary" 
+                                @onclick="ResendCode" 
+                                disabled="@(isProcessing || resendCooldown > 0)">
+                            <i class="bi bi-arrow-clockwise"></i> 
+                            @if (resendCooldown > 0)
+                            {
+                                <text>Reenviar código (@resendCooldown s)</text>
+                            }
+                            else
+                            {
+                                <text>Reenviar código</text>
+                            }
+                        </button>
+
+                        <button type="button" class="btn btn-link" @onclick="CancelTwoFactor">
+                            Cancelar y volver al login
+                        </button>
+                    </div>
+                </EditForm>
+            }
+            else if (modoLogin)
+            {
+                <!-- Formulario de Login -->
+                <EditForm Model="loginRequest" OnValidSubmit="Login">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <InputText @bind-Value="loginRequest.Email" 
+                                      type="email" 
+                                      class="form-control" 
+                                      placeholder="tu@email.com" />
+                        </div>
+                        <ValidationMessage For="() => loginRequest.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <InputText @bind-Value="loginRequest.Password" 
+                                      type="password" 
+                                      class="form-control" 
+                                      placeholder="••••••••" />
+                        </div>
+                        <ValidationMessage For="() => loginRequest.Password" />
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(mensaje))
+                    {
+                        <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show">
+                            <i class="bi bi-@(esError ? "exclamation-triangle" : "check-circle")"></i>
+                            @mensaje
+                            <button type="button" class="btn-close" @onclick="@(() => mensaje = "")"></button>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg" disabled="@isProcessing">
+                            @if (isProcessing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-link" @onclick="CambiarModo">
+                            ¿No tienes cuenta? Regístrate aquí
+                        </button>
+                    </div>
+                </EditForm>
             }
             else
             {
-                <Ejercicios.Frontend.Components.Register OnRegisterSuccess="OnRegisterSuccess" />
+                <!-- Formulario de Registro -->
+                <EditForm Model="registroRequest" OnValidSubmit="Registrar">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de usuario:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <InputText @bind-Value="registroRequest.NombreUsuario" 
+                                      class="form-control" 
+                                      placeholder="usuario123" />
+                        </div>
+                        <ValidationMessage For="() => registroRequest.NombreUsuario" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <InputText @bind-Value="registroRequest.Email" 
+                                      type="email" 
+                                      class="form-control" 
+                                      placeholder="tu@email.com" />
+                        </div>
+                        <ValidationMessage For="() => registroRequest.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nombre completo (opcional):</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                            <InputText @bind-Value="registroRequest.NombreCompleto" 
+                                      class="form-control" 
+                                      placeholder="Juan Pérez" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <InputText @bind-Value="registroRequest.Password" 
+                                      type="password" 
+                                      class="form-control" 
+                                      placeholder="••••••••" />
+                        </div>
+                        <ValidationMessage For="() => registroRequest.Password" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Confirmar contraseña:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <InputText @bind-Value="registroRequest.ConfirmPassword" 
+                                      type="password" 
+                                      class="form-control" 
+                                      placeholder="••••••••" />
+                        </div>
+                        <ValidationMessage For="() => registroRequest.ConfirmPassword" />
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(mensaje))
+                    {
+                        <div class="alert @(esError ? "alert-danger" : "alert-success") alert-dismissible fade show">
+                            <i class="bi bi-@(esError ? "exclamation-triangle" : "check-circle")"></i>
+                            @mensaje
+                            <button type="button" class="btn-close" @onclick="@(() => mensaje = "")"></button>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-success btn-lg" disabled="@isProcessing">
+                            @if (isProcessing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            <i class="bi bi-person-plus"></i> Crear Cuenta
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-link" @onclick="CambiarModo">
+                            ¿Ya tienes cuenta? Inicia sesión aquí
+                        </button>
+                    </div>
+                </EditForm>
             }
-            
-            <div class="text-center mt-3">
-                <button class="btn btn-link" @onclick="CambiarModo">
-                    @if (mostrarLogin)
-                    {
-                        <span>¿No tienes cuenta? Regístrate</span>
-                    }
-                    else
-                    {
-                        <span>¿Ya tienes cuenta? Inicia sesión</span>
-                    }
-                </button>
-            </div>
         </div>
     </div>
 </div>
 
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        max-width: 500px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .auth-header h2 {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+    }
+
+    .auth-body {
+        padding: 30px;
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border-right: none;
+    }
+
+    .form-control {
+        border-left: none;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3e8f 100%);
+    }
+</style>
+
 @code {
-    private bool mostrarLogin = true;
+    private bool modoLogin = true;
+    private bool requiresTwoFactor = false;
+    private bool isProcessing = false;
+    private string mensaje = "";
+    private bool esError = false;
+    private string tempEmail = "";
+    private string tempPassword = "";
+    private int resendCooldown = 0;
+    private System.Threading.Timer? cooldownTimer;
+
+    private LoginRequest loginRequest = new LoginRequest();
+    private RegistroRequest registroRequest = new RegistroRequest();
+    private VerifyTwoFactorRequest twoFactorRequest = new VerifyTwoFactorRequest();
 
     protected override void OnInitialized()
     {
-        Logger.LogInformation("Inicializando componente Auth");
+        Logger.LogInformation("Página de autenticación inicializada");
         
-        // Si ya está autenticado, redirigir al inicio
         if (AuthService.IsAuthenticated)
         {
+            Logger.LogInformation("Usuario ya autenticado, redirigiendo a Home");
             Navigation.NavigateTo("/home");
         }
     }
 
     private void CambiarModo()
     {
-        mostrarLogin = !mostrarLogin;
+        modoLogin = !modoLogin;
+        mensaje = "";
+        esError = false;
+        loginRequest = new LoginRequest();
+        registroRequest = new RegistroRequest();
+        Logger.LogDebug("Modo cambiado a: {Modo}", modoLogin ? "Login" : "Registro");
     }
 
-    private void OnLoginSuccess()
+    private async Task Login()
     {
-        Logger.LogInformation("Login exitoso, redirigiendo al inicio");
-        Navigation.NavigateTo("/home");
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+
+            Logger.LogInformation("Intento de login para: {Email}", loginRequest.Email);
+
+            var (success, message, requires2FA) = await AuthService.LoginAsync(loginRequest);
+
+            if (requires2FA)
+            {
+                requiresTwoFactor = true;
+                tempEmail = loginRequest.Email;
+                tempPassword = loginRequest.Password;
+                twoFactorRequest.Email = loginRequest.Email;
+                mensaje = message;
+                esError = false;
+                
+                Logger.LogInformation("Login requiere 2FA para: {Email}", loginRequest.Email);
+            }
+            else if (success)
+            {
+                Logger.LogInformation("Login exitoso para: {Email}", loginRequest.Email);
+                mensaje = message;
+                esError = false;
+                await Task.Delay(500);
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                Logger.LogWarning("Login fallido para: {Email}. Mensaje: {Message}", loginRequest.Email, message);
+                mensaje = message;
+                esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error durante el login");
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            isProcessing = false;
+        }
     }
 
-    private void OnRegisterSuccess()
+    private async Task VerifyTwoFactor()
     {
-        // El componente Register ya maneja la redirección
-        // Este método se mantiene por compatibilidad pero no se usa
-        Logger.LogInformation("Callback de registro recibido");
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+
+            Logger.LogInformation("Verificando código 2FA para: {Email}", twoFactorRequest.Email);
+
+            var (success, message) = await AuthService.VerifyTwoFactorAsync(twoFactorRequest);
+
+            if (success)
+            {
+                Logger.LogInformation("Verificación 2FA exitosa para: {Email}", twoFactorRequest.Email);
+                mensaje = message;
+                esError = false;
+                await Task.Delay(500);
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                Logger.LogWarning("Verificación 2FA fallida para: {Email}. Mensaje: {Message}", twoFactorRequest.Email, message);
+                mensaje = message;
+                esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error durante la verificación 2FA");
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task ResendCode()
+    {
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+
+            Logger.LogInformation("Reenviando código 2FA para: {Email}", tempEmail);
+
+            var (success, message) = await AuthService.ResendTwoFactorCodeAsync(tempEmail, tempPassword);
+
+            mensaje = message;
+            esError = !success;
+
+            if (success)
+            {
+                // Iniciar cooldown de 60 segundos
+                resendCooldown = 60;
+                cooldownTimer?.Dispose();
+                cooldownTimer = new System.Threading.Timer(_ =>
+                {
+                    if (resendCooldown > 0)
+                    {
+                        resendCooldown--;
+                        InvokeAsync(StateHasChanged);
+                    }
+                    else
+                    {
+                        cooldownTimer?.Dispose();
+                    }
+                }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
+                Logger.LogInformation("Código 2FA reenviado exitosamente para: {Email}", tempEmail);
+            }
+            else
+            {
+                Logger.LogWarning("Error al reenviar código 2FA para: {Email}", tempEmail);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error al reenviar código 2FA");
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void CancelTwoFactor()
+    {
+        requiresTwoFactor = false;
+        twoFactorRequest = new VerifyTwoFactorRequest();
+        tempEmail = "";
+        tempPassword = "";
+        mensaje = "";
+        esError = false;
+        cooldownTimer?.Dispose();
+        resendCooldown = 0;
+        
+        Logger.LogInformation("Verificación 2FA cancelada");
+    }
+
+    private async Task Registrar()
+    {
+        try
+        {
+            isProcessing = true;
+            mensaje = "";
+            esError = false;
+
+            Logger.LogInformation("Intento de registro para: {Email}", registroRequest.Email);
+
+            var (success, message) = await AuthService.RegistrarAsync(registroRequest);
+
+            if (success)
+            {
+                Logger.LogInformation("Registro exitoso para: {Email}", registroRequest.Email);
+                mensaje = message;
+                esError = false;
+                await Task.Delay(500);
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                Logger.LogWarning("Registro fallido para: {Email}. Mensaje: {Message}", registroRequest.Email, message);
+                mensaje = message;
+                esError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error durante el registro");
+            mensaje = $"Error: {ex.Message}";
+            esError = true;
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        cooldownTimer?.Dispose();
     }
 }

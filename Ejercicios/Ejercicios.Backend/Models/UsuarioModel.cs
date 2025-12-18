@@ -24,6 +24,11 @@ namespace Ejercicios.Backend.Models
         public string NombreCompleto { get; set; } = "";
         
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+
+        public bool TwoFactorEnabled { get; set; } = false;
+        public string? TwoFactorCode { get; set;}
+        public DateTime? TwoFactorCodeExpiry { get; set; }
+        public int FailedTwoFactorAttempts { get; set; } = 0;
     }
 
     // DTOs para autenticación
@@ -67,6 +72,28 @@ namespace Ejercicios.Backend.Models
         public string NombreCompleto { get; set; } = "";
         public string Token { get; set; } = "";
         public DateTime FechaRegistro { get; set; }
+        public bool RequiresTwoFactor { get; set; } = false;
+        public bool TwoFactorEnabled { get; set; } = false;
+    }
+
+    
+    public class VerifyTwoFactorRequest
+    {
+        [Required(ErrorMessage = "El email es requerido")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "El código de verificación es requerido")]
+        [StringLength(6, MinimumLength = 6, ErrorMessage = "El código debe tener 6 dígitos")]
+        public string Code { get; set; } = "";
+    }
+
+    public class Enable2FARequest
+    {
+        [Required(ErrorMessage = "El ID de usuario es requerido")]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Se requiere habilitar o deshabilitar 2FA")]
+        public bool Enable { get; set; }
     }
 
     public static class PasswordHelper
@@ -81,6 +108,15 @@ namespace Ejercicios.Backend.Models
         public static bool VerifyPassword(string password, string hash)
         {
             return HashPassword(password) == hash;
+        }
+
+        public static string GenerateTwoFactorCode()
+        {
+            using var rng = RandomNumberGenerator.Create();
+            var bytes = new byte[4];
+            rng.GetBytes(bytes);
+            var code = BitConverter.ToUInt32(bytes, 0) % 1000000;
+            return code.ToString("D6");
         }
     }
 

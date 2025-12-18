@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ejercicios.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUsuariosTable : Migration
+    public partial class InitialCreateWithAuth : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,10 @@ namespace Ejercicios.Backend.Migrations
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     NombreCompleto = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     FechaRegistro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    Activo = table.Column<bool>(type: "boolean", nullable: false)
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorCode = table.Column<string>(type: "text", nullable: true),
+                    TwoFactorCodeExpiry = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FailedTwoFactorAttempts = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

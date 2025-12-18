@@ -47,6 +47,12 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "security" ? "active" : "")" 
+                    @onclick="@(() => ChangeTab("security"))" type="button">
+                <i class="bi bi-shield-check"></i> Seguridad
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link @(activeTab == "exercises" ? "active" : "")" 
                     @onclick="@(() => ChangeTab("exercises"))" type="button">
                 <i class="bi bi-star"></i> Ejercicios
@@ -57,7 +63,7 @@
     <!-- Contenido de pestañas -->
     @if (activeTab == "info")
     {
-        <!-- Información del usuario -->
+        <!-- Información del usuario (sin cambios) -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="card h-100">
@@ -133,7 +139,7 @@
     }
     else if (activeTab == "edit")
     {
-        <!-- Editar perfil -->
+        <!-- Editar perfil (sin cambios de la versión anterior) -->
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -196,7 +202,7 @@
     }
     else if (activeTab == "password")
     {
-        <!-- Cambiar contraseña -->
+        <!-- Cambiar contraseña (sin cambios de la versión anterior) -->
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -260,9 +266,103 @@
             </div>
         </div>
     }
+    else if (activeTab == "security")
+    {
+        <!-- NUEVA PESTAÑA: Configuración de seguridad y 2FA -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-shield-check text-info"></i> Configuración de Seguridad
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Información sobre 2FA -->
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-info-circle"></i> Autenticación de Dos Factores (2FA)
+                            </h6>
+                            <p class="mb-2">
+                                La autenticación de dos factores añade una capa adicional de seguridad a tu cuenta.
+                            </p>
+                            <ul class="mb-0 small">
+                                <li>Recibirás un código de 6 dígitos por email cada vez que inicies sesión</li>
+                                <li>El código expira en 10 minutos</li>
+                                <li>Protege tu cuenta incluso si alguien conoce tu contraseña</li>
+                            </ul>
+                        </div>
+
+                        <!-- Estado actual de 2FA -->
+                        <div class="card mb-4 @(twoFactorEnabled ? "border-success" : "border-secondary")">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h6>
+                                            <i class="bi bi-@(twoFactorEnabled ? "shield-check" : "shield-x")"></i>
+                                            Autenticación de Dos Factores
+                                        </h6>
+                                        <p class="mb-0 small text-muted">
+                                            Estado: 
+                                            <strong class="@(twoFactorEnabled ? "text-success" : "text-secondary")">
+                                                @(twoFactorEnabled ? "Habilitada" : "Deshabilitada")
+                                            </strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                        <div class="form-check form-switch d-flex justify-content-md-end">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   role="switch" 
+                                                   id="toggle2FA"
+                                                   checked="@twoFactorEnabled"
+                                                   @onchange="ToggleTwoFactor"
+                                                   disabled="@isProcessing2FA"
+                                                   style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(mensaje2FA))
+                        {
+                            <div class="alert @(esError2FA ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+                                <i class="bi bi-@(esError2FA ? "exclamation-triangle" : "check-circle")"></i>
+                                @mensaje2FA
+                                <button type="button" class="btn-close" @onclick="@(() => mensaje2FA = "")"></button>
+                            </div>
+                        }
+
+                        <!-- Instrucciones de uso -->
+                        @if (twoFactorEnabled)
+                        {
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-check-circle"></i> 2FA Habilitada
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Tu cuenta está protegida con 2FA.</strong></p>
+                                    <p class="mb-2">En tu próximo inicio de sesión:</p>
+                                    <ol class="small mb-0">
+                                        <li>Ingresa tu email y contraseña como siempre</li>
+                                        <li>Recibirás un código de 6 dígitos en tu email: <strong>@AuthService.Usuario?.Email</strong></li>
+                                        <li>Introduce el código para completar el inicio de sesión</li>
+                                        <li>El código es válido por 10 minutos</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     else if (activeTab == "exercises")
     {
-        <!-- Ejercicios disponibles -->
+        <!-- Ejercicios disponibles (sin cambios) -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -295,7 +395,7 @@
         </div>
     }
 
-    <!-- Zona de peligro -->
+    <!-- Zona de peligro (sin cambios) -->
     <div class="row mt-5">
         <div class="col-12">
             <div class="card border-danger">
@@ -367,6 +467,11 @@
     .stat-card:hover {
         background: rgba(0, 0, 0, 0.05);
     }
+
+    .form-check-input:checked {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
 </style>
 
 @code {
@@ -384,6 +489,12 @@
     private bool isProcessingPassword = false;
     private string mensajePassword = "";
     private bool esErrorPassword = false;
+
+    // Variables para 2FA
+    private bool twoFactorEnabled = false;
+    private bool isProcessing2FA = false;
+    private string mensaje2FA = "";
+    private bool esError2FA = false;
 
     // Variables para eliminar cuenta
     private bool isProcessingDelete = false;
@@ -428,6 +539,10 @@
                 {
                     UserId = userId.Value
                 };
+
+                // TODO: Cargar estado de 2FA desde el servidor
+                // Por ahora asumimos false, pero deberías hacer una petición al API
+                twoFactorEnabled = false;
             }
         }
     }
@@ -439,8 +554,62 @@
         // Limpiar mensajes al cambiar de pestaña
         mensajeProfile = "";
         mensajePassword = "";
+        mensaje2FA = "";
     }
 
+    private async Task ToggleTwoFactor(ChangeEventArgs e)
+    {
+        try
+        {
+            isProcessing2FA = true;
+            mensaje2FA = "";
+            esError2FA = false;
+
+            var userId = AuthService.GetUserId();
+            if (!userId.HasValue)
+            {
+                mensaje2FA = "Error: No se pudo obtener el ID de usuario";
+                esError2FA = true;
+                return;
+            }
+
+            var newValue = (bool)(e.Value ?? false);
+
+            Logger.LogInformation("Cambiando estado de 2FA para usuario: {Usuario}, Nuevo estado: {Estado}", 
+                AuthService.Usuario?.NombreUsuario, newValue);
+
+            var (success, message) = await AuthService.Toggle2FAAsync(userId.Value, newValue);
+
+            if (success)
+            {
+                twoFactorEnabled = newValue;
+                mensaje2FA = message;
+                esError2FA = false;
+                
+                Logger.LogInformation("Estado de 2FA cambiado exitosamente para usuario: {Usuario}", 
+                    AuthService.Usuario?.NombreUsuario);
+            }
+            else
+            {
+                mensaje2FA = message;
+                esError2FA = true;
+                Logger.LogWarning("Error al cambiar estado de 2FA: {Error}", message);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje2FA = $"Error: {ex.Message}";
+            esError2FA = true;
+            Logger.LogError(ex, "Error al cambiar estado de 2FA");
+        }
+        finally
+        {
+            isProcessing2FA = false;
+        }
+    }
+
+    // ... resto de métodos sin cambios (UpdateProfile, ChangePassword, DeleteAccount, etc.)
+    
     private async Task UpdateProfile()
     {
         try
@@ -461,7 +630,6 @@
                 Logger.LogInformation("Perfil actualizado exitosamente para usuario: {Usuario}", 
                     updateProfileRequest.NombreUsuario);
 
-                // Esperar un momento y cambiar a la pestaña de información
                 await Task.Delay(1500);
                 activeTab = "info";
                 mensajeProfile = "";
@@ -505,12 +673,10 @@
                 Logger.LogInformation("Contraseña actualizada exitosamente para usuario: {Usuario}", 
                     AuthService.Usuario?.NombreUsuario);
 
-                // Limpiar formulario
                 changePasswordRequest.CurrentPassword = "";
                 changePasswordRequest.NewPassword = "";
                 changePasswordRequest.ConfirmNewPassword = "";
 
-                // Esperar un momento y cambiar a la pestaña de información
                 await Task.Delay(1500);
                 activeTab = "info";
                 mensajePassword = "";
@@ -566,7 +732,6 @@
             {
                 Logger.LogWarning("Cuenta eliminada exitosamente para usuario: {Usuario}", AuthService.Usuario?.NombreUsuario);
                 
-                // Mostrar mensaje y redirigir
                 await JSRuntime.InvokeVoidAsync("alert", "Tu cuenta ha sido eliminada correctamente.");
                 Navigation.NavigateTo("/auth");
             }
@@ -589,7 +754,6 @@
 
     private void CancelEditProfile()
     {
-        // Restaurar valores originales
         if (AuthService.Usuario != null)
         {
             updateProfileRequest.NombreUsuario = AuthService.Usuario.NombreUsuario;
@@ -603,7 +767,6 @@
 
     private void CancelChangePassword()
     {
-        // Limpiar formulario
         changePasswordRequest.CurrentPassword = "";
         changePasswordRequest.NewPassword = "";
         changePasswordRequest.ConfirmNewPassword = "";
